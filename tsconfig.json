@@ -13,6 +13,7 @@
     "node_modules",
     "dist",
     "demo",
+    "osme_demo",
     "build"
   ]
 }

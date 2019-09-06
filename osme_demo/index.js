@@ -389,21 +389,19 @@ import { SourceGeneratorPlugin, GeneratorPluginOptions } from '../src/OSME/Sourc
         // var generatorPluginOptions = new GeneratorPluginOptions();
         // generatorPluginOptions.number_of_measures = measure;
         var generatorPlugin = new ExampleSourceGenerator(generatorPluginOptions);
-        var source = generatorPlugin.generateGraphicalMusicSheet();
-        console.log("source")
-      
-        openSheetMusicDisplay.graphic = source;
+        var sheet = generatorPlugin.generate();
+        var graphicalSheet = generatorPlugin.generateGraphicalMusicSheet(sheet);
+
+        openSheetMusicDisplay.reset();
+        openSheetMusicDisplay.sheet = sheet;
+        openSheetMusicDisplay.graphic = graphicalSheet;
         rerender()
     }
 
     function rerender() {
         disable();
         window.setTimeout(function () {
-            if (openSheetMusicDisplay.IsReadyToRender()) {
-                openSheetMusicDisplay.render();
-            } else {
-                loadAndDisplay(); // reload sample e.g. after osmd.clear()
-            }
+            openSheetMusicDisplay.render();
             enable();
         }, 0);
     }

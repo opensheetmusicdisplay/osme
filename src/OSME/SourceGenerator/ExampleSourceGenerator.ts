@@ -1,5 +1,6 @@
 import { SourceGeneratorPlugin, GeneratorPluginOptions } from "./SourceGeneratorPlugin";
-import { MusicSheet, SourceMeasure, Staff, Instrument, Voice, Note, GraphicalMusicSheet, MusicSheetCalculator, StaffEntryLink, VoiceEntry } from "../../MusicalScore";
+// tslint:disable-next-line: max-line-length
+import { MusicSheet, SourceMeasure, Staff, Instrument, Voice, Note, GraphicalMusicSheet, MusicSheetCalculator, VoiceEntry, SourceStaffEntry, InstrumentalGroup } from "../../MusicalScore";
 import { Fraction, Pitch, NoteEnum, AccidentalEnum } from "../../Common";
 import { VexFlowMusicSheetCalculator } from "../../MusicalScore/Graphical/VexFlow";
 
@@ -17,7 +18,8 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
     public generate(): MusicSheet {
 
         const sheet: MusicSheet = new MusicSheet();
-        const instrument: Instrument = new Instrument(1, "piano", sheet, undefined);
+        const group: InstrumentalGroup = new InstrumentalGroup("group", sheet, undefined);
+        const instrument: Instrument = new Instrument(1, "piano", sheet, group);
         const staff: Staff = new Staff(instrument, 0);
         const voice: Voice = new Voice(instrument, 1);
 
@@ -32,8 +34,7 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
         return sheet;
     }
 
-    public generateGraphicalMusicSheet(): GraphicalMusicSheet {
-        const sheet: MusicSheet = this.generate();
+    public generateGraphicalMusicSheet(sheet: MusicSheet): GraphicalMusicSheet {
         const calc: MusicSheetCalculator = new VexFlowMusicSheetCalculator();
         const graphic: GraphicalMusicSheet = new GraphicalMusicSheet(sheet, calc);
         return graphic;

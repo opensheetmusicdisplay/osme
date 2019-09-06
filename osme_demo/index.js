@@ -1,4 +1,7 @@
 import { OpenSheetMusicDisplay } from '../src/OpenSheetMusicDisplay/OpenSheetMusicDisplay';
+import { ExampleSourceGenerator } from '../src/OSME/SourceGenerator/ExampleSourceGenerator';
+import { SourceGeneratorPlugin, GeneratorPluginOptions } from '../src/OSME/SourceGenerator/SourceGeneratorPlugin';
+//import * as OSME from '../src/OSME';
 
 /*jslint browser:true */
 (function () {
@@ -373,38 +376,24 @@ import { OpenSheetMusicDisplay } from '../src/OpenSheetMusicDisplay/OpenSheetMus
         var measure = selectMeasureNumber.value;
         var time = selectTimeSignature.value
         var key = selectKeySignature.value
-        var generatorPluginConfig = {
-            scale_type: "major",
-            scale_tone: "C",
-            number_of_bars: measure
+        var generatorPluginOptions = {
+            //   scale_type: "major",
+            //   scale_tone: "C",
+            number_of_measures: measure
         }
 
         console.log("selectMeasureNumber: " + measure);
         console.log("selectTimeSignature: " + time);
         console.log("selectKeySignature: " + key);
 
-
-        var generatorPlugin = GeneratorPluginFactory.build("example_source_generator", generatorPluginOptions);
-        var source = generatorPlugin.createSource();
+        // var generatorPluginOptions = new GeneratorPluginOptions();
+        // generatorPluginOptions.number_of_measures = measure;
+        var generatorPlugin = new ExampleSourceGenerator(generatorPluginOptions);
+        var source = generatorPlugin.generateGraphicalMusicSheet();
         console.log("source")
-        openSheetMusicDisplay.setOptions({ generatorPlugin: "scales_random", generatorPluginOptions: generatorPluginConfig });
-        openSheetMusicDisplay.load(str).then(
-            function () {
-                // This gives you access to the osmd object in the console. Do not use in productive code
-                window.osmd = openSheetMusicDisplay;
-                return openSheetMusicDisplay.render();
-            },
-            function (e) {
-                errorLoadingOrRenderingSheet(e, "rendering");
-            }
-        ).then(
-            function () {
-                return onLoadingEnd(true);
-            }, function (e) {
-                errorLoadingOrRenderingSheet(e, "loading");
-                onLoadingEnd(true);
-            }
-        );
+      
+        openSheetMusicDisplay.graphic = source;
+        rerender()
     }
 
     function rerender() {

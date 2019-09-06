@@ -5,79 +5,79 @@ import { OpenSheetMusicDisplay } from '../src/OpenSheetMusicDisplay/OpenSheetMus
     "use strict";
     var openSheetMusicDisplay;
     var osme;
-    
+
     var sampleFolder = process.env.STATIC_FILES_SUBFOLDER ? process.env.STATIC_FILES_SUBFOLDER + "/" : "",
-    samples = {
-        "Beethoven, L.v. - An die ferne Geliebte": "Beethoven_AnDieFerneGeliebte.xml",
-        "Clementi, M. - Sonatina Op.36 No.1 Pt.1": "MuzioClementi_SonatinaOpus36No1_Part1.xml",
-        "Clementi, M. - Sonatina Op.36 No.1 Pt.2": "MuzioClementi_SonatinaOpus36No1_Part2.xml",
-        "Clementi, M. - Sonatina Op.36 No.3 Pt.1": "MuzioClementi_SonatinaOpus36No3_Part1.xml",
-        "Clementi, M. - Sonatina Op.36 No.3 Pt.2": "MuzioClementi_SonatinaOpus36No3_Part2.xml",
-        "Bach, J.S. - Praeludium in C-Dur BWV846 1": "JohannSebastianBach_PraeludiumInCDur_BWV846_1.xml",
-        "Bach, J.S. - Air": "JohannSebastianBach_Air.xml",
-        "Gounod, C. - Méditation": "CharlesGounod_Meditation.xml",
-        "Haydn, J. - Concertante Cello": "JosephHaydn_ConcertanteCello.xml",
-        "Joplin, S. - Elite Syncopations": "ScottJoplin_EliteSyncopations.xml",
-        "Joplin, S. - The Entertainer": "ScottJoplin_The_Entertainer.xml",
-        "Mozart, W.A. - An Chloe": "Mozart_AnChloe.xml",
-        "Mozart, W.A. - Das Veilchen": "Mozart_DasVeilchen.xml",
-        "Mozart, W.A. - Clarinet Quintet (Excerpt)": "Mozart_Clarinet_Quintet_Excerpt.mxl",
-        "Mozart, W.A. - String Quartet in G, K. 387, 1st Mvmt Excerpt": "Mozart_String_Quartet_in_G_K._387_1st_Mvmnt_excerpt.musicxml",
-        "Mozart/Holzer - Land der Berge (national anthem of Austria)": "Land_der_Berge.musicxml",
-        "OSMD Function Test - All": "OSMD_function_test_all.xml",
-        "OSMD Function Test - Accidentals": "OSMD_function_test_accidentals.musicxml",
-        "OSMD Function Test - Autobeam": "OSMD_function_test_autobeam.musicxml",
-        "OSMD Function Test - Auto-/Custom-Coloring": "OSMD_function_test_auto-custom-coloring-entchen.musicxml",
-        "OSMD Function Test - Bar lines": "OSMD_function_test_bar_lines.musicxml",
-        "OSMD Function Test - Color (from XML)": "OSMD_function_test_color.musicxml",
-        "OSMD Function Test - Drumset": "OSMD_function_test_drumset.musicxml",
-        "OSMD Function Test - Expressions": "OSMD_function_test_expressions.musicxml",
-        "OSMD Function Test - Expressions Overlap": "OSMD_function_test_expressions_overlap.musicxml",
-        "OSMD Function Test - Grace Notes": "OSMD_function_test_GraceNotes.xml",
-        "OSMD Function Test - Invisible Notes": "OSMD_function_test_invisible_notes.musicxml",
-        "OSMD Function Test - Selecting Measures To Draw": "OSMD_function_test_measuresToDraw_Beethoven_AnDieFerneGeliebte.xml",
-        "OSMD Function Test - Notehead Shapes": "OSMD_function_test_noteheadShapes.musicxml",
-        "OSMD Function Test - Ornaments": "OSMD_function_test_Ornaments.xml",
-        "OSMD Function Test - Tremolo": "OSMD_Function_Test_Tremolo_2bars.musicxml",
-        "Schubert, F. - An Die Musik": "Schubert_An_die_Musik.xml",
-        "Actor, L. - Prelude (Large Sample, loading time)": "ActorPreludeSample.xml",
-        "Anonymous - Saltarello": "Saltarello.mxl",
-        "Debussy, C. - Mandoline": "Debussy_Mandoline.xml",
-        "Levasseur, F. - Parlez Mois": "Parlez-moi.mxl",
-        "Schumann, R. - Dichterliebe": "Dichterliebe01.xml",
-        "Telemann, G.P. - Sonate-Nr.1.1-Dolce": "TelemannWV40.102_Sonate-Nr.1.1-Dolce.xml",
-        "Telemann, G.P. - Sonate-Nr.1.2-Allegro": "TelemannWV40.102_Sonate-Nr.1.2-Allegro-F-Dur.xml",
-    },
+        samples = {
+            "Beethoven, L.v. - An die ferne Geliebte": "Beethoven_AnDieFerneGeliebte.xml",
+            "Clementi, M. - Sonatina Op.36 No.1 Pt.1": "MuzioClementi_SonatinaOpus36No1_Part1.xml",
+            "Clementi, M. - Sonatina Op.36 No.1 Pt.2": "MuzioClementi_SonatinaOpus36No1_Part2.xml",
+            "Clementi, M. - Sonatina Op.36 No.3 Pt.1": "MuzioClementi_SonatinaOpus36No3_Part1.xml",
+            "Clementi, M. - Sonatina Op.36 No.3 Pt.2": "MuzioClementi_SonatinaOpus36No3_Part2.xml",
+            "Bach, J.S. - Praeludium in C-Dur BWV846 1": "JohannSebastianBach_PraeludiumInCDur_BWV846_1.xml",
+            "Bach, J.S. - Air": "JohannSebastianBach_Air.xml",
+            "Gounod, C. - Méditation": "CharlesGounod_Meditation.xml",
+            "Haydn, J. - Concertante Cello": "JosephHaydn_ConcertanteCello.xml",
+            "Joplin, S. - Elite Syncopations": "ScottJoplin_EliteSyncopations.xml",
+            "Joplin, S. - The Entertainer": "ScottJoplin_The_Entertainer.xml",
+            "Mozart, W.A. - An Chloe": "Mozart_AnChloe.xml",
+            "Mozart, W.A. - Das Veilchen": "Mozart_DasVeilchen.xml",
+            "Mozart, W.A. - Clarinet Quintet (Excerpt)": "Mozart_Clarinet_Quintet_Excerpt.mxl",
+            "Mozart, W.A. - String Quartet in G, K. 387, 1st Mvmt Excerpt": "Mozart_String_Quartet_in_G_K._387_1st_Mvmnt_excerpt.musicxml",
+            "Mozart/Holzer - Land der Berge (national anthem of Austria)": "Land_der_Berge.musicxml",
+            "OSMD Function Test - All": "OSMD_function_test_all.xml",
+            "OSMD Function Test - Accidentals": "OSMD_function_test_accidentals.musicxml",
+            "OSMD Function Test - Autobeam": "OSMD_function_test_autobeam.musicxml",
+            "OSMD Function Test - Auto-/Custom-Coloring": "OSMD_function_test_auto-custom-coloring-entchen.musicxml",
+            "OSMD Function Test - Bar lines": "OSMD_function_test_bar_lines.musicxml",
+            "OSMD Function Test - Color (from XML)": "OSMD_function_test_color.musicxml",
+            "OSMD Function Test - Drumset": "OSMD_function_test_drumset.musicxml",
+            "OSMD Function Test - Expressions": "OSMD_function_test_expressions.musicxml",
+            "OSMD Function Test - Expressions Overlap": "OSMD_function_test_expressions_overlap.musicxml",
+            "OSMD Function Test - Grace Notes": "OSMD_function_test_GraceNotes.xml",
+            "OSMD Function Test - Invisible Notes": "OSMD_function_test_invisible_notes.musicxml",
+            "OSMD Function Test - Selecting Measures To Draw": "OSMD_function_test_measuresToDraw_Beethoven_AnDieFerneGeliebte.xml",
+            "OSMD Function Test - Notehead Shapes": "OSMD_function_test_noteheadShapes.musicxml",
+            "OSMD Function Test - Ornaments": "OSMD_function_test_Ornaments.xml",
+            "OSMD Function Test - Tremolo": "OSMD_Function_Test_Tremolo_2bars.musicxml",
+            "Schubert, F. - An Die Musik": "Schubert_An_die_Musik.xml",
+            "Actor, L. - Prelude (Large Sample, loading time)": "ActorPreludeSample.xml",
+            "Anonymous - Saltarello": "Saltarello.mxl",
+            "Debussy, C. - Mandoline": "Debussy_Mandoline.xml",
+            "Levasseur, F. - Parlez Mois": "Parlez-moi.mxl",
+            "Schumann, R. - Dichterliebe": "Dichterliebe01.xml",
+            "Telemann, G.P. - Sonate-Nr.1.1-Dolce": "TelemannWV40.102_Sonate-Nr.1.1-Dolce.xml",
+            "Telemann, G.P. - Sonate-Nr.1.2-Allegro": "TelemannWV40.102_Sonate-Nr.1.2-Allegro-F-Dur.xml",
+        },
 
-    zoom = 1.0,
-    // HTML Elements in the page
-    err,
-    error_tr,
-    canvas,
+        zoom = 1.0,
+        // HTML Elements in the page
+        err,
+        error_tr,
+        canvas,
 
-    selectSample,
-    editTitle,
-    editComposer,
-    editTempo,
-    selectMeasureNumber,
-    selectTimeSignature,
-    selectKeySignature,
+        selectSample,
+        editTitle,
+        editComposer,
+        editTempo,
+        selectMeasureNumber,
+        selectTimeSignature,
+        selectKeySignature,
 
-    selectBounding,
-    skylineDebug,
-    bottomlineDebug,
-    zoomIn,
-    zoomOut,
-    zoomDiv,
-    custom,
-    nextCursorBtn,
-    resetCursorBtn,
-    followCursorCheckbox,
-    showCursorBtn,
-    hideCursorBtn,
-    backendSelect,
-    debugReRenderBtn,
-    debugClearBtn;
+        selectBounding,
+        skylineDebug,
+        bottomlineDebug,
+        zoomIn,
+        zoomOut,
+        zoomDiv,
+        custom,
+        nextCursorBtn,
+        resetCursorBtn,
+        followCursorCheckbox,
+        showCursorBtn,
+        hideCursorBtn,
+        backendSelect,
+        debugReRenderBtn,
+        debugClearBtn;
 
     var minMeasureToDrawStashed = 1;
     var maxMeasureToDrawStashed = Number.MAX_SAFE_INTEGER;
@@ -129,15 +129,11 @@ import { OpenSheetMusicDisplay } from '../src/OpenSheetMusicDisplay/OpenSheetMus
         if (selectBounding) {
             selectBounding.onchange = selectBoundingOnChange;
         }
-        if (selectKeySignature) {
-            selectKeySignature.onchange = selectKeySignatureOnChange;
-        }
-        if (selectMeasureNumber) {
-            selectMeasureNumber.onchange = selectKeySignatureOnChange;
-        }
-        if (selectTimeSignature) {
-            selectTimeSignature.onchange = selectKeySignatureOnChange;
-        }
+
+        selectMeasureNumber.onchange = generatorParamsOnChange;
+        selectTimeSignature.onchange = generatorParamsOnChange;
+        selectKeySignature.onchange = generatorParamsOnChange;
+
         // Pre-select default music piece
 
         custom.appendChild(document.createTextNode("Custom"));
@@ -153,30 +149,30 @@ import { OpenSheetMusicDisplay } from '../src/OpenSheetMusicDisplay/OpenSheetMus
         };
 
         if (skylineDebug) {
-            skylineDebug.onclick = function() {
+            skylineDebug.onclick = function () {
                 openSheetMusicDisplay.DrawSkyLine = !openSheetMusicDisplay.DrawSkyLine;
             }
         }
 
         if (bottomlineDebug) {
-            bottomlineDebug.onclick = function() {
+            bottomlineDebug.onclick = function () {
                 openSheetMusicDisplay.DrawBottomLine = !openSheetMusicDisplay.DrawBottomLine;
             }
         }
 
         if (debugReRenderBtn) {
-            debugReRenderBtn.onclick = function() {
+            debugReRenderBtn.onclick = function () {
                 rerender();
             }
         }
 
         if (debugClearBtn) {
-            debugClearBtn.onclick = function() {
+            debugClearBtn.onclick = function () {
                 openSheetMusicDisplay.clear();
             }
         }
 
-      //  osme = new OSME()
+        //  osme = new OSME()
         // Create OSMD object and canvas
         openSheetMusicDisplay = new OpenSheetMusicDisplay(canvas, {
             autoResize: true,
@@ -215,27 +211,27 @@ import { OpenSheetMusicDisplay } from '../src/OpenSheetMusicDisplay/OpenSheetMus
         openSheetMusicDisplay.setLogLevel('info');
         document.body.appendChild(canvas);
 
-        window.addEventListener("keydown", function(e) {
+        window.addEventListener("keydown", function (e) {
             var event = window.event ? window.event : e;
             if (event.keyCode === 39) {
                 openSheetMusicDisplay.cursor.next();
             }
         });
-        nextCursorBtn.addEventListener("click", function() {
+        nextCursorBtn.addEventListener("click", function () {
             openSheetMusicDisplay.cursor.next();
         });
-        resetCursorBtn.addEventListener("click", function() {
+        resetCursorBtn.addEventListener("click", function () {
             openSheetMusicDisplay.cursor.reset();
         });
         if (followCursorCheckbox) {
-            followCursorCheckbox.onclick = function() {
+            followCursorCheckbox.onclick = function () {
                 openSheetMusicDisplay.FollowCursor = !openSheetMusicDisplay.FollowCursor;
             }
         }
-        hideCursorBtn.addEventListener("click", function() {
+        hideCursorBtn.addEventListener("click", function () {
             openSheetMusicDisplay.cursor.hide();
         });
-        showCursorBtn.addEventListener("click", function() {
+        showCursorBtn.addEventListener("click", function () {
             if (openSheetMusicDisplay.cursor) {
                 openSheetMusicDisplay.cursor.show();
             } else {
@@ -243,18 +239,18 @@ import { OpenSheetMusicDisplay } from '../src/OpenSheetMusicDisplay/OpenSheetMus
             }
         });
 
-        backendSelect.addEventListener("change", function(e) {
+        backendSelect.addEventListener("change", function (e) {
             var value = e.target.value;
             var createNewOsmd = true;
 
             if (createNewOsmd) {
                 // clears the canvas element
                 canvas.innerHTML = "";
-                openSheetMusicDisplay = new OpenSheetMusicDisplay(canvas, {backend: value});
+                openSheetMusicDisplay = new OpenSheetMusicDisplay(canvas, { backend: value });
                 openSheetMusicDisplay.setLogLevel('info');
             } else {
                 // alternative, doesn't work yet, see setOptions():
-                openSheetMusicDisplay.setOptions({backend: value});
+                openSheetMusicDisplay.setOptions({ backend: value });
             }
 
             loadAndDisplay();
@@ -265,12 +261,6 @@ import { OpenSheetMusicDisplay } from '../src/OpenSheetMusicDisplay/OpenSheetMus
     function selectBoundingOnChange(evt) {
         var value = evt.target.value;
         openSheetMusicDisplay.DrawBoundingBox = value;
-    }
-
-    function selectKeySignatureOnChange(evt) {
-        var value = evt.target.value;
-        openSheetMusicDisplay.DrawBoundingBox = value;
-        loadAndDisplay()
     }
 
     function loadAndDisplay(str) {
@@ -324,23 +314,23 @@ import { OpenSheetMusicDisplay } from '../src/OpenSheetMusicDisplay/OpenSheetMus
                 colorStemsLikeNoteheads: true
             });
         } else {
-            openSheetMusicDisplay.setOptions({coloringMode: 0, colorStemsLikeNoteheads: false});
+            openSheetMusicDisplay.setOptions({ coloringMode: 0, colorStemsLikeNoteheads: false });
         }
-        openSheetMusicDisplay.setOptions({autoBeam: str.includes("autobeam")});
-        openSheetMusicDisplay.setOptions({drawPartAbbreviations: !str.includes("Schubert_An_die_Musik")}); // TODO weird layout bug here. but shouldn't be in score anyways
+        openSheetMusicDisplay.setOptions({ autoBeam: str.includes("autobeam") });
+        openSheetMusicDisplay.setOptions({ drawPartAbbreviations: !str.includes("Schubert_An_die_Musik") }); // TODO weird layout bug here. but shouldn't be in score anyways
         openSheetMusicDisplay.load(str).then(
-            function() {
+            function () {
                 // This gives you access to the osmd object in the console. Do not use in productive code
                 window.osmd = openSheetMusicDisplay;
                 return openSheetMusicDisplay.render();
             },
-            function(e) {
+            function (e) {
                 errorLoadingOrRenderingSheet(e, "rendering");
             }
         ).then(
-            function() {
+            function () {
                 return onLoadingEnd(isCustom);
-            }, function(e) {
+            }, function (e) {
                 errorLoadingOrRenderingSheet(e, "loading");
                 onLoadingEnd(isCustom);
             }
@@ -372,16 +362,54 @@ import { OpenSheetMusicDisplay } from '../src/OpenSheetMusicDisplay/OpenSheetMus
 
     function scale() {
         disable();
-        window.setTimeout(function(){
+        window.setTimeout(function () {
             openSheetMusicDisplay.zoom = zoom;
             openSheetMusicDisplay.render();
             enable();
         }, 0);
     }
 
+    function generatorParamsOnChange() {
+        var measure = selectMeasureNumber.value;
+        var time = selectTimeSignature.value
+        var key = selectKeySignature.value
+        var generatorPluginConfig = {
+            scale_type: "major",
+            scale_tone: "C",
+            number_of_bars: measure
+        }
+
+        console.log("selectMeasureNumber: " + measure);
+        console.log("selectTimeSignature: " + time);
+        console.log("selectKeySignature: " + key);
+
+
+        var generatorPlugin = GeneratorPluginFactory.build("example_source_generator", generatorPluginOptions);
+        var source = generatorPlugin.createSource();
+        console.log("source")
+        openSheetMusicDisplay.setOptions({ generatorPlugin: "scales_random", generatorPluginOptions: generatorPluginConfig });
+        openSheetMusicDisplay.load(str).then(
+            function () {
+                // This gives you access to the osmd object in the console. Do not use in productive code
+                window.osmd = openSheetMusicDisplay;
+                return openSheetMusicDisplay.render();
+            },
+            function (e) {
+                errorLoadingOrRenderingSheet(e, "rendering");
+            }
+        ).then(
+            function () {
+                return onLoadingEnd(true);
+            }, function (e) {
+                errorLoadingOrRenderingSheet(e, "loading");
+                onLoadingEnd(true);
+            }
+        );
+    }
+
     function rerender() {
         disable();
-        window.setTimeout(function(){
+        window.setTimeout(function () {
             if (openSheetMusicDisplay.IsReadyToRender()) {
                 openSheetMusicDisplay.render();
             } else {
@@ -414,21 +442,21 @@ import { OpenSheetMusicDisplay } from '../src/OpenSheetMusicDisplay/OpenSheetMus
     }
 
     // Register events: load, drag&drop
-    window.addEventListener("load", function() {
+    window.addEventListener("load", function () {
         init();
         loadAndDisplay();
     });
-    window.addEventListener("dragenter", function(event) {
+    window.addEventListener("dragenter", function (event) {
         event.preventDefault();
         disable();
     });
-    window.addEventListener("dragover", function(event) {
+    window.addEventListener("dragover", function (event) {
         event.preventDefault();
     });
-    window.addEventListener("dragleave", function(event) {
+    window.addEventListener("dragleave", function (event) {
         enable();
     });
-    window.addEventListener("drop", function(event) {
+    window.addEventListener("drop", function (event) {
         event.preventDefault();
         if (!event.dataTransfer || !event.dataTransfer.files || event.dataTransfer.files.length === 0) {
             return;
@@ -445,7 +473,7 @@ import { OpenSheetMusicDisplay } from '../src/OpenSheetMusicDisplay/OpenSheetMus
         if (filename.toLowerCase().indexOf(".xml") > 0
             || filename.toLowerCase().indexOf(".musicxml") > 0) {
             reader.readAsText(event.dataTransfer.files[0]);
-        } else if (event.dataTransfer.files[0].name.toLowerCase().indexOf(".mxl") > 0){
+        } else if (event.dataTransfer.files[0].name.toLowerCase().indexOf(".mxl") > 0) {
             reader.readAsBinaryString(event.dataTransfer.files[0]);
         }
         else {

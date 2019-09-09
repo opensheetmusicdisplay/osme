@@ -392,14 +392,13 @@ import { SourceGeneratorPlugin, GeneratorPluginOptions } from '../src/OSME/Sourc
         var sheet = generatorPlugin.generate();
         var graphicalSheet = generatorPlugin.generateGraphicalMusicSheet(sheet);
 
-        openSheetMusicDisplay.reset();
+        //openSheetMusicDisplay.reset();
         openSheetMusicDisplay.sheet = sheet;
         openSheetMusicDisplay.graphic = graphicalSheet;
         rerender()
     }
 
-    function rerender() {
-        disable();
+    function rerender() {        
         window.setTimeout(function () {
             openSheetMusicDisplay.render();
             enable();

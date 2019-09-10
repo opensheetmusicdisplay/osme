@@ -1,9 +1,10 @@
-import { GeneratorPluginOptions, SourceGeneratorPlugin } from "./SourceGeneratorPlugin";
+import { SourceGeneratorPlugin } from "./SourceGeneratorPlugin";
 import { ExampleSourceGenerator } from "./ExampleSourceGenerator";
+import { SourceGeneratorOptions } from "./SourceGeneratorParameters";
 
 export class GeneratorPluginFactory {
 
-    public static build(name: string, options: GeneratorPluginOptions): SourceGeneratorPlugin {
+    public static build(name: string, options: SourceGeneratorOptions): SourceGeneratorPlugin {
         switch (name) {
             case ExampleSourceGenerator.NAME: return new ExampleSourceGenerator(options);
             default: {

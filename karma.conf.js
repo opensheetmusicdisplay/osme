@@ -15,16 +15,16 @@ module.exports = function (config) {
 
         files: [
             {
-                pattern: 'test/**/*.ts',
+                pattern: 'test/OSME/**/*.ts',
                 included: true
             }, {
-                pattern: 'test/data/*.xml',
+                pattern: 'test/OSME/data/*.xml',
                 included: true
             }, {
-                pattern: 'test/data/*.mxl.base64',
+                pattern: 'test/OSME/data/*.mxl.base64',
                 included: true
             }, {
-                pattern: 'test/data/*.mxl',
+                pattern: 'test/OSME/data/*.mxl',
                 included: false,
                 watched: false,
                 served: true
@@ -33,10 +33,10 @@ module.exports = function (config) {
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
-            'test/data/*.xml': ['xml2js'],
-            'test/data/*.mxl.base64': ['base64-to-js'],
+            'test/OSME/data/*.xml': ['xml2js'],
+            'test/OSME/data/*.mxl.base64': ['base64-to-js'],
             // add webpack as preprocessor
-            'test/**/*.ts': ['webpack']
+            'test/OSME/**/*.ts': ['webpack']
         },
 
         webpack: {

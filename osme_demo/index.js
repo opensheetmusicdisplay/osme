@@ -72,13 +72,7 @@ import { SourceGeneratorPlugin, GeneratorPluginOptions } from '../src/OSME/Sourc
         zoomIn,
         zoomOut,
         zoomDiv,
-        custom,
-        nextCursorBtn,
-        resetCursorBtn,
-        followCursorCheckbox,
-        showCursorBtn,
-        hideCursorBtn,
-        backendSelect,
+        custom,       
         debugReRenderBtn,
         debugClearBtn;
 
@@ -92,7 +86,7 @@ import { SourceGeneratorPlugin, GeneratorPluginOptions } from '../src/OSME/Sourc
 
         err = document.getElementById("error-td");
         error_tr = document.getElementById("error-tr");
-        zoomDiv = document.getElementById("zoom-str");
+       
         custom = document.createElement("option");
         editTitle = document.getElementById("editTitle");
         editComposer = document.getElementById("editComposer");
@@ -104,15 +98,8 @@ import { SourceGeneratorPlugin, GeneratorPluginOptions } from '../src/OSME/Sourc
         selectBounding = document.getElementById("selectBounding");
         skylineDebug = document.getElementById("skylineDebug");
         bottomlineDebug = document.getElementById("bottomlineDebug");
-        zoomIn = document.getElementById("zoom-in-btn");
-        zoomOut = document.getElementById("zoom-out-btn");
         canvas = document.createElement("div");
-        nextCursorBtn = document.getElementById("next-cursor-btn");
-        resetCursorBtn = document.getElementById("reset-cursor-btn");
-        followCursorCheckbox = document.getElementById("follow-cursor-checkbox");
-        showCursorBtn = document.getElementById("show-cursor-btn");
-        hideCursorBtn = document.getElementById("hide-cursor-btn");
-        backendSelect = document.getElementById("backend-select");
+      
         debugReRenderBtn = document.getElementById("debug-re-render-btn");
         debugClearBtn = document.getElementById("debug-clear-btn");
 
@@ -142,15 +129,7 @@ import { SourceGeneratorPlugin, GeneratorPluginOptions } from '../src/OSME/Sourc
         custom.appendChild(document.createTextNode("Custom"));
 
         // Create zoom controls
-        zoomIn.onclick = function () {
-            zoom *= 1.2;
-            scale();
-        };
-        zoomOut.onclick = function () {
-            zoom /= 1.2;
-            scale();
-        };
-
+     
         if (skylineDebug) {
             skylineDebug.onclick = function () {
                 openSheetMusicDisplay.DrawSkyLine = !openSheetMusicDisplay.DrawSkyLine;
@@ -179,7 +158,7 @@ import { SourceGeneratorPlugin, GeneratorPluginOptions } from '../src/OSME/Sourc
         // Create OSMD object and canvas
         openSheetMusicDisplay = new OpenSheetMusicDisplay(canvas, {
             autoResize: true,
-            backend: backendSelect.value,
+            backend: "SVG",
             disableCursor: false,
             drawingParameters: "default", // try compact (instead of default)
             drawPartNames: true, // try false
@@ -219,46 +198,7 @@ import { SourceGeneratorPlugin, GeneratorPluginOptions } from '../src/OSME/Sourc
             if (event.keyCode === 39) {
                 openSheetMusicDisplay.cursor.next();
             }
-        });
-        nextCursorBtn.addEventListener("click", function () {
-            openSheetMusicDisplay.cursor.next();
-        });
-        resetCursorBtn.addEventListener("click", function () {
-            openSheetMusicDisplay.cursor.reset();
-        });
-        if (followCursorCheckbox) {
-            followCursorCheckbox.onclick = function () {
-                openSheetMusicDisplay.FollowCursor = !openSheetMusicDisplay.FollowCursor;
-            }
-        }
-        hideCursorBtn.addEventListener("click", function () {
-            openSheetMusicDisplay.cursor.hide();
-        });
-        showCursorBtn.addEventListener("click", function () {
-            if (openSheetMusicDisplay.cursor) {
-                openSheetMusicDisplay.cursor.show();
-            } else {
-                console.info("Can't show cursor, as it was disabled (e.g. by drawingParameters).");
-            }
-        });
-
-        backendSelect.addEventListener("change", function (e) {
-            var value = e.target.value;
-            var createNewOsmd = true;
-
-            if (createNewOsmd) {
-                // clears the canvas element
-                canvas.innerHTML = "";
-                openSheetMusicDisplay = new OpenSheetMusicDisplay(canvas, { backend: value });
-                openSheetMusicDisplay.setLogLevel('info');
-            } else {
-                // alternative, doesn't work yet, see setOptions():
-                openSheetMusicDisplay.setOptions({ backend: value });
-            }
-
-            loadAndDisplay();
-
-        });
+        });         
     }
 
     function selectBoundingOnChange(evt) {
@@ -419,11 +359,11 @@ import { SourceGeneratorPlugin, GeneratorPluginOptions } from '../src/OSME/Sourc
     // Enable/Disable Controls
     function disable() {
         document.body.style.opacity = 0.3;
-        selectSample.disabled = zoomIn.disabled = zoomOut.disabled = "disabled";
+        selectSample.disabled = "disabled";
     }
     function enable() {
         document.body.style.opacity = 1;
-        selectSample.disabled = zoomIn.disabled = zoomOut.disabled = "";
+        selectSample.disabled = "";
         logCanvasSize();
     }
 

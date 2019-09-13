@@ -38,6 +38,17 @@ If you'd like to support OSMD and our ongoing work, you can donate via PayPal:<b
 [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=FPHCYVV2HH8VU)<br>
 Any support is highly appreciated.
 
+# Run a local demo
+
+This debugging guide assumes you have setup the project correctly, see [Build Instructions](https://github.com/opensheetmusicdisplay/opensheetmusicdisplay/wiki/Build-Instructions).
+
+To run the local demo and test your MusicXML files:
+* run `npm start` in your cloned repository folder
+* open `http://localhost:8000/` in your Browser
+* To render your own MusicXML file, drag&drop it into the window.
+* It should look similar to our [public demo](https://opensheetmusicdisplay.github.io/demo/), except for a different interface and state of code.<br>
+The public demo is on the state of the last release, which can be useful to compare.
+
 
 
 

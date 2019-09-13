@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6",
     "module": "commonjs",
     "moduleResolution": "node",
     "noUnusedLocals": true,
@@ -13,6 +13,7 @@
     "node_modules",
     "dist",
     "demo",
+    "osme_demo",
     "build"
   ]
 }

@@ -1,11 +1,11 @@
 {
-  "name": "opensheetmusicdisplay",
+  "name": "osme",
   "version": "0.7.1",
   "description": "An open source JavaScript engine for displaying MusicXML based on VexFlow.",
-  "main": "build/opensheetmusicdisplay.min.js",
+  "main": "build/osme.min.js",
   "typings": "build/dist/src/",
   "scripts": {
-    "docs": "typedoc --out ./build/docs --name OpenSheetMusicDisplay --module commonjs --target ES5 --ignoreCompilerErrors --mode file ./src",
+    "docs": "typedoc --out ./build/docs --name OSME --module commonjs --target ES5 --ignoreCompilerErrors --mode file ./src",
     "eslint": "eslint .",
     "tslint": "tslint --project tsconfig.json \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "npm-run-all eslint tslint",
@@ -14,10 +14,10 @@
     "prepare": "npm run build",
     "build": "npm-run-all lint build:webpack",
     "build:doc": "cross-env STATIC_FILES_SUBFOLDER=sheets npm run build",
-    "build:webpack": "webpack --progress --colors --config webpack.prod.js",
-    "build:webpack-dev": "webpack --progress --colors --config webpack.dev.js",
+    "build:webpack": "webpack --progress --colors --config osme_webpack.prod.js",
+    "build:webpack-dev": "webpack --progress --colors --config osme_webpack.dev.js",
     "build:webpack-sourcemap": "webpack --progress --colors --config webpack.sourcemap.js",
-    "start": "webpack-dev-server --progress --colors --config webpack.dev.js",
+    "start": "webpack-dev-server --progress --colors --config osme_webpack.dev.js",
     "fix-memory-limit": "increase-memory-limit"
   },
   "pre-commit": [
@@ -25,7 +25,7 @@
   ],
   "files": [
     "build/dist/src",
-    "build/opensheetmusicdisplay.min.js",
+    "build/osme.min.js",
     "AUTHORS",
     "CHANGELOG.md",
     "README.md",
@@ -33,7 +33,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/opensheetmusicdisplay/opensheetmusicdisplay"
+    "url": "https://github.com/opensheetmusicdisplay/osme"
   },
   "keywords": [
     "sheet",
@@ -44,7 +44,7 @@
   "author": "PhonicScore",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/opensheetmusicdisplay/opensheetmusicdisplay/issues"
+    "url": "https://github.com/opensheetmusicdisplay/osme/issues"
   },
   "homepage": "http://opensheetmusicdisplay.org",
   "dependencies": {

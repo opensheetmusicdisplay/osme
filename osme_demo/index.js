@@ -1,6 +1,8 @@
 import { OpenSheetMusicDisplay } from '../src/OpenSheetMusicDisplay/OpenSheetMusicDisplay';
 import { ExampleSourceGenerator } from '../src/OSME/SourceGenerator/ExampleSourceGenerator';
 import { SourceGeneratorPlugin, GeneratorPluginOptions } from '../src/OSME/SourceGenerator/SourceGeneratorPlugin';
+import { TimeSignature, NoteEnum, AccidentalEnum, DefaultInstrumentOptions } from '../src';
+import { ScaleKey, ScaleType } from '../src/OSME/Common';
 //import * as OSME from '../src/OSME';
 
 /*jslint browser:true */
@@ -65,14 +67,12 @@ import { SourceGeneratorPlugin, GeneratorPluginOptions } from '../src/OSME/Sourc
         selectMeasureNumber,
         selectTimeSignature,
         selectKeySignature,
+        selectComplexity,
 
         selectBounding,
         skylineDebug,
         bottomlineDebug,
-        zoomIn,
-        zoomOut,
-        zoomDiv,
-        custom,       
+        custom,
         debugReRenderBtn,
         debugClearBtn;
 
@@ -86,7 +86,7 @@ import { SourceGeneratorPlugin, GeneratorPluginOptions } from '../src/OSME/Sourc
 
         err = document.getElementById("error-td");
         error_tr = document.getElementById("error-tr");
-       
+
         custom = document.createElement("option");
         editTitle = document.getElementById("editTitle");
         editComposer = document.getElementById("editComposer");
@@ -95,11 +95,12 @@ import { SourceGeneratorPlugin, GeneratorPluginOptions } from '../src/OSME/Sourc
         selectTimeSignature = document.getElementById("selectTimeSignature");
         selectMeasureNumber = document.getElementById("selectMeasureNumber");
         selectKeySignature = document.getElementById("selectKeySignature");
+        selectComplexity = document.getElementById("selectComplexity");
         selectBounding = document.getElementById("selectBounding");
         skylineDebug = document.getElementById("skylineDebug");
         bottomlineDebug = document.getElementById("bottomlineDebug");
         canvas = document.createElement("div");
-      
+
         debugReRenderBtn = document.getElementById("debug-re-render-btn");
         debugClearBtn = document.getElementById("debug-clear-btn");
 
@@ -123,13 +124,15 @@ import { SourceGeneratorPlugin, GeneratorPluginOptions } from '../src/OSME/Sourc
         selectMeasureNumber.onchange = generatorParamsOnChange;
         selectTimeSignature.onchange = generatorParamsOnChange;
         selectKeySignature.onchange = generatorParamsOnChange;
+        selectComplexity.onchange = generatorParamsOnChange;
+        editTempo.onchange = generatorParamsOnChange;
 
         // Pre-select default music piece
 
         custom.appendChild(document.createTextNode("Custom"));
 
         // Create zoom controls
-     
+
         if (skylineDebug) {
             skylineDebug.onclick = function () {
                 openSheetMusicDisplay.DrawSkyLine = !openSheetMusicDisplay.DrawSkyLine;
@@ -198,7 +201,7 @@ import { SourceGeneratorPlugin, GeneratorPluginOptions } from '../src/OSME/Sourc
             if (event.keyCode === 39) {
                 openSheetMusicDisplay.cursor.next();
             }
-        });         
+        });
     }
 
     function selectBoundingOnChange(evt) {
@@ -300,7 +303,7 @@ import { SourceGeneratorPlugin, GeneratorPluginOptions } from '../src/OSME/Sourc
     }
 
     function logCanvasSize() {
-        zoomDiv.innerHTML = Math.floor(zoom * 100.0) + "%";
+        // zoomDiv.innerHTML = Math.floor(zoom * 100.0) + "%";
     }
 
     function scale() {
@@ -314,17 +317,25 @@ import { SourceGeneratorPlugin, GeneratorPluginOptions } from '../src/OSME/Sourc
 
     function generatorParamsOnChange() {
         var measure = selectMeasureNumber.value;
-        var time = selectTimeSignature.value
-        var key = selectKeySignature.value
+        var time = selectTimeSignature.value;
+        var key = selectKeySignature.value;
+        var complexity = selectComplexity.value / 10;
+        var tempo = editTempo.value;
+
+        var instrumentOptions = DefaultInstrumentOptions.get("trumpet");
+        var timeSignature = TimeSignature.common();
+        var scaleKey = ScaleKey.create(ScaleType.MAJOR, NoteEnum.C, AccidentalEnum.NONE);
+
         var generatorPluginOptions = {
-            //   scale_type: "major",
-            //   scale_tone: "C",
-            number_of_measures: measure
+            complexity: complexity,
+            measure_count: measure,
+            tempo: tempo,
+            time_signature: timeSignature,
+            scale_key: scaleKey,
+            instruments: [instrumentOptions]
         }
 
-        console.log("selectMeasureNumber: " + measure);
-        console.log("selectTimeSignature: " + time);
-        console.log("selectKeySignature: " + key);
+        console.log("generatorPluginOptions: ", generatorPluginOptions);
 
         // var generatorPluginOptions = new GeneratorPluginOptions();
         // generatorPluginOptions.number_of_measures = measure;
@@ -338,7 +349,7 @@ import { SourceGeneratorPlugin, GeneratorPluginOptions } from '../src/OSME/Sourc
         rerender()
     }
 
-    function rerender() {        
+    function rerender() {
         window.setTimeout(function () {
             openSheetMusicDisplay.render();
             enable();

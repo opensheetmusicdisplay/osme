@@ -10,6 +10,8 @@ import { ClefInstruction, MidiInstrument, RhythmSymbolEnum } from "../../Musical
  * Not-null arguments must be given, otherwise generation would fail.
  */
 export interface SourceGeneratorOptions {
+    // a float between 0.0 and 1.0 describing the "complexity" or "difficulty" of the expected result
+    complexity: number;
     // number of total measures for the sheet to contain
     measure_count: number;
     // tempo in bpm (float)
@@ -86,7 +88,8 @@ export class DefaultInstrumentOptions extends InstrumentOptions {
         const acc: AccidentalEnum = AccidentalEnum.NONE;
         const low: Pitch = new Pitch(NoteEnum.C, 0, acc);
         const high: Pitch = new Pitch(NoteEnum.C, 3, acc);
-        this.defaults.set("trumpet", InstrumentOptions.createDefault("piano", MidiInstrument.Electric_Grand_Piano, low, high));
+        this.defaults.set("piano", InstrumentOptions.createDefault("piano", MidiInstrument.Electric_Grand_Piano, low, high));
+        this.defaults.set("trumpet", InstrumentOptions.createDefault("trumpet", MidiInstrument.Trumpet, low, high));
     }
 }
 

@@ -10,6 +10,7 @@ describe("SourceGenerator Parameters", () => {
 
    it("GraphicalMusicSheet", (done: MochaDone) => {
       const options: SourceGeneratorOptions = {
+         complexity: 0.5,
          measure_count: 5,
          tempo: 145.0,
          time_signature: TimeSignature.common(),

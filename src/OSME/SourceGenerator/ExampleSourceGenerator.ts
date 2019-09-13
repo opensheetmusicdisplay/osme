@@ -20,6 +20,7 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
 
     public test(): void {
         const options: SourceGeneratorOptions = {
+            complexity: 0.5,
             instruments: [DefaultInstrumentOptions.get("piano")],
             measure_count: 5,
             scale_key: ScaleKey.create(ScaleType.MAJOR, NoteEnum.C),
@@ -38,26 +39,58 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
         const musicSheet: MusicSheet = this.createMusicSheet();
         const instrument: Instrument = this.configureInstruments(musicSheet);
 
+        const measureCount: number = this.options.measure_count;
         const staff: Staff = this.createInstrumentStaff(instrument, musicSheet);
 
         const voice: Voice = this.createInstrumentVoice(instrument);
+        super.initState(voice);
 
-        const sourceMeasure: SourceMeasure = this.createFirstSourceMeasure();
+        const duration: Fraction = new Fraction(4, 4);
 
-        musicSheet.addMeasure(sourceMeasure);
+        for (let index: number = 0; index < measureCount; index++) {
 
-        const staffEntry: SourceStaffEntry = sourceMeasure.findOrCreateStaffEntry(new Fraction(0, 4), 0, staff).staffEntry;
-        const voiceEntry: VoiceEntry = sourceMeasure.findOrCreateVoiceEntry(staffEntry, voice).voiceEntry;
-        voiceEntry.Notes.push(new Note(voiceEntry, staffEntry, new Fraction(1, 4), new Pitch(NoteEnum.C, 0, AccidentalEnum.NONE)));
+            console.log("Creating measure %s", index);
 
+            let currentMeasure: SourceMeasure;
+            if (index === 0) {
+                currentMeasure = this.createFirstSourceMeasure(new Fraction(0, 4), duration);
+            } else {
+                currentMeasure = this.createSourceMeasure(new Fraction(4 * index, 4), duration);
+            }
+            musicSheet.addMeasure(currentMeasure);
+
+            // create some notes in some entries
+            this.generateNotes(currentMeasure, staff, voice);
+        }
+
+        // finalize and polish the sheet
         musicSheet.fillStaffList();
-
+        super.debugStatistics();
         return musicSheet;
     }
 
+    private generateNotes(currentMeasure: SourceMeasure, staff: Staff, voice: Voice): Note[] {
+        const history: Note[] = [];
+        super.updateLocalState(voice, []);
+        for (let index: number = 0; index < 4; index++) {
+            const pitch: Pitch = new Pitch(NoteEnum.C, index, AccidentalEnum.NONE);
+            const note: Note = this.generateEntry(currentMeasure, staff, voice, new Fraction(index, 4), new Fraction(1, 4), pitch);
+            history.push(note);
+            super.updateLocalState(voice, history);
+        }
+        super.updateGlobalState(voice, history);
+        return history;
+    }
 
+    private generateEntry(currentMeasure: SourceMeasure, staff: Staff, voice: Voice, entryBegin: Fraction, entryDuration: Fraction, pitch: Pitch): Note {
+        const staffEntry: SourceStaffEntry = currentMeasure.findOrCreateStaffEntry(entryBegin, 0, staff).staffEntry;
+        const voiceEntry: VoiceEntry = currentMeasure.findOrCreateVoiceEntry(staffEntry, voice).voiceEntry;
+        const note: Note = new Note(voiceEntry, staffEntry, entryDuration, pitch);
+        voiceEntry.Notes.push(note);
+        return note;
+    }
 
-    private createFirstSourceMeasure(): SourceMeasure {
+    private createFirstSourceMeasure(beginFraction: Fraction, duration: Fraction): SourceMeasure {
         const sourceMeasure: SourceMeasure = new SourceMeasure(1);
         const firstStaffEntry: SourceStaffEntry = new SourceStaffEntry(undefined, undefined);
         const clefInstruction: ClefInstruction = new ClefInstruction();
@@ -66,8 +99,16 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
         firstStaffEntry.Instructions.push(clefInstruction);
         firstStaffEntry.Instructions.push(keyInstruction);
         sourceMeasure.FirstInstructionsStaffEntries[0] = firstStaffEntry;
-        sourceMeasure.AbsoluteTimestamp = new Fraction(0, 1);
-        sourceMeasure.Duration = new Fraction(4, 4);
+        sourceMeasure.AbsoluteTimestamp = beginFraction;
+        sourceMeasure.Duration = duration;
+        sourceMeasure.MeasureNumber = 1;
+        return sourceMeasure;
+    }
+
+    private createSourceMeasure(beginFraction: Fraction, duration: Fraction): SourceMeasure {
+        const sourceMeasure: SourceMeasure = new SourceMeasure(1);
+        sourceMeasure.AbsoluteTimestamp = beginFraction;
+        sourceMeasure.Duration = duration;
         sourceMeasure.MeasureNumber = 1;
         return sourceMeasure;
     }

@@ -1,6 +1,6 @@
 import { OpenSheetMusicDisplay } from '../src/OpenSheetMusicDisplay/OpenSheetMusicDisplay';
 import { ExampleSourceGenerator } from '../src/OSME/SourceGenerator/ExampleSourceGenerator';
-import { SourceGeneratorPlugin, GeneratorPluginOptions } from '../src/OSME/SourceGenerator/SourceGeneratorPlugin';
+import { SourceGeneratorPlugin, GeneratorPluginOptions,PitchSettings } from '../src/OSME/SourceGenerator/SourceGeneratorPlugin';
 import { TimeSignature, NoteEnum, AccidentalEnum, DefaultInstrumentOptions } from '../src';
 import { ScaleKey, ScaleType } from '../src/OSME/Common';
 //import * as OSME from '../src/OSME';

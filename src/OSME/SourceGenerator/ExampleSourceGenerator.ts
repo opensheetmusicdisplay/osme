@@ -1,11 +1,11 @@
 import { SourceGeneratorPlugin } from "./SourceGeneratorPlugin";
 // tslint:disable-next-line: max-line-length
 import { MusicSheet, SourceMeasure, Staff, Instrument, Voice, Note, VoiceEntry, SourceStaffEntry, InstrumentalGroup } from "../../MusicalScore";
-import { Fraction, Pitch, NoteEnum, AccidentalEnum } from "../../Common";
+import { Fraction, Pitch, NoteEnum } from "../../Common";
 import { ClefInstruction, KeyInstruction } from "../../MusicalScore/VoiceData/Instructions";
-import { SourceGeneratorOptions, TimeSignature, DefaultInstrumentOptions } from "./SourceGeneratorParameters";
+import { SourceGeneratorOptions, TimeSignature, DefaultInstrumentOptions, PitchSettings } from "./SourceGeneratorParameters";
 import { ScaleKey, ScaleType } from "../Common";
-
+import { MusicalEntry } from "../Common/Intention/IntentionEntry";
 
 export class ExampleSourceGenerator extends SourceGeneratorPlugin {
 
@@ -26,6 +26,7 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
             scale_key: ScaleKey.create(ScaleType.MAJOR, NoteEnum.C),
             tempo: 145.0,
             time_signature: TimeSignature.common(),
+            pitch_settings: PitchSettings.EQUIVALENT()
         };
         this.setOptions(options);
 
@@ -33,17 +34,20 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
         this.generateGraphicalMusicSheet(sheet);
     }
 
-
     public generate(): MusicSheet {
+
+        this.options.pitch_settings = PitchSettings.HARMONIC();
+        console.log(this.options);
 
         const musicSheet: MusicSheet = this.createMusicSheet();
         const instrument: Instrument = this.configureInstruments(musicSheet);
 
         const measureCount: number = this.options.measure_count;
+
         const staff: Staff = this.createInstrumentStaff(instrument, musicSheet);
 
         const voice: Voice = this.createInstrumentVoice(instrument);
-        super.initState(voice);
+        super.createState(voice);
 
         const duration: Fraction = new Fraction(4, 4);
 
@@ -71,15 +75,25 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
 
     private generateNotes(currentMeasure: SourceMeasure, staff: Staff, voice: Voice): Note[] {
         const history: Note[] = [];
-        super.updateLocalState(voice, []);
+        super.setLocalState(voice, []);
         for (let index: number = 0; index < 4; index++) {
-            const pitch: Pitch = new Pitch(NoteEnum.C, index, AccidentalEnum.NONE);
+            const musicalEntry: MusicalEntry = this.getNextEntry();
+            const pitch: Pitch = musicalEntry.pitch;
             const note: Note = this.generateEntry(currentMeasure, staff, voice, new Fraction(index, 4), new Fraction(1, 4), pitch);
+            super.adaptLocalState(voice, note);
             history.push(note);
-            super.updateLocalState(voice, history);
         }
         super.updateGlobalState(voice, history);
         return history;
+    }
+    private getNextEntry(): MusicalEntry {
+        const pitchSettings: PitchSettings = this.options.pitch_settings;
+        const index: number = pitchSettings.getWeightedRandomIndex();
+        console.log("index:" + index);
+        const entry: MusicalEntry = new MusicalEntry();
+        entry.pitch = Pitch.fromHalftone(index).withOctave(2);
+        entry.duration = new Fraction(1, 4);
+        return entry;
     }
 
     private generateEntry(currentMeasure: SourceMeasure, staff: Staff, voice: Voice, entryBegin: Fraction, entryDuration: Fraction, pitch: Pitch): Note {

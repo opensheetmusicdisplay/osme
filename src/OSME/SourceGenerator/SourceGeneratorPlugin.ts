@@ -6,7 +6,6 @@ import { StateManager } from ".";
 
 export abstract class SourceGeneratorPlugin implements OSMPlugin {
 
-
     protected historyMap: Dictionary<Voice, StateManager> = new Dictionary<Voice, StateManager>();
     public getPluginType(): OSMPluginType { return OSMPluginType.SOURCE_GENERATOR; }
     public abstract getPluginName(): string;
@@ -36,15 +35,24 @@ export abstract class SourceGeneratorPlugin implements OSMPlugin {
         }
     }
 
-    protected initState(voice: Voice): void {
-        this.historyMap.setValue(voice, new StateManager());
+    protected createState(voice: Voice): StateManager {
+        const stateManager: StateManager = new StateManager();
+        this.historyMap.setValue(voice, stateManager);
+        return stateManager;
+    }
+
+    protected getVoiceState(voice: Voice): StateManager {
+        return this.historyMap.getValue(voice);
     }
 
     protected updateGlobalState(voice: Voice, history: Note[]): void {
         this.historyMap.getValue(voice).updateGlobaleState(history);
     }
-    protected updateLocalState(voice: Voice, history: Note[]): void {
-        this.historyMap.getValue(voice).updateLocalState(history);
+    protected setLocalState(voice: Voice, history: Note[]): void {
+        this.historyMap.getValue(voice).setLocalState(history);
+    }
+    protected adaptLocalState(voice: Voice, note: Note): void {
+        this.historyMap.getValue(voice).adaptLocalState(note);
     }
 }
 

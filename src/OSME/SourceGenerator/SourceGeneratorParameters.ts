@@ -1,6 +1,8 @@
 import { ScaleKey } from "../Common";
 import { Pitch, NoteEnum, AccidentalEnum } from "../../Common";
 import { ClefInstruction, MidiInstrument, RhythmSymbolEnum } from "../../MusicalScore/VoiceData/Instructions";
+import { Distribution } from "../Common/Distribution";
+import { Duration } from "../Common/Duration";
 
 /**
  * Global parameters for all sourceGenerator plugins.
@@ -94,14 +96,21 @@ export class DefaultInstrumentOptions extends InstrumentOptions {
 }
 
 type TwelveNumbers = [number, number, number, number, number, number, number, number, number, number, number, number];
-type PitchSettings = TwelveNumbers;
+
 type IntervalSettings = TwelveNumbers;
 type DurationSettings = Map<Duration, number>;
 
-export enum Duration {
-    WHOLE,
-    HALF,
-    QUARTER,
-    EIGHTH,
-    SIXTEENTH,
+export class PitchSettings extends Distribution {
+
+    constructor(sum: number, values: Array<number>) {
+        super(sum, values);
+    }
+    public static EQUIVALENT(): PitchSettings {
+        return new PitchSettings(1.0, Distribution.EQUIVALENT_VALUES(1.0, 12));
+    }
+    public static HARMONIC(): PitchSettings {
+        return new PitchSettings(1.0, [0.5, 0, 0, 0, 0, 0.3, 0, 0.2, 0, 0, 0, 0]);
+    }
 }
+
+

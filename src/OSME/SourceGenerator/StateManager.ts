@@ -1,5 +1,6 @@
-import { Note } from "../..";
+import { Note, Pitch } from "../..";
 import { Dictionary } from "typescript-collections";
+import { NoteEnum } from "../../Common";
 
 export class StateManager {
 
@@ -19,25 +20,35 @@ export class StateManager {
         }
 
     }
-    public updateLocalState(history: Note[]): void {
+    public setLocalState(history: Note[]): void {
         if (history === undefined || history === []) {
             this.localNoteFrequency = new Dictionary<string, number>();
             this.localNoteEvents = [];
         } else {
+            this.localNoteFrequency = new Dictionary<string, number>();
+            this.localNoteEvents = history;
             for (const note of history) {
-                this.updateEventsList(this.localNoteEvents, note);
                 this.updateFrequencyMap(this.localNoteFrequency, note);
             }
         }
     }
 
+    public adaptLocalState(note: Note): void {
+        this.updateEventsList(this.localNoteEvents, note);
+        this.updateFrequencyMap(this.localNoteFrequency, note);
+    }
+
     public printStatistics(): void {
         console.log("global state:");
-        console.log(this.noteEvents);
-        console.log(this.noteFrequency);
+        let noteFrequencyString: String = "noteFrequency: ";
+        this.noteFrequency.forEach((key, value) => { noteFrequencyString += key + ": " + value + "; "; });
+        // console.log(this.noteEvents);
+        console.log(noteFrequencyString);
         console.log("local state:");
-        console.log(this.localNoteEvents);
-        console.log(this.localNoteFrequency);
+        let localNoteFrequencyString: String = "localNoteFrequency: ";
+        this.localNoteFrequency.forEach((key, value) => { localNoteFrequencyString += key + ": " + value + "; "; });
+        // console.log(this.localNoteEvents);
+        console.log(localNoteFrequencyString);
     }
 
     private updateEventsList(list: Note[], next: Note): void {
@@ -45,8 +56,7 @@ export class StateManager {
     }
 
     private updateFrequencyMap(map: Dictionary<string, number>, note: Note): void {
-
-        const key: string = note.Pitch.ToString();
+        const key: string = this.getNoteKey(note);
         if (map.containsKey(key)) {
             const oldValue: number = map.getValue(key);
             const newValue: number = oldValue + 1;
@@ -54,5 +64,15 @@ export class StateManager {
         } else {
             map.setValue(key, 1);
         }
+    }
+
+    private getNoteKey(note: Note): string {
+        const noteHalftone: number = note.Pitch.getHalfTone();
+        const octave: number = note.Pitch.Octave;
+        const accHalftone: number = Pitch.HalfTonesFromAccidental(note.Pitch.Accidental);
+        const halftone: number = noteHalftone + accHalftone;
+        const noteEnum: NoteEnum = note.Pitch.FundamentalNote;
+        const enumNoteString: string = Pitch.getNoteEnumString(noteEnum);
+        return enumNoteString + octave + "-" + halftone + "-" + note.Pitch.Accidental;
     }
 }

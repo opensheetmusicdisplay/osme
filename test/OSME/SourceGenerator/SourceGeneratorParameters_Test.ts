@@ -20,8 +20,7 @@ describe("SourceGenerator Parameters", () => {
       const plugin: SourceGeneratorPlugin = new ExampleSourceGenerator(options);
 
       const musicSheet: MusicSheet = plugin.generate();
-      musicSheet.Staves;
-      console.log(musicSheet);
+      chai.expect(musicSheet).to.not.be.undefined;
       done();
    });
 });

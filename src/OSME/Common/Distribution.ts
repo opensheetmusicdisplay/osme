@@ -22,6 +22,15 @@ export class Distribution {
         return this.sum;
     }
 
+    public calculateSetSum(): number {
+        let sum: number = 0.0;
+        this.values.forEach(element => {
+            sum += element;
+        });
+        this.sum = sum;
+        return sum;
+    }
+
     public getValues(): Array<number> {
         return this.values;
     }
@@ -36,13 +45,11 @@ export class Distribution {
         // choose a random between 0 and that sum as start distance
         let distance: number = Math.random() * sum;
         let nextIndex: number = 0;
-        console.log("Distance: " + distance + "  sum: " + sum);
         while (distance > 0) {
             // choose a random index for next element
             nextIndex = Math.floor(Math.random() * this.values.length);
             const weight: number = this.values[nextIndex];
             distance = distance - weight;
-            console.log("Distance: " + distance + "  weight: " + weight);
         }
         return nextIndex;
     }

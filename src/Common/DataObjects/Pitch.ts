@@ -89,14 +89,14 @@ export class Pitch {
             value -= limit;
             overflow++; // the octave change
         }
-        return {overflow: overflow, value: value};
+        return { overflow: overflow, value: value };
     }
 
     //public static calcFrequency(pitch: Pitch): number;
 
     //public static calcFrequency(fractionalKey: number): number;
 
-    public static calcFrequency(obj: Pitch|number): number {
+    public static calcFrequency(obj: Pitch | number): number {
         let octaveSteps: number = 0;
         let halfToneSteps: number;
         if (obj instanceof Pitch) {
@@ -200,7 +200,7 @@ export class Pitch {
                 return -3;
             default:
                 throw new Error("Unhandled AccidentalEnum value");
-                // return 0;
+            // return 0;
         }
     }
 
@@ -325,13 +325,13 @@ export class Pitch {
             case AccidentalEnum.DOUBLEFLAT:
                 this.fundamentalNote = this.getPreviousFundamentalNote(this.fundamentalNote);
                 this.accidental = Pitch.AccidentalFromHalfTones(this.halfTone - (<number>(this.fundamentalNote) +
-                (this.octave + Pitch.octXmlDiff) * 12));
+                    (this.octave + Pitch.octXmlDiff) * 12));
                 break;
             case AccidentalEnum.SHARP:
             case AccidentalEnum.DOUBLESHARP:
                 this.fundamentalNote = this.getNextFundamentalNote(this.fundamentalNote);
                 this.accidental = Pitch.AccidentalFromHalfTones(this.halfTone - (<number>(this.fundamentalNote) +
-                (this.octave + Pitch.octXmlDiff) * 12));
+                    (this.octave + Pitch.octXmlDiff) * 12));
                 break;
             default:
                 return;
@@ -344,7 +344,7 @@ export class Pitch {
             accidentalString = "";
         }
         return "Key: " + Pitch.getNoteEnumString(this.fundamentalNote) + accidentalString +
-        ", Note: " + this.fundamentalNote + ", octave: " + this.octave.toString();
+            ", Note: " + this.fundamentalNote + ", octave: " + this.octave.toString();
     }
 
     public OperatorEquals(p2: Pitch): boolean {
@@ -403,5 +403,10 @@ export class Pitch {
         } else {
             return Pitch.pitchEnumValues[Pitch.pitchEnumValues.length - 1];
         }
+    }
+
+    public withOctave(octave: number): Pitch {
+        this.octave = octave;
+        return this;
     }
 }

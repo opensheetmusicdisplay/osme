@@ -4,7 +4,7 @@ import { MusicSheet, SourceMeasure, Staff, Instrument, Voice, Note, VoiceEntry, 
 import { Fraction, Pitch, NoteEnum } from "../../Common";
 import { ClefInstruction, KeyInstruction } from "../../MusicalScore/VoiceData/Instructions";
 import { SourceGeneratorOptions, TimeSignature, DefaultInstrumentOptions, PitchSettings } from "./SourceGeneratorParameters";
-import { ScaleKey, ScaleType } from "../Common";
+import { ScaleKey, ScaleType, ScaleKeyPatterns, Tone } from "../Common";
 import { MusicalEntry } from "../Common/Intention/IntentionEntry";
 
 export class ExampleSourceGenerator extends SourceGeneratorPlugin {
@@ -36,6 +36,8 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
 
     public generate(): MusicSheet {
 
+        const pattern: Array<Tone> = ScaleKey.buildTones(Tone.C, ScaleKeyPatterns.MAJOR);
+        console.log(pattern);
         this.options.pitch_settings = PitchSettings.HARMONIC();
         console.log(this.options);
 

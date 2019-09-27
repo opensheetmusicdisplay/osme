@@ -18,7 +18,7 @@ export enum MusicalIntervalType {
     S9_SIXTH_MAJOR,
     S10_SEVENTH_MINOR,
     S11_SEVENTH_MAJOR,
-    S12_OCATVE,
+    S12_OCTAVE,
 }
 
 export class NextFuture {

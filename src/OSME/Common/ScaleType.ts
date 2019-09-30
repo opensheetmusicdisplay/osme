@@ -1,4 +1,6 @@
 export enum ScaleType {
     MAJOR,
-    MINOR
+    MINOR_NATURAL,
+    MINOR_HARMONIC,
+    MINOR_MELODIC,
 }

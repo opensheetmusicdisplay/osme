@@ -1,10 +1,10 @@
 import { SourceGeneratorPlugin } from "./SourceGeneratorPlugin";
 // tslint:disable-next-line: max-line-length
 import { MusicSheet, SourceMeasure, Staff, Instrument, Voice, Note, VoiceEntry, SourceStaffEntry, InstrumentalGroup } from "../../MusicalScore";
-import { Fraction, Pitch, NoteEnum } from "../../Common";
+import { Fraction, Pitch } from "../../Common";
 import { ClefInstruction, KeyInstruction } from "../../MusicalScore/VoiceData/Instructions";
 import { SourceGeneratorOptions, TimeSignature, DefaultInstrumentOptions, PitchSettings } from "./SourceGeneratorParameters";
-import { ScaleKey, ScaleType, ScaleKeyPatterns, Tone } from "../Common";
+import { ScaleKey, ScaleType, Tone } from "../Common";
 import { MusicalEntry } from "../Common/Intention/IntentionEntry";
 
 export class ExampleSourceGenerator extends SourceGeneratorPlugin {
@@ -23,23 +23,20 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
             complexity: 0.5,
             instruments: [DefaultInstrumentOptions.get("piano")],
             measure_count: 5,
-            scale_key: ScaleKey.create(ScaleType.MAJOR, NoteEnum.C),
+            scale_key: ScaleKey.create(ScaleType.MAJOR, Tone.Gb),
             tempo: 145.0,
             time_signature: TimeSignature.common(),
-            pitch_settings: PitchSettings.EQUIVALENT()
+            pitch_settings: PitchSettings.HARMONIC()
         };
         this.setOptions(options);
-
-        const sheet: MusicSheet = this.generate();
-        this.generateGraphicalMusicSheet(sheet);
     }
 
     public generate(): MusicSheet {
 
-        const pattern: Array<Tone> = ScaleKey.buildTones(Tone.C, ScaleKeyPatterns.MAJOR);
-        console.log(pattern);
+        // const pattern: Array<Tone> = ScaleKey.buildTones(Tone.C, ScaleKeyPatterns.MAJOR);
+        // console.log(pattern);
         this.options.pitch_settings = PitchSettings.HARMONIC();
-        console.log(this.options);
+        // console.log(this.options);
 
         const musicSheet: MusicSheet = this.createMusicSheet();
         const instrument: Instrument = this.configureInstruments(musicSheet);
@@ -52,6 +49,8 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
         super.createState(voice);
 
         const duration: Fraction = new Fraction(4, 4);
+
+        const currentScale: ScaleKey = this.options.scale_key;
 
         for (let index: number = 0; index < measureCount; index++) {
 
@@ -66,7 +65,10 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
             musicSheet.addMeasure(currentMeasure);
 
             // create some notes in some entries
-            this.generateNotes(currentMeasure, staff, voice);
+            const localOptions: MeasureLocalOptions = {
+                scaleKey: currentScale
+            };
+            this.generateNotes(currentMeasure, staff, voice, localOptions);
         }
 
         // finalize and polish the sheet
@@ -75,11 +77,11 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
         return musicSheet;
     }
 
-    private generateNotes(currentMeasure: SourceMeasure, staff: Staff, voice: Voice): Note[] {
+    private generateNotes(currentMeasure: SourceMeasure, staff: Staff, voice: Voice, localOptions: MeasureLocalOptions): Note[] {
         const history: Note[] = [];
         super.setLocalState(voice, []);
         for (let index: number = 0; index < 4; index++) {
-            const musicalEntry: MusicalEntry = this.getNextEntry();
+            const musicalEntry: MusicalEntry = this.getNextEntry(localOptions.scaleKey);
             const pitch: Pitch = musicalEntry.pitch;
             const note: Note = this.generateEntry(currentMeasure, staff, voice, new Fraction(index, 4), new Fraction(1, 4), pitch);
             super.adaptLocalState(voice, note);
@@ -88,12 +90,11 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
         super.updateGlobalState(voice, history);
         return history;
     }
-    private getNextEntry(): MusicalEntry {
+    private getNextEntry(scaleKey: ScaleKey): MusicalEntry {
         const pitchSettings: PitchSettings = this.options.pitch_settings;
         const index: number = pitchSettings.getWeightedRandomIndex();
-        console.log("index:" + index);
         const entry: MusicalEntry = new MusicalEntry();
-        entry.pitch = Pitch.fromHalftone(index).withOctave(2);
+        entry.pitch = Pitch.fromHalftone(scaleKey.tone.getHalftone() + index).withOctave(2);
         entry.duration = new Fraction(1, 4);
         return entry;
     }
@@ -154,4 +155,8 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
     private createMusicSheet(): MusicSheet {
         return new MusicSheet();
     }
+}
+
+export interface MeasureLocalOptions {
+    scaleKey: ScaleKey;
 }

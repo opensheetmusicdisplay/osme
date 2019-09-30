@@ -1,8 +1,8 @@
 import { OpenSheetMusicDisplay } from '../src/OpenSheetMusicDisplay/OpenSheetMusicDisplay';
 import { ExampleSourceGenerator } from '../src/OSME/SourceGenerator/ExampleSourceGenerator';
-import { SourceGeneratorPlugin, GeneratorPluginOptions,PitchSettings } from '../src/OSME/SourceGenerator/SourceGeneratorPlugin';
-import { TimeSignature, NoteEnum, AccidentalEnum, DefaultInstrumentOptions } from '../src';
-import { ScaleKey, ScaleType } from '../src/OSME/Common';
+import { SourceGeneratorPlugin, GeneratorPluginOptions } from '../src/OSME/SourceGenerator/SourceGeneratorPlugin';
+import { TimeSignature, PitchSettings, NoteEnum, AccidentalEnum, DefaultInstrumentOptions } from '../src';
+import { ScaleKey, ScaleType, Tone } from '../src/OSME/Common';
 //import * as OSME from '../src/OSME';
 
 /*jslint browser:true */
@@ -324,15 +324,17 @@ import { ScaleKey, ScaleType } from '../src/OSME/Common';
 
         var instrumentOptions = DefaultInstrumentOptions.get("trumpet");
         var timeSignature = TimeSignature.common();
-        var scaleKey = ScaleKey.create(ScaleType.MAJOR, NoteEnum.C, AccidentalEnum.NONE);
+        var pitchSettings = PitchSettings.HARMONIC();
 
+        var scaleKey = ScaleKey.fromStringCode(key)
         var generatorPluginOptions = {
             complexity: complexity,
             measure_count: measure,
             tempo: tempo,
             time_signature: timeSignature,
             scale_key: scaleKey,
-            instruments: [instrumentOptions]
+            instruments: [instrumentOptions],
+            pitch_settings: pitchSettings
         }
 
         console.log("generatorPluginOptions: ", generatorPluginOptions);
@@ -340,6 +342,7 @@ import { ScaleKey, ScaleType } from '../src/OSME/Common';
         // var generatorPluginOptions = new GeneratorPluginOptions();
         // generatorPluginOptions.number_of_measures = measure;
         var generatorPlugin = new ExampleSourceGenerator(generatorPluginOptions);
+        //generatorPlugin.test();
         var sheet = generatorPlugin.generate();
         var graphicalSheet = generatorPlugin.generateGraphicalMusicSheet(sheet);
 

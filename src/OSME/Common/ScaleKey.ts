@@ -1,4 +1,4 @@
-import { Pitch, NoteEnum, AccidentalEnum } from "../../Common";
+import { NoteEnum } from "../../Common";
 import { ScaleType } from "./ScaleType";
 
 export class Tone {
@@ -59,6 +59,16 @@ export class Tone {
         return this.allTones;
     }
 
+    public static getToneFromHalftone(halftone: number, accidental: number): Tone {
+        const candidates: Array<Tone> = this.getAllTones().filter(it => it.halftone === halftone);
+        return candidates.filter(it => it.accidental === accidental)[0];
+    }
+
+    public static getToneFromSymbol(symbol: number, accidental: number): Tone {
+        const candidates: Array<Tone> = this.getAllTones().filter(it => it.symbol === symbol);
+        return candidates.filter(it => it.accidental === accidental)[0];
+    }
+
     constructor(symbol: number, halftone: number, accidental: number, noteEnum: NoteEnum) {
         this.symbol = symbol;
         this.halftone = halftone;
@@ -79,23 +89,60 @@ export class ScaleKeyPatterns {
 }
 
 export class ScaleKey {
-    public note: Pitch;
-    public type: any;
+    public tone: Tone;
+    public type: ScaleType;
     private tones: Array<Tone>;
 
-    constructor(note: Pitch, type: ScaleType) {
-        this.note = note;
+    constructor(tone: Tone, type: ScaleType) {
+        this.tone = tone;
         this.type = type;
-        this.buildPitches();
+        this.init();
     }
 
-    public static create(type: ScaleType, note: NoteEnum, accidental: AccidentalEnum = AccidentalEnum.NONE): ScaleKey {
-        const pitch: Pitch = new Pitch(note, 0, accidental);
-        return new ScaleKey(pitch, type);
+    public static create(type: ScaleType, tone: Tone): ScaleKey {
+        return new ScaleKey(tone, type);
     }
 
-    private buildPitches(): void {
-        this.tones = Array(7);
+    public static fromStringCode(code: string): ScaleKey {
+        const parts: Array<string> = code.split("_");
+        const typePart: string = parts[0].toLowerCase();
+        const tonePart: string = parts[1];
+
+        let type: ScaleType = undefined;
+        switch (typePart) {
+            case "major": type = ScaleType.MAJOR; break;
+            default: type = ScaleType.MAJOR;
+        }
+
+        let symbol: number = 0;
+        let accidental: number = 0;
+
+        if (tonePart.indexOf("-") > -1) {
+            const toneParts: Array<string> = tonePart.split("-");
+            symbol = parseInt(toneParts[0], 10);
+            if (toneParts[1] === "b") {
+                accidental = -1;
+            } else if (toneParts[1] === "#") {
+                accidental = +1;
+            }
+        }
+        const tone: Tone = Tone.getToneFromSymbol(symbol, accidental);
+        return ScaleKey.create(type, tone);
+    }
+
+    private init(): void {
+
+        let pattern: Array<number> = undefined;
+
+        switch (this.type) {
+            case ScaleType.MAJOR: pattern = ScaleKeyPatterns.MAJOR; break;
+            case ScaleType.MINOR_NATURAL: pattern = ScaleKeyPatterns.MINOR_NATURAL; break;
+            case ScaleType.MINOR_HARMONIC: pattern = ScaleKeyPatterns.MINOR_HARMONIC; break;
+            case ScaleType.MINOR_MELODIC: pattern = ScaleKeyPatterns.MINOR_MELODIC; break;
+            default: throw Error("Could not choose a ScaleKeyPatterns pattern for ScaleType " + this.type);
+        }
+
+        this.tones = ScaleKey.buildTones(this.tone, pattern);
     }
 
     public getTones(): Array<Tone> { return this.tones; }

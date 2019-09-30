@@ -101,7 +101,7 @@ export class ScaleKey {
     public getTones(): Array<Tone> { return this.tones; }
 
     public static buildTones(root: Tone, pattern: Array<number>): Array<Tone> {
-        const tones: Array<Tone> = new Array<Tone>(pattern.length);
+        const tones: Array<Tone> = new Array<Tone>(pattern.length - 1);
 
         const startSymbol: number = root.getSymbol();
         const startStep: number = root.getHalftone();
@@ -127,7 +127,6 @@ export class ScaleKey {
                 }
             } else {
                 console.log("No candidates found!");
-
             }
 
             currentSymbol = (currentSymbol + 1) % 7;

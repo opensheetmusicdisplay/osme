@@ -1,7 +1,9 @@
-import { NoteEnum } from "../../Common";
+import { NoteEnum, Pitch, AccidentalEnum } from "../../Common";
 import { ScaleType } from "./ScaleType";
+import { KeyEnum } from "../../MusicalScore/VoiceData/Instructions";
 
 export class Tone {
+
     private symbol: number;
     private halftone: number;
     private accidental: number;
@@ -80,6 +82,17 @@ export class Tone {
     public getHalftone(): number { return this.halftone; }
     public getAccidental(): number { return this.accidental; }
     public getNoteEnum(): number { return this.noteEnum; }
+
+    public toPitch(octave: number): Pitch {
+        const accEnum: AccidentalEnum = Pitch.AccidentalFromHalfTones(this.accidental);
+        const pitch: Pitch = new Pitch(this.noteEnum, octave, accEnum);
+        return pitch;
+    }
+
+    public shift(index: number): Tone {
+        const newHalftone: number = (this.halftone + index) % 12;
+        return Tone.getToneFromHalftone(newHalftone, this.accidental);
+    }
 }
 export class ScaleKeyPatterns {
     public static MAJOR: Array<number> = [0, 2, 2, 1, 2, 2, 2, 1];
@@ -89,6 +102,7 @@ export class ScaleKeyPatterns {
 }
 
 export class ScaleKey {
+
     public tone: Tone;
     public type: ScaleType;
     private tones: Array<Tone>;
@@ -146,6 +160,24 @@ export class ScaleKey {
     }
 
     public getTones(): Array<Tone> { return this.tones; }
+
+    // count number of sharps or flats to obtain corrent circle of fifth position
+    public  getKeyNumber(): number {
+        let sum: number = 0;
+        this.getTones().forEach(item => {
+            sum += item.getAccidental();
+        });
+        return sum;
+    }
+    public getKeyMode(): number {
+        switch (this.type) {
+            case ScaleType.MAJOR: return KeyEnum.major;
+            case ScaleType.MINOR_HARMONIC: return KeyEnum.minor;
+            case ScaleType.MINOR_MELODIC: return KeyEnum.minor;
+            case ScaleType.MINOR_NATURAL: return KeyEnum.minor;
+            default: return KeyEnum.none;
+        }
+    }
 
     public static buildTones(root: Tone, pattern: Array<number>): Array<Tone> {
         const tones: Array<Tone> = new Array<Tone>(pattern.length - 1);

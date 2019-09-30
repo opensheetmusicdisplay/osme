@@ -58,10 +58,12 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
 
             let currentMeasure: SourceMeasure;
             if (index === 0) {
-                currentMeasure = this.createFirstSourceMeasure(new Fraction(0, 4), duration);
+                currentMeasure = this.createFirstSourceMeasure(new Fraction(0, 4), duration, this.options.scale_key);
             } else {
                 currentMeasure = this.createSourceMeasure(new Fraction(4 * index, 4), duration);
             }
+            // set index explicitly
+            currentMeasure.MeasureNumber = index + 1;
             musicSheet.addMeasure(currentMeasure);
 
             // create some notes in some entries
@@ -94,7 +96,19 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
         const pitchSettings: PitchSettings = this.options.pitch_settings;
         const index: number = pitchSettings.getWeightedRandomIndex();
         const entry: MusicalEntry = new MusicalEntry();
-        entry.pitch = Pitch.fromHalftone(scaleKey.tone.getHalftone() + index).withOctave(2);
+        const tone: Tone = scaleKey.tone.shift(index);
+        if (tone === undefined) {
+            try {
+                scaleKey.tone.shift(index);
+            } catch (e) {
+                console.error(e);
+            }
+            return entry;
+        }
+        entry.pitch = tone.toPitch(2);
+        if (entry.pitch.Accidental !== scaleKey.tone.getAccidental()) {
+            // entry.pitch.DoEnharmonicChange();
+        }
         entry.duration = new Fraction(1, 4);
         return entry;
     }
@@ -107,11 +121,14 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
         return note;
     }
 
-    private createFirstSourceMeasure(beginFraction: Fraction, duration: Fraction): SourceMeasure {
+    private createFirstSourceMeasure(beginFraction: Fraction, duration: Fraction, scaleKey: ScaleKey): SourceMeasure {
         const sourceMeasure: SourceMeasure = new SourceMeasure(1);
         const firstStaffEntry: SourceStaffEntry = new SourceStaffEntry(undefined, undefined);
         const clefInstruction: ClefInstruction = new ClefInstruction();
-        const keyInstruction: KeyInstruction = new KeyInstruction();
+
+        const keyNumber: number = scaleKey.getKeyNumber();
+        const mode: number = scaleKey.getKeyMode();
+        const keyInstruction: KeyInstruction = new KeyInstruction(undefined, keyNumber, mode);
         clefInstruction.Parent = firstStaffEntry;
         firstStaffEntry.Instructions.push(clefInstruction);
         firstStaffEntry.Instructions.push(keyInstruction);

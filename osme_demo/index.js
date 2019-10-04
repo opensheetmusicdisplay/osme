@@ -324,7 +324,7 @@ import { ScaleKey, ScaleType, Tone } from '../src/OSME/Common';
 
         var instrumentOptions = DefaultInstrumentOptions.get("trumpet");
         var timeSignature = TimeSignature.common();
-        var pitchSettings = PitchSettings.HARMONIC();
+        var pitchSettings = PitchSettings.HARMONIC_SYMBOLS();
 
         var scaleKey = ScaleKey.fromStringCode(key)
         var generatorPluginOptions = {

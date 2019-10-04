@@ -12,14 +12,13 @@ export class StateManager {
 
 
     public updateGlobaleState(history: Note[]): void {
-
         for (const note of history) {
             this.noteEvents.push(note);
             this.updateEventsList(this.noteEvents, note);
             this.updateFrequencyMap(this.noteFrequency, note);
         }
-
     }
+
     public setLocalState(history: Note[]): void {
         if (history === undefined || history === []) {
             this.localNoteFrequency = new Dictionary<string, number>();

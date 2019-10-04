@@ -61,14 +61,14 @@ export class Tone {
         return this.allTones;
     }
 
-    public static getToneFromHalftone(halftone: number, accidental: number): Tone {
-        const candidates: Array<Tone> = this.getAllTones().filter(it => it.halftone === halftone);
-        return candidates.filter(it => it.accidental === accidental)[0];
-    }
-
     public static getToneFromSymbol(symbol: number, accidental: number): Tone {
         const candidates: Array<Tone> = this.getAllTones().filter(it => it.symbol === symbol);
         return candidates.filter(it => it.accidental === accidental)[0];
+    }
+
+    public static getToneFromSymbolHalftone(symbol: number, halftone: number): Tone {
+        const candidates: Array<Tone> = this.getAllTones().filter(it => it.symbol === symbol);
+        return candidates.filter(it => it.halftone === halftone)[0];
     }
 
     constructor(symbol: number, halftone: number, accidental: number, noteEnum: NoteEnum) {
@@ -87,11 +87,6 @@ export class Tone {
         const accEnum: AccidentalEnum = Pitch.AccidentalFromHalfTones(this.accidental);
         const pitch: Pitch = new Pitch(this.noteEnum, octave, accEnum);
         return pitch;
-    }
-
-    public shift(index: number): Tone {
-        const newHalftone: number = (this.halftone + index) % 12;
-        return Tone.getToneFromHalftone(newHalftone, this.accidental);
     }
 }
 export class ScaleKeyPatterns {
@@ -162,7 +157,7 @@ export class ScaleKey {
     public getTones(): Array<Tone> { return this.tones; }
 
     // count number of sharps or flats to obtain corrent circle of fifth position
-    public  getKeyNumber(): number {
+    public getKeyNumber(): number {
         let sum: number = 0;
         this.getTones().forEach(item => {
             sum += item.getAccidental();

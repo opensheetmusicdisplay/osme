@@ -106,10 +106,10 @@ export class PitchSettings extends Distribution {
         super(sum, values);
     }
     public static EQUIVALENT(): PitchSettings {
-        return new PitchSettings(1.0, Distribution.EQUIVALENT_VALUES(1.0, 12));
+        return new PitchSettings(1.0, Distribution.EQUIVALENT_VALUES(1.0, 7));
     }
-    public static HARMONIC(): PitchSettings {
-        return new PitchSettings(1.0, [0.5, 0, 0, 0, 0, 0.3, 0, 0.2, 0, 0, 0, 0]);
+    public static HARMONIC_SYMBOLS(): PitchSettings {
+        return new PitchSettings(1.0, [0.5, 0, 0, 0.3, 0.2, 0, 0]);
     }
 }
 

@@ -1,8 +1,8 @@
 import { Pitch, Fraction } from "../../../Common";
 
 export class MusicalEntry {
-    public pitch: Pitch;
-    public duration: Fraction;
+    public Pitch: Pitch;
+    public Duration: Fraction;
 }
 
 export enum MusicalIntervalType {

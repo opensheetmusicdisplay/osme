@@ -26,7 +26,7 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
             scale_key: ScaleKey.create(ScaleType.MAJOR, Tone.Gb),
             tempo: 145.0,
             time_signature: TimeSignature.common(),
-            pitch_settings: PitchSettings.HARMONIC()
+            pitch_settings: PitchSettings.HARMONIC_SYMBOLS()
         };
         this.setOptions(options);
     }
@@ -35,7 +35,7 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
 
         // const pattern: Array<Tone> = ScaleKey.buildTones(Tone.C, ScaleKeyPatterns.MAJOR);
         // console.log(pattern);
-        this.options.pitch_settings = PitchSettings.HARMONIC();
+        this.options.pitch_settings = PitchSettings.HARMONIC_SYMBOLS();
         // console.log(this.options);
 
         const musicSheet: MusicSheet = this.createMusicSheet();
@@ -44,7 +44,6 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
         const measureCount: number = this.options.measure_count;
 
         const staff: Staff = this.createInstrumentStaff(instrument, musicSheet);
-
         const voice: Voice = this.createInstrumentVoice(instrument);
         super.createState(voice);
 
@@ -84,7 +83,7 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
         super.setLocalState(voice, []);
         for (let index: number = 0; index < 4; index++) {
             const musicalEntry: MusicalEntry = this.getNextEntry(localOptions.scaleKey);
-            const pitch: Pitch = musicalEntry.pitch;
+            const pitch: Pitch = musicalEntry.Pitch;
             const note: Note = this.generateEntry(currentMeasure, staff, voice, new Fraction(index, 4), new Fraction(1, 4), pitch);
             super.adaptLocalState(voice, note);
             history.push(note);
@@ -96,21 +95,22 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
         const pitchSettings: PitchSettings = this.options.pitch_settings;
         const index: number = pitchSettings.getWeightedRandomIndex();
         const entry: MusicalEntry = new MusicalEntry();
-        const tone: Tone = scaleKey.tone.shift(index);
-        if (tone === undefined) {
-            try {
-                scaleKey.tone.shift(index);
-            } catch (e) {
-                console.error(e);
-            }
-            return entry;
+        // das muss anders gehen!
+        const tone: Tone = this.chooseScaleTone(scaleKey, index);
+        entry.Pitch = tone.toPitch(2);
+        if (entry.Pitch.Accidental !== scaleKey.tone.getAccidental()) {
+            //entry.Pitch.DoEnharmonicChange();
         }
-        entry.pitch = tone.toPitch(2);
-        if (entry.pitch.Accidental !== scaleKey.tone.getAccidental()) {
-            // entry.pitch.DoEnharmonicChange();
+        entry.Duration = new Fraction(1, 4);
+
+        if (entry.Pitch === undefined) {
+            throw new Error("entry.pitch is undefined");
         }
-        entry.duration = new Fraction(1, 4);
         return entry;
+    }
+    private chooseScaleTone(scaleKey: ScaleKey, index: number): Tone {
+        const newHalftone: number = (index) % scaleKey.getTones().length;
+        return scaleKey.getTones()[newHalftone];
     }
 
     private generateEntry(currentMeasure: SourceMeasure, staff: Staff, voice: Voice, entryBegin: Fraction, entryDuration: Fraction, pitch: Pitch): Note {

@@ -3,8 +3,8 @@ import { SourceGeneratorPlugin } from "./SourceGeneratorPlugin";
 import { MusicSheet, SourceMeasure, Staff, Instrument, Voice, Note, VoiceEntry, SourceStaffEntry, InstrumentalGroup } from "../../MusicalScore";
 import { Fraction, Pitch } from "../../Common";
 import { ClefInstruction, KeyInstruction } from "../../MusicalScore/VoiceData/Instructions";
-import { SourceGeneratorOptions, TimeSignature, DefaultInstrumentOptions, PitchSettings } from "./SourceGeneratorParameters";
-import { ScaleKey, ScaleType, Tone } from "../Common";
+import { SourceGeneratorOptions, PitchSettings, DurationSettings } from "./SourceGeneratorParameters";
+import { ScaleKey, Tone } from "../Common";
 import { MusicalEntry } from "../Common/Intention/IntentionEntry";
 
 export class ExampleSourceGenerator extends SourceGeneratorPlugin {
@@ -14,28 +14,36 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
     }
     public static NAME: string = "example_source_generator";
 
+    private durationPossibilites: Fraction[];
+    private measureDuration: Fraction;
+
+
     public getPluginName(): string {
         return ExampleSourceGenerator.NAME;
     }
 
-    public test(): void {
-        const options: SourceGeneratorOptions = {
-            complexity: 0.5,
-            instruments: [DefaultInstrumentOptions.get("piano")],
-            measure_count: 5,
-            scale_key: ScaleKey.create(ScaleType.MAJOR, Tone.Gb),
-            tempo: 145.0,
-            time_signature: TimeSignature.common(),
-            pitch_settings: PitchSettings.HARMONIC_SYMBOLS()
-        };
-        this.setOptions(options);
-    }
 
     public generate(): MusicSheet {
 
-        // const pattern: Array<Tone> = ScaleKey.buildTones(Tone.C, ScaleKeyPatterns.MAJOR);
-        // console.log(pattern);
-        this.options.pitch_settings = PitchSettings.HARMONIC_SYMBOLS();
+        // HINT: USE THIS TOGGLES TO MANIPULATE THE ALGORITHM
+
+        // this.options.pitch_settings = PitchSettings.HARMONIC_SYMBOLS();
+        const bla: PitchSettings = PitchSettings.HARMONIC_SYMBOLS();
+        console.log(bla);
+
+        // this.options.duration_settings = DurationSettings.SIMPLE();
+        const bla2: DurationSettings = DurationSettings.SIMPLE();
+        console.log(bla2);
+
+        this.durationPossibilites = [
+            new Fraction(1, 1),
+            new Fraction(1, 2),
+            new Fraction(1, 4),
+            new Fraction(1, 8),
+            new Fraction(1, 16),
+        ];
+
+        this.measureDuration = new Fraction(4, 4);
         // console.log(this.options);
 
         const musicSheet: MusicSheet = this.createMusicSheet();
@@ -72,21 +80,52 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
             this.generateNotes(currentMeasure, staff, voice, localOptions);
         }
 
+        console.log("fillStaffList");
         // finalize and polish the sheet
         musicSheet.fillStaffList();
         super.debugStatistics();
+        console.log("debugStatistics done");
+
         return musicSheet;
     }
 
     private generateNotes(currentMeasure: SourceMeasure, staff: Staff, voice: Voice, localOptions: MeasureLocalOptions): Note[] {
         const history: Note[] = [];
         super.setLocalState(voice, []);
-        for (let index: number = 0; index < 4; index++) {
+        const durationSum: Fraction = new Fraction(0, 4);
+        console.log("generateNotes");
+        while (durationSum.RealValue < 1.00) {
             const musicalEntry: MusicalEntry = this.getNextEntry(localOptions.scaleKey);
             const pitch: Pitch = musicalEntry.Pitch;
-            const note: Note = this.generateEntry(currentMeasure, staff, voice, new Fraction(index, 4), new Fraction(1, 4), pitch);
-            super.adaptLocalState(voice, note);
-            history.push(note);
+            const durationFraction: Fraction = musicalEntry.Duration;
+            console.log(musicalEntry);
+
+            const startPosition: Fraction = durationSum.clone();
+
+
+            let note: Note = undefined;
+            if (durationSum.RealValue + durationFraction.RealValue <= this.measureDuration.RealValue) {
+                // const durationFraction: Fraction = this.createFraction(duration);
+                note = this.generateEntry(currentMeasure, staff, voice, startPosition, durationFraction, pitch);
+                console.log("Add normal note:");
+                console.log(durationFraction);
+                durationSum.Add(durationFraction);
+            } else {
+                const diffDuration: Fraction = Fraction.minus(this.measureDuration, durationSum);
+                if (diffDuration.Numerator > 1) {
+                    console.log("Skip diffDuration note:");
+                    console.log(diffDuration);
+                } else {
+                    console.log("Add diffDuration note:");
+                    console.log(diffDuration);
+                    note = this.generateEntry(currentMeasure, staff, voice, startPosition, diffDuration, pitch);
+                    durationSum.Add(diffDuration);
+                }
+            }
+            if (note !== undefined) {
+                super.adaptLocalState(voice, note);
+                history.push(note);
+            }
         }
         super.updateGlobalState(voice, history);
         return history;
@@ -98,16 +137,23 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
         // das muss anders gehen!
         const tone: Tone = this.chooseScaleTone(scaleKey, index);
         entry.Pitch = tone.toPitch(2);
-        if (entry.Pitch.Accidental !== scaleKey.tone.getAccidental()) {
-            //entry.Pitch.DoEnharmonicChange();
-        }
-        entry.Duration = new Fraction(1, 4);
-
+        entry.Duration = this.chooseDuration();
+        console.log(entry.Duration);
         if (entry.Pitch === undefined) {
             throw new Error("entry.pitch is undefined");
         }
         return entry;
     }
+
+    private chooseDuration(): Fraction {
+        const index: number = this.options.duration_settings.getWeightedRandomIndex();
+        if (index < this.durationPossibilites.length) {
+            return this.durationPossibilites[index].clone();
+        } else {
+            return this.measureDuration.clone();
+        }
+    }
+
     private chooseScaleTone(scaleKey: ScaleKey, index: number): Tone {
         const newHalftone: number = (index) % scaleKey.getTones().length;
         return scaleKey.getTones()[newHalftone];

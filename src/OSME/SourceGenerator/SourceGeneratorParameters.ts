@@ -1,6 +1,6 @@
 import { ScaleKey } from "../Common";
 import { Pitch, NoteEnum, AccidentalEnum } from "../../Common";
-import { ClefInstruction, MidiInstrument, RhythmSymbolEnum } from "../../MusicalScore/VoiceData/Instructions";
+import { ClefInstruction, MidiInstrument, RhythmInstruction } from "../../MusicalScore/VoiceData/Instructions";
 import { Distribution } from "../Common/Distribution";
 
 /**
@@ -18,7 +18,7 @@ export interface SourceGeneratorOptions {
     // tempo in bpm (float)
     tempo: number;
     // TimeSignature, which can be defined numerial "4/4" or via "C"
-    time_signature: TimeSignature;
+    time_signature: RhythmInstruction;
     // ScaleKey of the MusicSheet, must contain a Pitch where the Oktave is ignored
     scale_key: ScaleKey;
     // At least one instrument is needed.
@@ -32,23 +32,6 @@ export interface SourceGeneratorOptions {
 
     /** hashmap with further options, relies on specific plugins on their own */
     other_settings?: Map<string, any>;
-}
-export class TimeSignature {
-    public numerator: number;
-    public denominator: number;
-    public type: RhythmSymbolEnum;
-
-    public static create(num: number, denom: number): TimeSignature {
-        return { numerator: num, denominator: denom, type: RhythmSymbolEnum.NONE };
-    }
-
-    public static common(): TimeSignature {
-        return { numerator: 4, denominator: 4, type: RhythmSymbolEnum.COMMON };
-    }
-
-    public static cut(): TimeSignature {
-        return { numerator: 4, denominator: 4, type: RhythmSymbolEnum.CUT };
-    }
 }
 
 export class InstrumentOptions {

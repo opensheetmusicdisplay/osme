@@ -43,16 +43,16 @@
             <h3 class="ui header">General</h3>
             <h4 class="ui header">Number of measures</h4>
             <select class="ui selection dropdown" id="selectMeasureNumber" style="width:60px">
-                <option value="1">1</option>
                 <option value="2">2</option>
-                <option value="3">3</option>
                 <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
                 <option value="8">8</option>
+                <option value="16">16</option>
                 <option value="32">32</option>
+                <option value="48">48</option>
+                <option value="64">64</option>
                 <option value="100">100</option>
+                <option value="200">200</option>
+                <option value="300">300</option>
             </select>
 
             <h4 class="ui header">Time signature</h4>
@@ -78,6 +78,10 @@
                 <option value="major_1-b">Db Major</option>                
                 <option value="major_4-b">Gb Major</option>                
             </select>
+            
+
+        </div>
+        <div class="column">
             <h4 class="ui header">Complexity (1-10)</h4>
             <select class="ui selection dropdown" id="selectComplexity">
                 <option value="1">1</option>
@@ -91,11 +95,8 @@
                 <option value="9">9</option>                
                 <option value="10">10</option>                
             </select>
-
-        </div>
-        <div class="column">
-            <h3 class="ui header">Select a sample:</h3>
-            <select class="ui selection dropdown" id="selectSample" style="width:320px; height:38%"></select>
+            <!-- <h3 class="ui header">Select a sample:</h3>
+            <select class="ui selection dropdown" id="selectSample" style="width:320px; height:38%"></select> -->
         </div>
         <div class="column">
             <!-- <h3 class="ui header">Render backend:</h3>
@@ -104,7 +105,7 @@
                 <option value="canvas">Canvas</option>>
             </select> -->
                           
-            <h3 class="ui header">Show bounding box for:</h3>
+            <!-- <h3 class="ui header">Show bounding box for:</h3>
             <select class="ui selection dropdown" id="selectBounding">
                 <option value="none">None</option>
                 <option value="all">All</option>
@@ -133,7 +134,7 @@
                         <label>Bottomline</label>
                     </div>
                 </div>
-            </div>
+            </div> -->
        
             <h3 class="ui header">Debug controls:</h3>
             <div>

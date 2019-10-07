@@ -43,7 +43,7 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
             new Fraction(1, 16),
         ];
 
-        this.measureDuration = new Fraction(4, 4);
+        this.measureDuration = new Fraction(this.options.time_signature.Rhythm.Numerator, this.options.time_signature.Rhythm.Denominator);
         // console.log(this.options);
 
         const musicSheet: MusicSheet = this.createMusicSheet();
@@ -55,19 +55,18 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
         const voice: Voice = this.createInstrumentVoice(instrument);
         super.createState(voice);
 
-        const duration: Fraction = new Fraction(4, 4);
-
         const currentScale: ScaleKey = this.options.scale_key;
 
         for (let index: number = 0; index < measureCount; index++) {
 
             console.log("Creating measure %s", index);
 
-            let currentMeasure: SourceMeasure;
+            const currentMeasure: SourceMeasure = this.createSourceMeasure( new Fraction(   this.measureDuration.Numerator * index,
+                                                                                            this.measureDuration.Denominator),
+                                                                            Fraction.createFromFraction(this.measureDuration));
             if (index === 0) {
-                currentMeasure = this.createFirstSourceMeasure(new Fraction(0, 4), duration, this.options.scale_key);
-            } else {
-                currentMeasure = this.createSourceMeasure(new Fraction(4 * index, 4), duration);
+                // add clef and key signature at first measure:
+                this.setClefAndKeyInstruction(currentMeasure, this.options.scale_key);
             }
             // set index explicitly
             currentMeasure.MeasureNumber = index + 1;
@@ -94,7 +93,7 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
         super.setLocalState(voice, []);
         const durationSum: Fraction = new Fraction(0, 4);
         console.log("generateNotes");
-        while (durationSum.RealValue < 1.00) {
+        while (durationSum.RealValue < currentMeasure.Duration.RealValue) {
             const musicalEntry: MusicalEntry = this.getNextEntry(localOptions.scaleKey);
             const pitch: Pitch = musicalEntry.Pitch;
             const durationFraction: Fraction = musicalEntry.Duration;
@@ -104,14 +103,14 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
 
 
             let note: Note = undefined;
-            if (durationSum.RealValue + durationFraction.RealValue <= this.measureDuration.RealValue) {
+            if (durationSum.RealValue + durationFraction.RealValue <= currentMeasure.Duration.RealValue) {
                 // const durationFraction: Fraction = this.createFraction(duration);
                 note = this.generateEntry(currentMeasure, staff, voice, startPosition, durationFraction, pitch);
                 console.log("Add normal note:");
                 console.log(durationFraction);
                 durationSum.Add(durationFraction);
             } else {
-                const diffDuration: Fraction = Fraction.minus(this.measureDuration, durationSum);
+                const diffDuration: Fraction = Fraction.minus(currentMeasure.Duration, durationSum);
                 if (diffDuration.Numerator > 1) {
                     console.log("Skip diffDuration note:");
                     console.log(diffDuration);
@@ -167,21 +166,18 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
         return note;
     }
 
-    private createFirstSourceMeasure(beginFraction: Fraction, duration: Fraction, scaleKey: ScaleKey): SourceMeasure {
-        const sourceMeasure: SourceMeasure = new SourceMeasure(1);
+    private setClefAndKeyInstruction(   sourceMeasure: SourceMeasure,
+                                        scaleKey: ScaleKey,
+                                        clefInstruction: ClefInstruction = new ClefInstruction()): SourceMeasure {
         const firstStaffEntry: SourceStaffEntry = new SourceStaffEntry(undefined, undefined);
-        const clefInstruction: ClefInstruction = new ClefInstruction();
-
         const keyNumber: number = scaleKey.getKeyNumber();
         const mode: number = scaleKey.getKeyMode();
         const keyInstruction: KeyInstruction = new KeyInstruction(undefined, keyNumber, mode);
         clefInstruction.Parent = firstStaffEntry;
         firstStaffEntry.Instructions.push(clefInstruction);
         firstStaffEntry.Instructions.push(keyInstruction);
+        firstStaffEntry.Instructions.push(this.options.time_signature);
         sourceMeasure.FirstInstructionsStaffEntries[0] = firstStaffEntry;
-        sourceMeasure.AbsoluteTimestamp = beginFraction;
-        sourceMeasure.Duration = duration;
-        sourceMeasure.MeasureNumber = 1;
         return sourceMeasure;
     }
 
@@ -208,7 +204,7 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
 
     private configureInstruments(musicSheet: MusicSheet): Instrument {
         const instrumentGroup: InstrumentalGroup = new InstrumentalGroup("group", musicSheet, undefined);
-        const instrument: Instrument = new Instrument(1, "piano", musicSheet, instrumentGroup);
+        const instrument: Instrument = new Instrument(1, "Part 1", musicSheet, instrumentGroup);
         musicSheet.InstrumentalGroups.push(instrumentGroup);
         musicSheet.Instruments.push(instrument);
         instrument.Visible = true;

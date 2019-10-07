@@ -1,8 +1,10 @@
 import { OpenSheetMusicDisplay } from '../src/OpenSheetMusicDisplay/OpenSheetMusicDisplay';
 import { ExampleSourceGenerator } from '../src/OSME/SourceGenerator/ExampleSourceGenerator';
 import { SourceGeneratorPlugin, GeneratorPluginOptions } from '../src/OSME/SourceGenerator/SourceGeneratorPlugin';
-import { TimeSignature, PitchSettings, NoteEnum, AccidentalEnum, DefaultInstrumentOptions, DurationSettings } from '../src';
-import { ScaleKey, ScaleType, Tone } from '../src/OSME/Common';
+import { PitchSettings, NoteEnum, AccidentalEnum, DefaultInstrumentOptions, DurationSettings, Label } from '../src';
+import { ScaleKey } from '../src/OSME/Common';
+import { RhythmInstruction, RhythmSymbolEnum } from '../src/MusicalScore/VoiceData/Instructions';
+import { Fraction } from '../src/Common/DataObjects';
 //import * as OSME from '../src/OSME';
 
 /*jslint browser:true */
@@ -89,16 +91,20 @@ import { ScaleKey, ScaleType, Tone } from '../src/OSME/Common';
 
         custom = document.createElement("option");
         editTitle = document.getElementById("editTitle");
+        editTitle.value = "Sight reading practice"
         editComposer = document.getElementById("editComposer");
+        editComposer.value = "Created by OSME"
         editTempo = document.getElementById("editTempo");
-        selectSample = document.getElementById("selectSample");
+        //selectSample = document.getElementById("selectSample");
         selectTimeSignature = document.getElementById("selectTimeSignature");
+        selectTimeSignature.value = 4;
         selectMeasureNumber = document.getElementById("selectMeasureNumber");
+        selectMeasureNumber.value = 16;
         selectKeySignature = document.getElementById("selectKeySignature");
         selectComplexity = document.getElementById("selectComplexity");
-        selectBounding = document.getElementById("selectBounding");
-        skylineDebug = document.getElementById("skylineDebug");
-        bottomlineDebug = document.getElementById("bottomlineDebug");
+        //selectBounding = document.getElementById("selectBounding");
+        //skylineDebug = document.getElementById("skylineDebug");
+        //bottomlineDebug = document.getElementById("bottomlineDebug");
         canvas = document.createElement("div");
 
         debugReRenderBtn = document.getElementById("debug-re-render-btn");
@@ -108,42 +114,42 @@ import { ScaleKey, ScaleType, Tone } from '../src/OSME/Common';
         error();
 
         // Create select
-        for (name in samples) {
-            if (samples.hasOwnProperty(name)) {
-                option = document.createElement("option");
-                option.value = samples[name];
-                option.textContent = name;
-            }
-            selectSample.appendChild(option);
-        }
-        selectSample.onchange = loadAndDisplay;
-        if (selectBounding) {
-            selectBounding.onchange = selectBoundingOnChange;
-        }
+        // for (name in samples) {
+        //     if (samples.hasOwnProperty(name)) {
+        //         option = document.createElement("option");
+        //         option.value = samples[name];
+        //         option.textContent = name;
+        //     }
+        //     selectSample.appendChild(option);
+        // }
+        // selectSample.onchange = loadAndDisplay;
+        // if (selectBounding) {
+        //     selectBounding.onchange = selectBoundingOnChange;
+        // }
 
-        selectMeasureNumber.onchange = generatorParamsOnChange;
-        selectTimeSignature.onchange = generatorParamsOnChange;
-        selectKeySignature.onchange = generatorParamsOnChange;
-        selectComplexity.onchange = generatorParamsOnChange;
-        editTempo.onchange = generatorParamsOnChange;
+        selectMeasureNumber.onchange = generatorCreatePractice;
+        selectTimeSignature.onchange = generatorCreatePractice;
+        selectKeySignature.onchange = generatorCreatePractice;
+        selectComplexity.onchange = generatorCreatePractice;
+        editTempo.onchange = generatorCreatePractice;
 
         // Pre-select default music piece
 
-        custom.appendChild(document.createTextNode("Custom"));
+        //custom.appendChild(document.createTextNode("Custom"));
 
         // Create zoom controls
 
-        if (skylineDebug) {
-            skylineDebug.onclick = function () {
-                openSheetMusicDisplay.DrawSkyLine = !openSheetMusicDisplay.DrawSkyLine;
-            }
-        }
+        // if (skylineDebug) {
+        //     skylineDebug.onclick = function () {
+        //         openSheetMusicDisplay.DrawSkyLine = !openSheetMusicDisplay.DrawSkyLine;
+        //     }
+        // }
 
-        if (bottomlineDebug) {
-            bottomlineDebug.onclick = function () {
-                openSheetMusicDisplay.DrawBottomLine = !openSheetMusicDisplay.DrawBottomLine;
-            }
-        }
+        // if (bottomlineDebug) {
+        //     bottomlineDebug.onclick = function () {
+        //         openSheetMusicDisplay.DrawBottomLine = !openSheetMusicDisplay.DrawBottomLine;
+        //     }
+        // }
 
         if (debugReRenderBtn) {
             debugReRenderBtn.onclick = function () {
@@ -180,7 +186,7 @@ import { ScaleKey, ScaleType, Tone } from '../src/OSME/Common';
             // defaultColorNotehead: "#CC0055", // try setting a default color. default is black (undefined)
             // defaultColorStem: "#BB0099",
 
-            autoBeam: false, // try true, OSMD Function Test AutoBeam sample
+            autoBeam: true, // try true, OSMD Function Test AutoBeam sample
             autoBeamOptions: {
                 beam_rests: false,
                 beam_middle_rests_only: false,
@@ -209,45 +215,45 @@ import { ScaleKey, ScaleType, Tone } from '../src/OSME/Common';
         openSheetMusicDisplay.DrawBoundingBox = value;
     }
 
-    function loadAndDisplay(str) {
+    function loadAndDisplay(str = "") {
         error();
         disable();
-        var isCustom = typeof str === "string";
-        if (!isCustom) {
-            str = sampleFolder + selectSample.value;
-        }
+        // var isCustom = typeof str === "string";
+        // if (!isCustom) {
+        //     str = sampleFolder + selectSample.value;
+        // }
         zoom = 1.0;
 
-        if (str.includes("measuresToDraw")) {
-            // stash previously set range of measures to draw
-            if (!measureToDrawRangeNeedsReset) { // only stash once, when measuresToDraw called multiple times in a row
-                minMeasureToDrawStashed = openSheetMusicDisplay.EngravingRules.MinMeasureToDrawIndex + 1;
-                maxMeasureToDrawStashed = openSheetMusicDisplay.EngravingRules.MaxMeasureToDrawIndex + 1;
-            }
-            measureToDrawRangeNeedsReset = true;
+        // if (str.includes("measuresToDraw")) {
+        //     // stash previously set range of measures to draw
+        //     if (!measureToDrawRangeNeedsReset) { // only stash once, when measuresToDraw called multiple times in a row
+        //         minMeasureToDrawStashed = openSheetMusicDisplay.EngravingRules.MinMeasureToDrawIndex + 1;
+        //         maxMeasureToDrawStashed = openSheetMusicDisplay.EngravingRules.MaxMeasureToDrawIndex + 1;
+        //     }
+        //     measureToDrawRangeNeedsReset = true;
 
-            // for debugging: draw from a random range of measures
-            let minMeasureToDraw = Math.ceil(Math.random() * 15); // measures start at 1 (measureIndex = measure number - 1 elsewhere)
-            let maxMeasureToDraw = Math.ceil(Math.random() * 15);
-            if (minMeasureToDraw > maxMeasureToDraw) {
-                minMeasureToDraw = maxMeasureToDraw;
-                let a = minMeasureToDraw;
-                maxMeasureToDraw = a;
-            }
-            //minMeasureToDraw = 1; // set your custom indexes here. Drawing only one measure can be a special case
-            //maxMeasureToDraw = 1;
-            console.log("drawing measures in the range: [" + minMeasureToDraw + "," + maxMeasureToDraw + "]");
-            openSheetMusicDisplay.setOptions({
-                drawFromMeasureNumber: minMeasureToDraw,
-                drawUpToMeasureNumber: maxMeasureToDraw
-            });
-        } else if (measureToDrawRangeNeedsReset) { // reset for other samples
-            openSheetMusicDisplay.setOptions({
-                drawFromMeasureNumber: minMeasureToDrawStashed,
-                drawUpToMeasureNumber: maxMeasureToDrawStashed
-            });
-            measureToDrawRangeNeedsReset = false;
-        }
+        //     // for debugging: draw from a random range of measures
+        //     let minMeasureToDraw = Math.ceil(Math.random() * 15); // measures start at 1 (measureIndex = measure number - 1 elsewhere)
+        //     let maxMeasureToDraw = Math.ceil(Math.random() * 15);
+        //     if (minMeasureToDraw > maxMeasureToDraw) {
+        //         minMeasureToDraw = maxMeasureToDraw;
+        //         let a = minMeasureToDraw;
+        //         maxMeasureToDraw = a;
+        //     }
+        //     //minMeasureToDraw = 1; // set your custom indexes here. Drawing only one measure can be a special case
+        //     //maxMeasureToDraw = 1;
+        //     console.log("drawing measures in the range: [" + minMeasureToDraw + "," + maxMeasureToDraw + "]");
+        //     openSheetMusicDisplay.setOptions({
+        //         drawFromMeasureNumber: minMeasureToDraw,
+        //         drawUpToMeasureNumber: maxMeasureToDraw
+        //     });
+        // } else if (measureToDrawRangeNeedsReset) { // reset for other samples
+        //     openSheetMusicDisplay.setOptions({
+        //         drawFromMeasureNumber: minMeasureToDrawStashed,
+        //         drawUpToMeasureNumber: maxMeasureToDrawStashed
+        //     });
+        //     measureToDrawRangeNeedsReset = false;
+        // }
 
         // Enable Boomwhacker-like coloring for OSMD Function Test - Auto-Coloring (Boomwhacker-like, custom color set)
         if (str.includes("auto-custom-coloring")) {
@@ -262,25 +268,28 @@ import { ScaleKey, ScaleType, Tone } from '../src/OSME/Common';
         } else {
             openSheetMusicDisplay.setOptions({ coloringMode: 0, colorStemsLikeNoteheads: false });
         }
-        openSheetMusicDisplay.setOptions({ autoBeam: str.includes("autobeam") });
-        openSheetMusicDisplay.setOptions({ drawPartAbbreviations: !str.includes("Schubert_An_die_Musik") }); // TODO weird layout bug here. but shouldn't be in score anyways
-        openSheetMusicDisplay.load(str).then(
-            function () {
-                // This gives you access to the osmd object in the console. Do not use in productive code
-                window.osmd = openSheetMusicDisplay;
-                return openSheetMusicDisplay.render();
-            },
-            function (e) {
-                errorLoadingOrRenderingSheet(e, "rendering");
-            }
-        ).then(
-            function () {
-                return onLoadingEnd(isCustom);
-            }, function (e) {
-                errorLoadingOrRenderingSheet(e, "loading");
-                onLoadingEnd(isCustom);
-            }
-        );
+        //openSheetMusicDisplay.setOptions({ autoBeam: str.includes("autobeam") });
+        //openSheetMusicDisplay.setOptions({ drawPartAbbreviations: !str.includes("Schubert_An_die_Musik") }); // TODO weird layout bug here. but shouldn't be in score anyways
+        // openSheetMusicDisplay.load(str).then(
+        //     function () {
+        //         // This gives you access to the osmd object in the console. Do not use in productive code
+        //         window.osmd = openSheetMusicDisplay;
+        //         return openSheetMusicDisplay.render();
+        //     },
+        //     function (e) {
+        //         errorLoadingOrRenderingSheet(e, "rendering");
+        //     }
+        // ).then(
+        //     function () {
+        //         return onLoadingEnd(isCustom);
+        //     }, function (e) {
+        //         errorLoadingOrRenderingSheet(e, "loading");
+        //         onLoadingEnd(isCustom);
+        //     }
+        // );
+
+        window.osmd = openSheetMusicDisplay;
+        generatorCreatePractice();
     }
 
     function errorLoadingOrRenderingSheet(e, loadingOrRenderingString) {
@@ -315,22 +324,22 @@ import { ScaleKey, ScaleType, Tone } from '../src/OSME/Common';
         }, 0);
     }
 
-    function generatorParamsOnChange() {
-        var measure = selectMeasureNumber.value;
+    function generatorCreatePractice() {
+        var numberOfMeasures = selectMeasureNumber.value;
         var time = selectTimeSignature.value;
         var key = selectKeySignature.value;
         var complexity = selectComplexity.value / 10;
         var tempo = editTempo.value;
 
         var instrumentOptions = DefaultInstrumentOptions.get("trumpet");
-        var timeSignature = TimeSignature.common();
+        var timeSignature = new RhythmInstruction(new Fraction(time, 4, 0, false), RhythmSymbolEnum.NONE);
         var pitchSettings = PitchSettings.EQUIVALENT();
         var durationSettings = DurationSettings.TYPICAL();
 
         var scaleKey = ScaleKey.fromStringCode(key)
         var generatorPluginOptions = {
             complexity: complexity,
-            measure_count: measure,
+            measure_count: numberOfMeasures,
             tempo: tempo,
             time_signature: timeSignature,
             scale_key: scaleKey,
@@ -347,6 +356,8 @@ import { ScaleKey, ScaleType, Tone } from '../src/OSME/Common';
         //generatorPlugin.test();
         console.log("generating: start");
         var sheet = generatorPlugin.generate();
+        sheet.title = new Label(editTitle.value); //"Sight reading practice");
+        sheet.composer = new Label(editComposer.value); //"Created by OSME");
         console.log("generating: done");
         console.log("generateGraphicalMusicSheet: start");
         var graphicalSheet = generatorPlugin.generateGraphicalMusicSheet(sheet);
@@ -355,13 +366,14 @@ import { ScaleKey, ScaleType, Tone } from '../src/OSME/Common';
         //openSheetMusicDisplay.reset();
         openSheetMusicDisplay.sheet = sheet;
         openSheetMusicDisplay.graphic = graphicalSheet;
-        console.log("rerender: start");
-        rerender()
+        console.log("render: start");
+        openSheetMusicDisplay.render();
+        enable();
     }
 
     function rerender() {
         window.setTimeout(function () {
-            openSheetMusicDisplay.render();
+            generatorCreatePractice();
             enable();
         }, 0);
     }
@@ -380,11 +392,11 @@ import { ScaleKey, ScaleType, Tone } from '../src/OSME/Common';
     // Enable/Disable Controls
     function disable() {
         document.body.style.opacity = 0.3;
-        selectSample.disabled = "disabled";
+        //selectSample.disabled = "disabled";
     }
     function enable() {
         document.body.style.opacity = 1;
-        selectSample.disabled = "";
+        //selectSample.disabled = "";
         logCanvasSize();
     }
 
@@ -409,7 +421,7 @@ import { ScaleKey, ScaleType, Tone } from '../src/OSME/Common';
             return;
         }
         // Add "Custom..." score
-        selectSample.appendChild(custom);
+        //selectSample.appendChild(custom);
         custom.selected = "selected";
         // Read dragged file
         var reader = new FileReader();

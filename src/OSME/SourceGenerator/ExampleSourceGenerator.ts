@@ -17,6 +17,7 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
     private durationPossibilites: Fraction[];
     private measureDuration: Fraction;
 
+    private static FloatInaccuracyTolerance: number = 0.0001; // allow a small delta (value difference) because of floating point inaccuracies
 
     public getPluginName(): string {
         return ExampleSourceGenerator.NAME;
@@ -146,8 +147,7 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
 
     private isOnBeat(position: Fraction): boolean {
         const beatDistance: number = this.distanceFromBeat(position);
-        const deltaForFloatInaccuracy: number = 0.001; // allow a small delta because of floating point inaccuracies
-        return Math.abs(beatDistance) < deltaForFloatInaccuracy;
+        return Math.abs(beatDistance) < ExampleSourceGenerator.FloatInaccuracyTolerance;
     }
 
     private distanceFromBeat(position: Fraction): number {
@@ -175,7 +175,9 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
             // TODO can be refined and allowed with higher complexity later, with probability distribution (idea of @matt-uib)
 
             // allow quarters and half notes at eighth distance from beat
-            noteShouldBeReRolled = noteShouldBeReRolled && !(Math.abs(this.distanceFromBeat(startPosition) - new Fraction(1, 8).RealValue) < 0.0001);
+            const isEighthDistanceToBeat: boolean = Math.abs(this.distanceFromBeat(startPosition) - new Fraction(1, 8).RealValue)
+                < ExampleSourceGenerator.FloatInaccuracyTolerance;
+            noteShouldBeReRolled = noteShouldBeReRolled && !isEighthDistanceToBeat;
         } while (noteShouldBeReRolled);
         // if quarter note or bigger and not starting on beat, choose another random note
 

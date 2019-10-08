@@ -144,7 +144,7 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
         return entry;
     }
 
-    private isOnBeat(position: Fraction): boolean { // TODO always returns false, nee
+    private isOnBeat(position: Fraction): boolean {
         const rhythm: Fraction = this.options.time_signature.Rhythm;
         const beatStep: Fraction = new Fraction(1, rhythm.Denominator);
         const distanceFromBeat: number = position.RealValue % beatStep.RealValue; // take modulo the beat value, e.g. 1/8 in a 3/8 time signature

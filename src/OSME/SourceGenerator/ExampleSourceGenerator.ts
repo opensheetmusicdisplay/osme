@@ -94,12 +94,12 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
         const durationSum: Fraction = new Fraction(0, 4);
         console.log("generateNotes");
         while (durationSum.RealValue < currentMeasure.Duration.RealValue) {
-            const musicalEntry: MusicalEntry = this.getNextEntry(localOptions.scaleKey);
+            const startPosition: Fraction = durationSum.clone();
+            const musicalEntry: MusicalEntry = this.getNextEntry(localOptions.scaleKey, startPosition);
             const pitch: Pitch = musicalEntry.Pitch;
             const durationFraction: Fraction = musicalEntry.Duration;
             console.log(musicalEntry);
 
-            const startPosition: Fraction = durationSum.clone();
 
 
             let note: Note = undefined;
@@ -129,14 +129,14 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
         super.updateGlobalState(voice, history);
         return history;
     }
-    private getNextEntry(scaleKey: ScaleKey): MusicalEntry {
+    private getNextEntry(scaleKey: ScaleKey, startPosition: Fraction): MusicalEntry {
         const pitchSettings: PitchSettings = this.options.pitch_settings;
         const index: number = pitchSettings.getWeightedRandomIndex();
         const entry: MusicalEntry = new MusicalEntry();
         // das muss anders gehen!
         const tone: Tone = this.chooseScaleTone(scaleKey, index);
         entry.Pitch = tone.toPitch(2);
-        entry.Duration = this.chooseDuration();
+        entry.Duration = this.chooseDuration(startPosition);
         console.log(entry.Duration);
         if (entry.Pitch === undefined) {
             throw new Error("entry.pitch is undefined");
@@ -144,13 +144,38 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
         return entry;
     }
 
-    private chooseDuration(): Fraction {
-        const index: number = this.options.duration_settings.getWeightedRandomIndex();
-        if (index < this.durationPossibilites.length) {
+    private isOnBeat(position: Fraction): boolean { // TODO always returns false, nee
+        const rhythm: Fraction = this.options.time_signature.Rhythm;
+        const beatStep: Fraction = new Fraction(1, rhythm.Denominator);
+        const distanceFromBeat: number = position.RealValue % beatStep.RealValue; // take modulo the beat value, e.g. 1/8 in a 3/8 time signature
+        const deltaForFloatInaccuracy: number = 0.001; // allow a small delta because of floating point inaccuracies
+        return Math.abs(distanceFromBeat) < deltaForFloatInaccuracy;
+    }
+
+    private chooseDuration(startPosition: Fraction): Fraction {
+        let index: number;
+        let chosenDuration: Fraction;
+        const startPositionIsOnBeat: boolean = this.isOnBeat(startPosition);
+        let noteShouldBeReRolled: boolean = false; // whether the randomly chosen note should be randomized again
+
+        do {
+            index = this.options.duration_settings.getWeightedRandomIndex();
+            if (index >= this.durationPossibilites.length) {
+                return this.measureDuration.clone(); // taken from original else condition at end of this method
+            }
+            chosenDuration = this.durationPossibilites[index];
+            noteShouldBeReRolled = new Fraction(1, 4).lte(chosenDuration) && !startPositionIsOnBeat;
+            // for now, don't put quarter or longer notes between the beat.
+            // TODO can be refined and allowed with higher complexity later
+        } while (noteShouldBeReRolled);
+        return chosenDuration;
+            // if quarter note or bigger and not starting on beat, choose another random note
+
+        /*if (index < this.durationPossibilites.length) {
             return this.durationPossibilites[index].clone();
         } else {
             return this.measureDuration.clone();
-        }
+        }*/
     }
 
     private chooseScaleTone(scaleKey: ScaleKey, index: number): Tone {

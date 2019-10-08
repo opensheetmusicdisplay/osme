@@ -145,11 +145,16 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
     }
 
     private isOnBeat(position: Fraction): boolean {
+        const beatDistance: number = this.distanceFromBeat(position);
+        const deltaForFloatInaccuracy: number = 0.001; // allow a small delta because of floating point inaccuracies
+        return Math.abs(beatDistance) < deltaForFloatInaccuracy;
+    }
+
+    private distanceFromBeat(position: Fraction): number {
         const rhythm: Fraction = this.options.time_signature.Rhythm;
         const beatStep: Fraction = new Fraction(1, rhythm.Denominator);
         const distanceFromBeat: number = position.RealValue % beatStep.RealValue; // take modulo the beat value, e.g. 1/8 in a 3/8 time signature
-        const deltaForFloatInaccuracy: number = 0.001; // allow a small delta because of floating point inaccuracies
-        return Math.abs(distanceFromBeat) < deltaForFloatInaccuracy;
+        return distanceFromBeat;
     }
 
     private chooseDuration(startPosition: Fraction): Fraction {
@@ -164,9 +169,13 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
                 return this.measureDuration.clone(); // taken from original else condition at end of this method
             }
             chosenDuration = this.durationPossibilites[index];
+
             noteShouldBeReRolled = new Fraction(1, 4).lte(chosenDuration) && !startPositionIsOnBeat;
-            // for now, don't put quarter or longer notes between the beat.
+            // for now, don't put quarter or longer notes between the beat, except at eighth note distance
             // TODO can be refined and allowed with higher complexity later, with probability distribution (idea of @matt-uib)
+
+            // allow quarters and half notes at eighth distance from beat
+            noteShouldBeReRolled = noteShouldBeReRolled && !(Math.abs(this.distanceFromBeat(startPosition) - new Fraction(1, 8).RealValue) < 0.0001);
         } while (noteShouldBeReRolled);
         // if quarter note or bigger and not starting on beat, choose another random note
 

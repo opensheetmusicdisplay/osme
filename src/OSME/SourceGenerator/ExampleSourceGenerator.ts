@@ -166,10 +166,11 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
             chosenDuration = this.durationPossibilites[index];
             noteShouldBeReRolled = new Fraction(1, 4).lte(chosenDuration) && !startPositionIsOnBeat;
             // for now, don't put quarter or longer notes between the beat.
-            // TODO can be refined and allowed with higher complexity later
+            // TODO can be refined and allowed with higher complexity later, with probability distribution (idea of @matt-uib)
         } while (noteShouldBeReRolled);
+        // if quarter note or bigger and not starting on beat, choose another random note
+
         return chosenDuration;
-            // if quarter note or bigger and not starting on beat, choose another random note
 
         /*if (index < this.durationPossibilites.length) {
             return this.durationPossibilites[index].clone();

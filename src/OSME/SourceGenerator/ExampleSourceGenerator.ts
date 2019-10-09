@@ -242,8 +242,8 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
     private createSourceMeasure(beginFraction: Fraction, duration: Fraction): SourceMeasure {
         const sourceMeasure: SourceMeasure = new SourceMeasure(1);
         sourceMeasure.AbsoluteTimestamp = beginFraction;
-        sourceMeasure.Duration = duration;
-        sourceMeasure.ActiveTimeSignature = duration;
+        sourceMeasure.Duration = duration; // can be 1/1
+        sourceMeasure.ActiveTimeSignature = this.options.time_signature.Rhythm; // is 4/4 in 4/4 signature
         sourceMeasure.MeasureNumber = 1;
         return sourceMeasure;
     }

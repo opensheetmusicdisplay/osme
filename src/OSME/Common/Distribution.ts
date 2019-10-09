@@ -1,10 +1,8 @@
-export class Distribution {
-    private sum: number;
-    private values: Array<number>;
+export class Distribution<T> {
+    private entries: Array<DistributionEntry<T>>;
 
-    public constructor(sum: number, values: Array<number>) {
-        this.sum = sum;
-        this.values = values;
+    public constructor(values: Array<DistributionEntry<T>>) {
+        this.entries = values;
     }
 
     public static EQUIVALENT_VALUES(sum: number, count: number): Array<number> {
@@ -18,40 +16,52 @@ export class Distribution {
         return values;
     }
 
-    public getSum(): number {
-        return this.sum;
-    }
-
-    public calculateSetSum(): number {
+    private calculateProbabilitySum(): number {
         let sum: number = 0.0;
-        this.values.forEach(element => {
-            sum += element;
+        this.entries.forEach(entry => {
+            sum += entry.Probability;
         });
-        this.sum = sum;
         return sum;
     }
 
-    public getValues(): Array<number> {
-        return this.values;
+    public getValues(): Array<DistributionEntry<T>> {
+        return this.entries;
     }
 
-    public getWeightedRandomIndex(): number {
-        // prepare a sum of all weights (is 1.0 most of the time)
-        let sum: number = 0.0;
-        this.values.forEach(element => {
-            sum += element;
-        });
+    public rollAndDraw(additionalWeights: Array<number> = undefined): T {
+        // get the sum of all weights
+        const sum: number = this.calculateProbabilitySum();
 
         // choose a random between 0 and that sum as start distance
         let distance: number = Math.random() * sum;
         let nextIndex: number = 0;
         while (distance > 0) {
             // choose a random index for next element
-            nextIndex = Math.floor(Math.random() * this.values.length);
-            const weight: number = this.values[nextIndex];
+            nextIndex = Math.floor(Math.random() * this.entries.length);
+            let weight: number = this.entries[nextIndex].Probability;
+            if (additionalWeights !== undefined) {
+                weight *= additionalWeights[nextIndex];
+            }
             distance = distance - weight;
         }
-        return nextIndex;
+        return this.entries[nextIndex].Object;
+    }
+}
+
+export class DistributionEntry<T> {
+    private object: T;
+    private probability: number;
+
+    public constructor(object: T, probability: number) {
+        this.object = object;
+        this.probability = probability;
     }
 
+    get Object(): T {
+        return this.object;
+    }
+
+    get Probability(): number {
+        return this.probability;
+    }
 }

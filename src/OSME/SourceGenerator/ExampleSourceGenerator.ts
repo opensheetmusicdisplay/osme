@@ -3,9 +3,10 @@ import { SourceGeneratorPlugin } from "./SourceGeneratorPlugin";
 import { MusicSheet, SourceMeasure, Staff, Instrument, Voice, Note, VoiceEntry, SourceStaffEntry, InstrumentalGroup } from "../../MusicalScore";
 import { Fraction, Pitch } from "../../Common";
 import { ClefInstruction, KeyInstruction } from "../../MusicalScore/VoiceData/Instructions";
-import { SourceGeneratorOptions, PitchSettings, DurationSettings } from "./SourceGeneratorParameters";
+import { SourceGeneratorOptions, PitchSettings } from "./SourceGeneratorParameters";
 import { ScaleKey, Tone } from "../Common";
 import { MusicalEntry } from "../Common/Intention/IntentionEntry";
+import { DistributionEntry } from "../Common/Distribution";
 
 export class ExampleSourceGenerator extends SourceGeneratorPlugin {
 
@@ -14,8 +15,8 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
     }
     public static NAME: string = "example_source_generator";
 
-    private durationPossibilites: Fraction[];
     private measureDuration: Fraction;
+    private beat: Fraction;
 
     private static FloatInaccuracyTolerance: number = 0.0001; // allow a small delta (value difference) because of floating point inaccuracies
 
@@ -28,23 +29,17 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
 
         // HINT: USE THIS TOGGLES TO MANIPULATE THE ALGORITHM
 
-        // this.options.pitch_settings = PitchSettings.HARMONIC_SYMBOLS();
-        const bla: PitchSettings = PitchSettings.HARMONIC_SYMBOLS();
-        console.log(bla);
+        // // this.options.pitch_settings = PitchSettings.HARMONIC_SYMBOLS();
+        // const bla: PitchSettings = PitchSettings.HARMONIC_SYMBOLS();
+        // console.log(bla);
 
-        // this.options.duration_settings = DurationSettings.SIMPLE();
-        const bla2: DurationSettings = DurationSettings.SIMPLE();
-        console.log(bla2);
+        // // this.options.duration_settings = DurationSettings.SIMPLE();
+        // const bla2: DurationSettings = DurationSettings.TYPICAL();
+        // console.log(bla2);
 
-        this.durationPossibilites = [
-            new Fraction(1, 1),
-            new Fraction(1, 2),
-            new Fraction(1, 4),
-            new Fraction(1, 8),
-            new Fraction(1, 16),
-        ];
 
         this.measureDuration = new Fraction(this.options.time_signature.Rhythm.Numerator, this.options.time_signature.Rhythm.Denominator);
+        this.beat = new Fraction(1, this.options.time_signature.Rhythm.Denominator);
         // console.log(this.options);
 
         const musicSheet: MusicSheet = this.createMusicSheet();
@@ -132,11 +127,11 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
     }
     private getNextEntry(scaleKey: ScaleKey, startPosition: Fraction): MusicalEntry {
         const pitchSettings: PitchSettings = this.options.pitch_settings;
-        const index: number = pitchSettings.getWeightedRandomIndex();
+        const index: number = pitchSettings.rollAndDraw();
         const entry: MusicalEntry = new MusicalEntry();
         // das muss anders gehen!
         const tone: Tone = this.chooseScaleTone(scaleKey, index);
-        entry.Pitch = tone.toPitch(2);
+        entry.Pitch = tone.toPitch(1);
         entry.Duration = this.chooseDuration(startPosition);
         console.log(entry.Duration);
         if (entry.Pitch === undefined) {
@@ -157,18 +152,44 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
         return distanceFromBeat;
     }
 
+    private calcWeightsForDurations(currentPosition: Fraction, beat: Fraction, durations: Array<DistributionEntry<Fraction>>): Array<number> {
+        const weights: Array<number> = new Array<number>(durations.length);
+        const halfBeatLength: Fraction = new Fraction(beat.Numerator, beat.Denominator * 2);
+        for (let i: number = 0; i < durations.length; i++) {
+            const duration: Fraction = durations[i].Object;
+            let durationWeight: number = 1.0;
+            const noteEndPosition: Fraction = Fraction.plus(currentPosition, duration);
+            let inBeatPos: Fraction = noteEndPosition;
+            while (!inBeatPos.lte(beat)) {// if greater than beat length -> subtract beat to go somewhere within the first beat.
+                inBeatPos.Sub(beat);
+            }
+            // make sure to get the distance to the next beat:
+            if (!inBeatPos.lte(halfBeatLength)) {// greater than half beat length:
+                inBeatPos = Fraction.minus(beat, inBeatPos);
+            }
+
+            // get the relative distance away from the beat
+            // 0.. on the beat
+            // 1.. exactly in between two beats
+            const relHalfBeatPos: number = inBeatPos.RealValue / halfBeatLength.RealValue;
+            if (relHalfBeatPos > 0.00001) {
+                durationWeight = relHalfBeatPos * relHalfBeatPos * 0.5;
+            }
+            weights[i] = durationWeight;
+        }
+        return weights;
+    }
+
     private chooseDuration(startPosition: Fraction): Fraction {
-        let index: number;
         let chosenDuration: Fraction;
         const startPositionIsOnBeat: boolean = this.isOnBeat(startPosition);
         let noteShouldBeReRolled: boolean = false; // whether the randomly chosen note should be randomized again
 
         do {
-            index = this.options.duration_settings.getWeightedRandomIndex();
-            if (index >= this.durationPossibilites.length) {
-                return this.measureDuration.clone(); // taken from original else condition at end of this method
-            }
-            chosenDuration = this.durationPossibilites[index];
+
+            const currPosWeights: Array<number> = this.calcWeightsForDurations(startPosition, this.beat, this.options.duration_settings.getValues());
+            console.log(currPosWeights);
+            chosenDuration = this.options.duration_settings.rollAndDraw(currPosWeights);
 
             noteShouldBeReRolled = new Fraction(1, 4).lte(chosenDuration) && !startPositionIsOnBeat;
             // for now, don't put quarter or longer notes between the beat, except at eighth note distance
@@ -181,7 +202,7 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
         } while (noteShouldBeReRolled);
         // if quarter note or bigger and not starting on beat, choose another random note
 
-        return chosenDuration;
+        return Fraction.createFromFraction(chosenDuration);
 
         /*if (index < this.durationPossibilites.length) {
             return this.durationPossibilites[index].clone();

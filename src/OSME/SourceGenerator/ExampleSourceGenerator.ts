@@ -243,6 +243,7 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
         const sourceMeasure: SourceMeasure = new SourceMeasure(1);
         sourceMeasure.AbsoluteTimestamp = beginFraction;
         sourceMeasure.Duration = duration;
+        sourceMeasure.ActiveTimeSignature = duration;
         sourceMeasure.MeasureNumber = 1;
         return sourceMeasure;
     }

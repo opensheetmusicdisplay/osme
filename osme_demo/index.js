@@ -81,6 +81,9 @@ import { Fraction } from '../src/Common/DataObjects';
     var minMeasureToDrawStashed = 1;
     var maxMeasureToDrawStashed = Number.MAX_SAFE_INTEGER;
     var measureToDrawRangeNeedsReset = false;
+    
+    var generatedSheet; // OSME-generated sheet
+    var generatedGraphicSheet; // OSME-generated GraphicalMusicSheet
 
     // Initialization code
     function init() {
@@ -358,14 +361,20 @@ import { Fraction } from '../src/Common/DataObjects';
         var sheet = generatorPlugin.generate();
         sheet.title = new Label(editTitle.value); //"Sight reading practice");
         sheet.composer = new Label(editComposer.value); //"Created by OSME");
+        generatedSheet = sheet;
         console.log("generating: done");
         console.log("generateGraphicalMusicSheet: start");
         var graphicalSheet = generatorPlugin.generateGraphicalMusicSheet(sheet);
+        generatedGraphicSheet = graphicalSheet;
         console.log("generateGraphicalMusicSheet: done");
 
+        renderGeneratedSheet();
+    }
+
+    function renderGeneratedSheet() {
         //openSheetMusicDisplay.reset();
-        openSheetMusicDisplay.sheet = sheet;
-        openSheetMusicDisplay.graphic = graphicalSheet;
+        openSheetMusicDisplay.sheet = generatedSheet;
+        openSheetMusicDisplay.graphic = generatedGraphicSheet;
         console.log("render: start");
         openSheetMusicDisplay.render();
         enable();
@@ -374,6 +383,7 @@ import { Fraction } from '../src/Common/DataObjects';
     function rerender() {
         window.setTimeout(function () {
             generatorCreatePractice();
+            //renderGeneratedSheet(); // load same sheet again, for (OSMD) debugging (commentate above line)
             enable();
         }, 0);
     }

@@ -16,11 +16,17 @@ export class Distribution<T> {
         return values;
     }
 
-    private calculateProbabilitySum(): number {
+    private calculateProbabilitySum(additionalWeights: Array<number> = undefined): number {
         let sum: number = 0.0;
-        this.entries.forEach(entry => {
-            sum += entry.Probability;
-        });
+        if (additionalWeights !== undefined) {
+            for (let i: number = 0; i < this.entries.length; i++) {
+                sum += this.entries[i].Probability * additionalWeights[i];
+            }
+        } else {
+            for (let i: number = 0; i < this.entries.length; i++) {
+                sum += this.entries[i].Probability;
+            }
+        }
         return sum;
     }
 
@@ -30,7 +36,7 @@ export class Distribution<T> {
 
     public rollAndDraw(additionalWeights: Array<number> = undefined): T {
         // get the sum of all weights
-        const sum: number = this.calculateProbabilitySum();
+        const sum: number = this.calculateProbabilitySum(additionalWeights);
 
         // choose a random between 0 and that sum as start distance
         let distance: number = Math.random() * sum;

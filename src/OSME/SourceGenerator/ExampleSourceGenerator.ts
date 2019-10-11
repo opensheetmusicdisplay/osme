@@ -91,7 +91,7 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
         console.log("generateNotes");
         while (durationSum.RealValue < currentMeasure.Duration.RealValue) {
             const startPosition: Fraction = durationSum.clone();
-            const musicalEntry: MusicalEntry = this.getNextEntry(localOptions.scaleKey, startPosition);
+            const musicalEntry: MusicalEntry = this.getNextEntry(currentMeasure, localOptions.scaleKey, startPosition);
             const pitch: Pitch = musicalEntry.Pitch;
             const durationFraction: Fraction = musicalEntry.Duration;
             console.log(musicalEntry);
@@ -125,31 +125,19 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
         super.updateGlobalState(voice, history);
         return history;
     }
-    private getNextEntry(scaleKey: ScaleKey, startPosition: Fraction): MusicalEntry {
+    private getNextEntry(currentMeasure: SourceMeasure, scaleKey: ScaleKey, startPosition: Fraction): MusicalEntry {
         const pitchSettings: PitchSettings = this.options.pitch_settings;
         const index: number = pitchSettings.rollAndDraw();
         const entry: MusicalEntry = new MusicalEntry();
         // das muss anders gehen!
         const tone: Tone = this.chooseScaleTone(scaleKey, index);
         entry.Pitch = tone.toPitch(1);
-        entry.Duration = this.chooseDuration(startPosition);
+        entry.Duration = this.chooseDuration(currentMeasure, startPosition);
         console.log(entry.Duration);
         if (entry.Pitch === undefined) {
             throw new Error("entry.pitch is undefined");
         }
         return entry;
-    }
-
-    private isOnBeat(position: Fraction): boolean {
-        const beatDistance: number = this.distanceFromBeat(position);
-        return Math.abs(beatDistance) < ExampleSourceGenerator.FloatInaccuracyTolerance;
-    }
-
-    private distanceFromBeat(position: Fraction): number {
-        const rhythm: Fraction = this.options.time_signature.Rhythm;
-        const beatStep: Fraction = new Fraction(1, rhythm.Denominator);
-        const distanceFromBeat: number = position.RealValue % beatStep.RealValue; // take modulo the beat value, e.g. 1/8 in a 3/8 time signature
-        return distanceFromBeat;
     }
 
     private calcWeightsForDurations(currentPosition: Fraction, beat: Fraction, durations: Array<DistributionEntry<Fraction>>): Array<number> {
@@ -180,9 +168,9 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
         return weights;
     }
 
-    private chooseDuration(startPosition: Fraction): Fraction {
+    private chooseDuration(currentMeasure: SourceMeasure, startPosition: Fraction): Fraction {
         let chosenDuration: Fraction;
-        const startPositionIsOnBeat: boolean = this.isOnBeat(startPosition);
+        const startPositionIsOnBeat: boolean = startPosition.isOnBeat(currentMeasure.ActiveTimeSignature);
         let noteShouldBeReRolled: boolean = false; // whether the randomly chosen note should be randomized again
 
         do {
@@ -196,7 +184,7 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
             // TODO can be refined and allowed with higher complexity later, with probability distribution (idea of @matt-uib)
 
             // allow quarters and half notes at eighth distance from beat
-            const isEighthDistanceToBeat: boolean = Math.abs(this.distanceFromBeat(startPosition) - new Fraction(1, 8).RealValue)
+            const isEighthDistanceToBeat: boolean = Math.abs(startPosition.distanceFromBeat(currentMeasure.ActiveTimeSignature) - new Fraction(1, 8).RealValue)
                 < ExampleSourceGenerator.FloatInaccuracyTolerance;
             noteShouldBeReRolled = noteShouldBeReRolled && !isEighthDistanceToBeat;
         } while (noteShouldBeReRolled);

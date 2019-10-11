@@ -51,7 +51,7 @@ module.exports = {
             path.join(__dirname, 'build'),
             path.join(__dirname, 'osme_demo')
         ],
-        port: 8000,
+        port: 9000,
         compress: false
     }
 }

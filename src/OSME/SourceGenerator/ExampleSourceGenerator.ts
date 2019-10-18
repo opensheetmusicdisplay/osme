@@ -1,12 +1,13 @@
 import { SourceGeneratorPlugin } from "./SourceGeneratorPlugin";
 // tslint:disable-next-line: max-line-length
-import { MusicSheet, SourceMeasure, Staff, Instrument, Voice, Note, VoiceEntry, SourceStaffEntry, InstrumentalGroup, SystemLinesEnum } from "../../MusicalScore";
+import { MusicSheet, SourceMeasure, Staff, Instrument, Voice, Note, VoiceEntry, SourceStaffEntry, InstrumentalGroup } from "../../MusicalScore";
 import { Fraction, Pitch } from "../../Common";
 import { ClefInstruction, KeyInstruction } from "../../MusicalScore/VoiceData/Instructions";
 import { SourceGeneratorOptions, PitchSettings } from "./SourceGeneratorParameters";
 import { ScaleKey, Tone } from "../Common";
 import { MusicalEntry } from "../Common/Intention/IntentionEntry";
 import { DistributionEntry } from "../Common/Distribution";
+import { SystemLinesEnum } from "../../MusicalScore/Graphical/SystemLinesEnum";
 
 export class ExampleSourceGenerator extends SourceGeneratorPlugin {
 
@@ -73,8 +74,8 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
                 scaleKey: currentScale
             };
             this.generateNotes(currentMeasure, staff, voice, localOptions);
-            musicSheet.SourceMeasures.last().endingBarStyleEnum = SystemLinesEnum.ThinBold; // add final bar line to last measure
         }
+        musicSheet.SourceMeasures.last().endingBarStyleEnum = SystemLinesEnum.ThinBold; // add final bar line to last measure
 
         console.log("fillStaffList");
         // finalize and polish the sheet

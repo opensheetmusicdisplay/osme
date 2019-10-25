@@ -43,20 +43,21 @@ export class MusicSheet /*implements ISettableMusicSheet, IComparable<MusicSheet
         this.MusicPartManager = new MusicPartManager(this);
         this.hasBPMInfo = false;
     }
-    public static defaultTitle: string = "[kein Titel]";
+    public static defaultTitle: string = "[no title given]";
 
     public userStartTempoInBPM: number;
     public pageWidth: number;
     public rules: EngravingRules;
 
-    private idString: string = "kjgdfuilhsdaöoihfsvjh";
+    private idString: string = "random idString, not initialized";
     private sourceMeasures: SourceMeasure[] = [];
     private repetitions: Repetition[] = [];
     private dynListStaves: DynamicsContainer[][] = [];
     private timestampSortedDynamicExpressionsList: DynamicsContainer[] = [];
     private timestampSortedTempoExpressionsList: MultiTempoExpression[] = [];
     private instrumentalGroups: InstrumentalGroup[] = [];
-    private instruments: Instrument[] = [];
+    /** The parts in the sheet, e.g. piano left hand, or piano right hand, or violin. */
+    private instruments: Instrument[] = []; // Should be renamed from instruments to parts and part, though this will be a big refactor
     private playbackSettings: PlaybackSettings;
     private path: string;
     private title: Label;
@@ -116,7 +117,11 @@ export class MusicSheet /*implements ISettableMusicSheet, IComparable<MusicSheet
     public get InstrumentalGroups(): InstrumentalGroup[] {
         return this.instrumentalGroups;
     }
-    public get Instruments(): Instrument[] {
+    public get Parts(): Instrument[] { // Instrument should be renamed to Part
+        return this.instruments;
+    }
+    public get Instruments(): Instrument[] { // deprecated
+        // this method name should remain for a while to maintain compatibility even when Instrument is renamed to Part
         return this.instruments;
     }
      public get SheetPlaybackSetting(): PlaybackSettings {

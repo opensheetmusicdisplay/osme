@@ -27,7 +27,7 @@ import {AutoColorSet} from "../MusicalScore";
  * After the constructor, use load() and render() to load and render a MusicXML file.
  */
 export class OpenSheetMusicDisplay {
-    private version: string = "0.7.1b-release"; // getter: this.Version
+    private version: string = "0.7.1d-dev"; // getter: this.Version
     // at release, bump version and change to -release, afterwards to -dev again
 
     /**
@@ -200,6 +200,11 @@ export class OpenSheetMusicDisplay {
         if (!this.drawingParameters) {
             this.drawingParameters = new DrawingParameters();
         }
+        if (options === undefined || options === null) {
+            log.warn("warning: osmd.setOptions() called without an options parameter, has no effect."
+            + "\n" + "example usage: osmd.setOptions({drawCredits: false, drawPartNames: false})");
+            return;
+        }
         if (options.drawingParameters) {
             this.drawingParameters.DrawingParametersEnum =
                 (<any>DrawingParametersEnum)[options.drawingParameters.toLowerCase()];
@@ -289,6 +294,12 @@ export class OpenSheetMusicDisplay {
         if (options.drawFingerings === false) {
             EngravingRules.Rules.RenderFingerings = false;
         }
+        if (options.drawMeasureNumbers !== undefined) {
+            EngravingRules.Rules.RenderMeasureNumbers = options.drawMeasureNumbers;
+        }
+        if (options.measureNumberInterval !== undefined) {
+            EngravingRules.Rules.MeasureNumberLabelOffset = options.measureNumberInterval;
+        }
         if (options.fingeringPosition !== undefined) {
             EngravingRules.Rules.FingeringPosition = AbstractExpression.PlacementEnumFromString(options.fingeringPosition);
         }
@@ -315,6 +326,9 @@ export class OpenSheetMusicDisplay {
         }
         if (options.defaultColorTitle) {
             EngravingRules.Rules.DefaultColorTitle = options.defaultColorTitle;
+        }
+        if (options.defaultFontFamily) {
+            EngravingRules.Rules.DefaultFontFamily = options.defaultFontFamily; // default "Times New Roman", also used if font family not found
         }
         if (options.drawUpToMeasureNumber) {
             EngravingRules.Rules.MaxMeasureToDrawIndex = options.drawUpToMeasureNumber - 1;

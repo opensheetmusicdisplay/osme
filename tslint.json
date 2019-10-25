@@ -58,7 +58,7 @@
     "no-unused-expression": true,
     "no-var-keyword": true,
     "no-var-requires": true,
-    "object-literal-sort-keys": true,
+    "object-literal-sort-keys": false,
     "prefer-const": true,
     "one-line": [
       true,
@@ -101,6 +101,7 @@
     "variable-name": [
       true,
       "check-format",
+      "allow-pascal-case",
       "ban-keywords"
     ],
     "whitespace": [

@@ -1,11 +1,11 @@
 {
-  "name": "opensheetmusicdisplay",
+  "name": "osme",
   "version": "0.7.1",
   "description": "An open source JavaScript engine for displaying MusicXML based on VexFlow.",
-  "main": "build/opensheetmusicdisplay.min.js",
+  "main": "build/osme.min.js",
   "typings": "build/dist/src/",
   "scripts": {
-    "docs": "typedoc --out ./build/docs --name OpenSheetMusicDisplay --module commonjs --target ES5 --ignoreCompilerErrors --mode file ./src",
+    "docs": "typedoc --out ./build/docs --name OSME --module commonjs --target ES5 --ignoreCompilerErrors --mode file ./src",
     "eslint": "eslint .",
     "tslint": "tslint --project tsconfig.json \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "npm-run-all eslint tslint",
@@ -14,10 +14,10 @@
     "prepare": "npm run build",
     "build": "npm-run-all lint build:webpack",
     "build:doc": "cross-env STATIC_FILES_SUBFOLDER=sheets npm run build",
-    "build:webpack": "webpack --progress --colors --config webpack.prod.js",
-    "build:webpack-dev": "webpack --progress --colors --config webpack.dev.js",
+    "build:webpack": "webpack --progress --colors --config osme_webpack.prod.js",
+    "build:webpack-dev": "webpack --progress --colors --config osme_webpack.dev.js",
     "build:webpack-sourcemap": "webpack --progress --colors --config webpack.sourcemap.js",
-    "start": "webpack-dev-server --progress --colors --config webpack.dev.js",
+    "start": "webpack-dev-server --progress --colors --config osme_webpack.dev.js",
     "fix-memory-limit": "increase-memory-limit"
   },
   "pre-commit": [
@@ -25,7 +25,7 @@
   ],
   "files": [
     "build/dist/src",
-    "build/opensheetmusicdisplay.min.js",
+    "build/osme.min.js",
     "AUTHORS",
     "CHANGELOG.md",
     "README.md",
@@ -33,7 +33,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/opensheetmusicdisplay/opensheetmusicdisplay"
+    "url": "https://github.com/opensheetmusicdisplay/osme"
   },
   "keywords": [
     "sheet",
@@ -44,7 +44,7 @@
   "author": "PhonicScore",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/opensheetmusicdisplay/opensheetmusicdisplay/issues"
+    "url": "https://github.com/opensheetmusicdisplay/osme/issues"
   },
   "homepage": "http://opensheetmusicdisplay.org",
   "dependencies": {
@@ -62,12 +62,12 @@
     "@types/node": "^12.7.2",
     "chai": "^4.1.0",
     "clean-webpack-plugin": "^1.0.1",
-    "cross-env": "^5.1.3",
+    "cross-env": "^6.0.2",
     "cz-conventional-changelog": "^3.0.0",
-    "eslint": "^5.16.0",
-    "eslint-config-standard": "^14.0.0",
+    "eslint": "^6.2.2",
+    "eslint-config-standard": "^14.1.0",
     "eslint-plugin-import": "^2.16.0",
-    "eslint-plugin-node": "^9.1.0",
+    "eslint-plugin-node": "^10.0.0",
     "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-standard": "^4.0.0",
     "html-webpack-plugin": "^3.2.0",
@@ -90,9 +90,9 @@
     "tslint-loader": "^3.5.3",
     "typedoc": "^0.15.0",
     "typescript": "^2.6.1",
-    "webpack": "^4.39.2",
+    "webpack": "^4.39.3",
     "webpack-cli": "^3.3.2",
-    "webpack-dev-server": "^3.2.1",
+    "webpack-dev-server": "^3.8.0",
     "webpack-merge": "^4.1.2",
     "webpack-visualizer-plugin": "^0.1.11"
   },

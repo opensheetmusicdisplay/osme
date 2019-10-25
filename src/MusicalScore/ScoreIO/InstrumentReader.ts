@@ -25,6 +25,7 @@ import {RepetitionInstructionReader} from "./MusicSymbolModules/RepetitionInstru
 import {SlurReader} from "./MusicSymbolModules/SlurReader";
 import {StemDirectionType} from "../VoiceData/VoiceEntry";
 import {NoteType, NoteTypeHandler} from "../VoiceData";
+import {SystemLinesEnumHelper} from "../Graphical";
 //import Dictionary from "typescript-collections/dist/lib/Dictionary";
 
 // FIXME: The following classes are missing
@@ -476,9 +477,13 @@ export class InstrumentReader {
              this.currentMeasure.endsPiece = true;
            }
           }
-          if (xmlNode.element("bar-style") !== undefined) {
-            this.currentMeasure.endingBarStyle = xmlNode.element("bar-style").value;
+          const location: IXmlAttribute = xmlNode.attribute("location");
+          if (location && location.value === "right") {
+            const stringValue: string = xmlNode.element("bar-style").value;
+            this.currentMeasure.endingBarStyleXml = stringValue;
+            this.currentMeasure.endingBarStyleEnum = SystemLinesEnumHelper.xmlBarlineStyleToSystemLinesEnum(stringValue);
           }
+          // TODO do we need to process bars with left location too?
         } else if (xmlNode.name === "sound") {
           // (*) MetronomeReader.readTempoInstruction(xmlNode, this.musicSheet, this.currentXmlMeasureIndex);
         } else if (xmlNode.name === "harmony") {
@@ -675,7 +680,7 @@ export class InstrumentReader {
    * @returns {boolean}
    */
   private isAttributesNodeAtEndOfMeasure(parentNode: IXmlElement, attributesNode: IXmlElement): boolean {
-    const childs: IXmlElement[] = parentNode.elements().slice();
+    const childs: IXmlElement[] = parentNode.elements().slice(); // slice=arrayCopy
     let attributesNodeIndex: number = 0;
     for (let i: number = 0; i < childs.length; i++) {
       if (childs[i] === attributesNode) {

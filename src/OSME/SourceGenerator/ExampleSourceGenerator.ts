@@ -7,6 +7,7 @@ import { SourceGeneratorOptions, PitchSettings } from "./SourceGeneratorParamete
 import { ScaleKey, Tone } from "../Common";
 import { MusicalEntry } from "../Common/Intention/IntentionEntry";
 import { DistributionEntry } from "../Common/Distribution";
+import { SystemLinesEnum } from "../../MusicalScore/Graphical/SystemLinesEnum";
 
 export class ExampleSourceGenerator extends SourceGeneratorPlugin {
 
@@ -74,6 +75,7 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
             };
             this.generateNotes(currentMeasure, staff, voice, localOptions);
         }
+        musicSheet.SourceMeasures.last().endingBarStyleEnum = SystemLinesEnum.ThinBold; // add final bar line to last measure
 
         console.log("fillStaffList");
         // finalize and polish the sheet

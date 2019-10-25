@@ -66,6 +66,7 @@ import { Fraction } from '../src/Common/DataObjects';
         editTitle,
         editComposer,
         editTempo,
+        downloadFile,
         selectMeasureNumber,
         selectTimeSignature,
         selectKeySignature,
@@ -98,6 +99,7 @@ import { Fraction } from '../src/Common/DataObjects';
         editComposer = document.getElementById("editComposer");
         editComposer.value = "Created by OSME"
         editTempo = document.getElementById("editTempo");
+        downloadFile = document.getElementById("downloadFile");
         //selectSample = document.getElementById("selectSample");
         selectTimeSignature = document.getElementById("selectTimeSignature");
         selectTimeSignature.value = 4;
@@ -135,7 +137,7 @@ import { Fraction } from '../src/Common/DataObjects';
         selectKeySignature.onchange = generatorCreatePractice;
         selectComplexity.onchange = generatorCreatePractice;
         editTempo.onchange = generatorCreatePractice;
-
+        downloadFile.onclick = exportXml;
         // Pre-select default music piece
 
         //custom.appendChild(document.createTextNode("Custom"));
@@ -369,6 +371,10 @@ import { Fraction } from '../src/Common/DataObjects';
         console.log("generateGraphicalMusicSheet: done");
 
         renderGeneratedSheet();
+    }
+
+    function exportXml() {
+        
     }
 
     function renderGeneratedSheet() {

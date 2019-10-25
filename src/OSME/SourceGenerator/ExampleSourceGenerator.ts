@@ -98,8 +98,6 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
             const durationFraction: Fraction = musicalEntry.Duration;
             console.log(musicalEntry);
 
-
-
             let note: Note = undefined;
             if (durationSum.RealValue + durationFraction.RealValue <= currentMeasure.Duration.RealValue) {
                 // const durationFraction: Fraction = this.createFraction(duration);

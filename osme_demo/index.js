@@ -106,7 +106,7 @@ import { Fraction } from '../src/Common/DataObjects';
         selectTimeSignature = document.getElementById("selectTimeSignature");
         selectTimeSignature.value = 4;
         selectMeasureNumber = document.getElementById("selectMeasureNumber");
-        selectMeasureNumber.value = 16;
+        selectMeasureNumber.value = 1;
         selectKeySignature = document.getElementById("selectKeySignature");
         selectComplexity = document.getElementById("selectComplexity");
         //selectBounding = document.getElementById("selectBounding");
@@ -381,7 +381,7 @@ import { Fraction } from '../src/Common/DataObjects';
         try {
             var exporter = new XMLSourceExporter();
             const outputTxt = exporter.export(sheet);
-            console.log(outputTxt);
+            // console.log(outputTxt);
             debugOutput.textContent = outputTxt;
         } catch (exception) {
             console.error(exception);

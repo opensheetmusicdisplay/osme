@@ -59,6 +59,7 @@ export class XMLDriver {
 
         const key: KeyInstruction = this.transformer.getKeyInstruction(measure);
         const keyFifths: Number = (key === undefined) ? undefined : this.transformer.keyToFifths(key);
+        const keyMode: String = (key === undefined) ? undefined : this.transformer.keyToMode(key);
 
         const beats: Number = measure.ActiveTimeSignature.Numerator;
         const beatType: Number = measure.ActiveTimeSignature.Denominator;
@@ -68,11 +69,12 @@ export class XMLDriver {
 
         const attributes: xmlbuilder.XMLElement = this.currentMeasure.element("attributes");
         attributes.element("divisions", divisions);
-        if (printClef) {
+
+        if (printKey) {
             attributes.element({
-                "clef": {
-                    sign: { "#text": clefSign },
-                    line: { "#text": clefLine }
+                "key": {
+                    fifths: { "#text": keyFifths },
+                    mode: { "#text": keyMode },
                 }
             });
         }
@@ -84,34 +86,44 @@ export class XMLDriver {
                 }
             });
         }
-        if (printKey) {
+        if (printClef) {
             attributes.element({
-                "key": {
-                    fifth: { "#text": keyFifths },
+                "clef": {
+                    sign: { "#text": clefSign },
+                    line: { "#text": clefLine }
                 }
             });
         }
     }
 
-    public writeNote(note: Note): void {
+    public writeNote(note: Note, lastAccidental: number = 0): void {
         const step: String = this.transformer.noteToNoteString(note);
         const octave: Number = this.transformer.noteToOctaveNumber(note);
         const duration: Number = this.transformer.noteToDurationNumber(note);
         const durationType: String = this.transformer.noteToDurationType(note);
+        const alterStep: Number = this.transformer.pitchToAlterStep(note);
         const alterString: String = this.transformer.pitchToAlterString(note);
-        const out: Object = {
-            note: {
-                pitch: {
-                    step: { "#text": step },
-                    octave: { "#text": octave }
-                },
-                duration: { "#text": duration },
-                type: { "#text": durationType }
+
+        const xmlNote: xmlbuilder.XMLElement = this.currentMeasure.element("note");
+        //    order is important! Pitch, duration,type
+        const pitch: xmlbuilder.XMLElement = xmlNote.element("pitch");
+        pitch.element("step", step);
+        if (alterStep !== 0) {
+            pitch.element("alter", alterStep);
+        }
+        pitch.element("octave", octave);
+        xmlNote.element("duration", duration);
+        xmlNote.element("type", durationType);
+
+        console.log("lastAccidental:%s alterStep:%s alterString:%s", lastAccidental, alterStep, alterString);
+        if (lastAccidental !== 0) {
+            if (lastAccidental !== alterStep && alterString !== undefined) {
+                xmlNote.element("accidental", alterString);
             }
-        };
-        const xmlNote: xmlbuilder.XMLElement = this.currentMeasure.element(out);
-        if (alterString !== undefined) {
-            xmlNote.children[0].element("alter", alterString);
+        } else {
+            if (alterString !== undefined) {
+                xmlNote.element("accidental", alterString);
+            }
         }
     }
 

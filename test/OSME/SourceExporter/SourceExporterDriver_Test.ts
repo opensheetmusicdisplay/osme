@@ -1,11 +1,13 @@
 import { XMLDriver } from "../../../src/OSME/SourceExporter";
 import { SourceMeasure, Note, Fraction, Pitch, NoteEnum, AccidentalEnum } from "../../../src";
+import { XMLPropertyTransformer } from "../../../src/OSME/SourceExporter/XMLPropertyTransformer";
 
 /* tslint:disable:no-unused-expression */
 describe("SourceExporterDriver Test", () => {
 
    it("does not crash", (done: MochaDone) => {
-      const driver: XMLDriver = new XMLDriver();
+      const transformer: XMLPropertyTransformer = new XMLPropertyTransformer();
+      const driver: XMLDriver = new XMLDriver(transformer);
 
       driver.begin();
       const measure: SourceMeasure = new SourceMeasure(2);
@@ -13,7 +15,6 @@ describe("SourceExporterDriver Test", () => {
       const pitch: Pitch = new Pitch(NoteEnum.C, 4, AccidentalEnum.NATURAL);
       const note: Note = new Note(undefined, undefined, length, pitch);
       driver.beginMeasure(measure);
-      driver.writeMeasureAttributes(measure);
       driver.writeNote(note);
       driver.endMeasure();
       const xmlString: String = driver.endAndReturn();

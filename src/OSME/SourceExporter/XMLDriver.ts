@@ -1,59 +1,104 @@
 
 import { } from "xmlbuilder";
 import xmlbuilder = require("xmlbuilder");
-import { SourceMeasure, Pitch } from "../..";
+import { SourceMeasure } from "../..";
 import { Note } from "../../MusicalScore";
+import { XMLPropertyTransformer } from "./XMLPropertyTransformer";
+import { ClefInstruction, KeyInstruction } from "../../MusicalScore/VoiceData/Instructions";
 
 export class XMLDriver {
 
+    private transformer: XMLPropertyTransformer;
     private root: xmlbuilder.XMLElement;
+    private partList: xmlbuilder.XMLElement;
     private currentMeasure: xmlbuilder.XMLElement;
+    private currentPart: xmlbuilder.XMLElement;
 
-    constructor() {
+    constructor(transformer: XMLPropertyTransformer) {
         this.root = undefined;
+        this.transformer = transformer;
     }
 
     public begin(): void {
-        this.root = xmlbuilder.create("root");
+        this.root = xmlbuilder.create("score-partwise", {
+            version: "1.0",
+            encoding: "UTF-8",
+            standalone: false,
+            pubID: "-//Recordare//DTD MusicXML 3.0 Partwise//EN",
+            sysID: "http://www.musicxml.org/dtds/partwise.dtd"
+        });
+        this.root.attribute("version", "3.0");
+        this.partList = this.root.element("part-list");
     }
-    public beginMeasure(measure: SourceMeasure): void {
-        this.currentMeasure = this.root.element("measure");
+
+
+    public beginPart(partId: string): void {
+        const part1: xmlbuilder.XMLElement = this.partList.element("score-part");
+        part1.attribute("id", partId);
+        part1.element("part-name", "Music");
+        this.currentPart = this.root.element("part");
+        this.currentPart.att("id", partId);
     }
+    public endPart(): void {
+        this.currentPart.end();
+        this.currentPart = undefined;
+    }
+
+
     public endMeasure(): void {
         this.currentMeasure.end();
         this.currentMeasure = undefined;
     }
-    public writeMeasureAttributes(measure: SourceMeasure): void {
-        const divisionNumber: Number = 2;
-        const clefSign: String = "G";
-        const clefLine: Number = 2;
-        const beats: Number = 2;
-        const beatType: Number = 2;
-        const keyFifths: Number = 2;
-        const out: Object = {
-            attributes: {
-                divisions: { "#text": divisionNumber },
-                clef: {
+    public beginMeasure(measure: SourceMeasure, printClef: Boolean = false, printTime: Boolean = false, printKey: Boolean = false, ): void {
+
+        const measureNumber: Number = this.transformer.measureToNumber(measure);
+        const divisions: Number = this.transformer.measureToDivisions(measure);
+        const clef: ClefInstruction = this.transformer.getClefInstruction(measure);
+        const clefSign: String = (clef === undefined) ? undefined : this.transformer.clefToClefSign(clef);
+        const clefLine: Number = (clef === undefined) ? undefined : this.transformer.clefToClefLine(clef);
+
+        const key: KeyInstruction = this.transformer.getKeyInstruction(measure);
+        const keyFifths: Number = (key === undefined) ? undefined : this.transformer.keyToFifths(key);
+
+        const beats: Number = measure.ActiveTimeSignature.Numerator;
+        const beatType: Number = measure.ActiveTimeSignature.Denominator;
+
+        this.currentMeasure = this.currentPart.element("measure");
+        this.currentMeasure.att("number", measureNumber);
+
+        const attributes: xmlbuilder.XMLElement = this.currentMeasure.element("attributes");
+        attributes.element("divisions", divisions);
+        if (printClef) {
+            attributes.element({
+                "clef": {
                     sign: { "#text": clefSign },
                     line: { "#text": clefLine }
-                },
-                time: {
+                }
+            });
+        }
+        if (printTime) {
+            attributes.element({
+                "time": {
                     beats: { "#text": beats },
                     "beat-type": { "#text": beatType }
-                },
-                key: {
+                }
+            });
+        }
+        if (printKey) {
+            attributes.element({
+                "key": {
                     fifth: { "#text": keyFifths },
                 }
-            }
-        };
-        this.currentMeasure.element(out);
+            });
+        }
     }
 
     public writeNote(note: Note): void {
-        const step: String = Pitch.getNoteEnumString(note.Pitch.FundamentalNote);
-        const octave: Number = note.Pitch.Octave.valueOf();
-        const duration: Number = note.Length.RealValue;
-        const type: Number = 2;
+        const step: String = this.transformer.noteToNoteString(note);
+        const octave: Number = this.transformer.noteToOctaveNumber(note);
+        const duration: Number = this.transformer.noteToDurationNumber(note);
+        const durationType: String = this.transformer.noteToDurationType(note);
+        const alterString: String = this.transformer.pitchToAlterString(note);
         const out: Object = {
             note: {
                 pitch: {
@@ -61,10 +106,13 @@ export class XMLDriver {
                     octave: { "#text": octave }
                 },
                 duration: { "#text": duration },
-                type: { "#text": type }
+                type: { "#text": durationType }
             }
         };
-        this.currentMeasure.element(out);
+        const xmlNote: xmlbuilder.XMLElement = this.currentMeasure.element(out);
+        if (alterString !== undefined) {
+            xmlNote.children[0].element("alter", alterString);
+        }
     }
 
     public endAndReturn(): String {

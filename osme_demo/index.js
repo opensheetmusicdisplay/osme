@@ -1,7 +1,8 @@
 import { OpenSheetMusicDisplay } from '../src/OpenSheetMusicDisplay/OpenSheetMusicDisplay';
 import { ExampleSourceGenerator } from '../src/OSME/SourceGenerator/ExampleSourceGenerator';
+import { XMLSourceExporter } from '../src/OSME/SourceExporter/XMLSourceExporter';
 import { SourceGeneratorPlugin, GeneratorPluginOptions } from '../src/OSME/SourceGenerator/SourceGeneratorPlugin';
-import { PitchSettings, NoteEnum, AccidentalEnum, DefaultInstrumentOptions, DurationSettings, Label } from '../src';
+import { PitchSettings, NoteEnum, AccidentalEnum, DefaultInstrumentOptions, DurationSettings, Label, MusicSheet } from '../src';
 import { ScaleKey } from '../src/OSME/Common';
 import { RhythmInstruction, RhythmSymbolEnum } from '../src/MusicalScore/VoiceData/Instructions';
 import { Fraction } from '../src/Common/DataObjects';
@@ -77,12 +78,13 @@ import { Fraction } from '../src/Common/DataObjects';
         bottomlineDebug,
         custom,
         debugReRenderBtn,
+        debugOutput,
         debugClearBtn;
 
     var minMeasureToDrawStashed = 1;
     var maxMeasureToDrawStashed = Number.MAX_SAFE_INTEGER;
     var measureToDrawRangeNeedsReset = false;
-    
+
     var generatedSheet; // OSME-generated sheet
     var generatedGraphicSheet; // OSME-generated GraphicalMusicSheet
 
@@ -114,6 +116,7 @@ import { Fraction } from '../src/Common/DataObjects';
 
         debugReRenderBtn = document.getElementById("debug-re-render-btn");
         debugClearBtn = document.getElementById("debug-clear-btn");
+        debugOutput = document.getElementById("debug-output");
 
         // Hide error
         error();
@@ -137,7 +140,6 @@ import { Fraction } from '../src/Common/DataObjects';
         selectKeySignature.onchange = generatorCreatePractice;
         selectComplexity.onchange = generatorCreatePractice;
         editTempo.onchange = generatorCreatePractice;
-        downloadFile.onclick = exportXml;
         // Pre-select default music piece
 
         //custom.appendChild(document.createTextNode("Custom"));
@@ -371,10 +373,19 @@ import { Fraction } from '../src/Common/DataObjects';
         console.log("generateGraphicalMusicSheet: done");
 
         renderGeneratedSheet();
+
+        exportXml(sheet);
     }
 
-    function exportXml() {
-        
+    function exportXml(sheet) {
+        try {
+            var exporter = new XMLSourceExporter();
+            const outputTxt = exporter.export(sheet);
+            console.log(outputTxt);
+            debugOutput.textContent = outputTxt;
+        } catch (exception) {
+            console.error(exception);
+        }
     }
 
     function renderGeneratedSheet() {

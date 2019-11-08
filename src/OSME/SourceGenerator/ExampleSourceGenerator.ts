@@ -28,17 +28,6 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
 
     public generate(): MusicSheet {
 
-        // HINT: USE THIS TOGGLES TO MANIPULATE THE ALGORITHM
-
-        // // this.options.pitch_settings = PitchSettings.HARMONIC_SYMBOLS();
-        // const bla: PitchSettings = PitchSettings.HARMONIC_SYMBOLS();
-        // console.log(bla);
-
-        // // this.options.duration_settings = DurationSettings.SIMPLE();
-        // const bla2: DurationSettings = DurationSettings.TYPICAL();
-        // console.log(bla2);
-
-
         this.measureDuration = new Fraction(this.options.time_signature.Rhythm.Numerator, this.options.time_signature.Rhythm.Denominator);
         this.beat = new Fraction(1, this.options.time_signature.Rhythm.Denominator);
         // console.log(this.options);
@@ -58,9 +47,12 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
 
             console.log("Creating measure %s", index);
 
-            const currentMeasure: SourceMeasure = this.createSourceMeasure( new Fraction(   this.measureDuration.Numerator * index,
-                                                                                            this.measureDuration.Denominator),
-                                                                            Fraction.createFromFraction(this.measureDuration));
+            const currentMeasure: SourceMeasure = this.createSourceMeasure(
+                new Fraction(
+                    this.measureDuration.Numerator * index,
+                    this.measureDuration.Denominator),
+                Fraction.createFromFraction(this.measureDuration));
+
             if (index === 0) {
                 // add clef and key signature at first measure:
                 this.setClefAndKeyInstruction(currentMeasure, this.options.scale_key);
@@ -90,13 +82,12 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
         const history: Note[] = [];
         super.setLocalState(voice, []);
         const durationSum: Fraction = new Fraction(0, 4);
-        console.log("generateNotes");
+
         while (durationSum.RealValue < currentMeasure.Duration.RealValue) {
             const startPosition: Fraction = durationSum.clone();
             const musicalEntry: MusicalEntry = this.getNextEntry(currentMeasure, localOptions.scaleKey, startPosition);
             const pitch: Pitch = musicalEntry.Pitch;
             const durationFraction: Fraction = musicalEntry.Duration;
-            console.log(musicalEntry);
 
             let note: Note = undefined;
             if (durationSum.RealValue + durationFraction.RealValue <= currentMeasure.Duration.RealValue) {
@@ -212,9 +203,11 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
         return note;
     }
 
-    private setClefAndKeyInstruction(   sourceMeasure: SourceMeasure,
-                                        scaleKey: ScaleKey,
-                                        clefInstruction: ClefInstruction = new ClefInstruction()): SourceMeasure {
+    private setClefAndKeyInstruction(
+        sourceMeasure: SourceMeasure,
+        scaleKey: ScaleKey,
+        clefInstruction: ClefInstruction = new ClefInstruction()
+    ): SourceMeasure {
         const firstStaffEntry: SourceStaffEntry = new SourceStaffEntry(undefined, undefined);
         const keyNumber: number = scaleKey.getKeyNumber();
         const mode: number = scaleKey.getKeyMode();

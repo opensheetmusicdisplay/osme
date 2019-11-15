@@ -19,7 +19,7 @@ export class XMLDriver {
         this.transformer = transformer;
     }
 
-    public begin(): void {
+    public begin(composer: String, title: String): void {
         this.root = xmlbuilder.create("score-partwise", {
             version: "1.0",
             encoding: "UTF-8",
@@ -27,10 +27,23 @@ export class XMLDriver {
             pubID: "-//Recordare//DTD MusicXML 3.0 Partwise//EN",
             sysID: "http://www.musicxml.org/dtds/partwise.dtd"
         });
+
         this.root.attribute("version", "3.0");
+        const work: xmlbuilder.XMLElement = this.root.element("work");
+        work.element("work-title", title);
+
+        const identification: xmlbuilder.XMLElement = this.root.element("identification");
+        const composerXml: xmlbuilder.XMLElement = identification.element("creator", composer);
+
+        composerXml.attribute("type", "composer");
+        // identification.element("rights", "Copyright © 2001 Recordare LLC");
+        const encoding: xmlbuilder.XMLElement = identification.element("encoding");
+        encoding.element("encoder", "Open Sheet Music Education");
+        encoding.element("software", "Open Sheet Music Education - XMLExport");
+        encoding.element("encoding-description", "MusicXML 3.0 generic notation with Open Sheet Music Education");
+
         this.partList = this.root.element("part-list");
     }
-
 
     public beginPart(partId: string): void {
         const part1: xmlbuilder.XMLElement = this.partList.element("score-part");
@@ -43,7 +56,6 @@ export class XMLDriver {
         this.currentPart.end();
         this.currentPart = undefined;
     }
-
 
     public endMeasure(): void {
         this.currentMeasure.end();

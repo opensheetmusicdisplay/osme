@@ -16,7 +16,7 @@ export class XMLSourceExporter {
     public export(sheet: MusicSheet): String {
         const measures: SourceMeasure[] = sheet.SourceMeasures;
 
-        this.xmlDriver.begin();
+        this.xmlDriver.begin(sheet.ComposerString, sheet.TitleString);
         this.xmlDriver.beginPart("P1");
 
         let printedMeasureInstructions: Boolean = false;

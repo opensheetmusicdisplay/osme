@@ -9,7 +9,7 @@ describe("SourceExporterDriver Test", () => {
       const transformer: XMLPropertyTransformer = new XMLPropertyTransformer();
       const driver: XMLDriver = new XMLDriver(transformer);
 
-      driver.begin();
+      driver.begin("testcomposer", "testtitle");
       const measure: SourceMeasure = new SourceMeasure(2);
       const length: Fraction = new Fraction(1, 2);
       const pitch: Pitch = new Pitch(NoteEnum.C, 4, AccidentalEnum.NATURAL);

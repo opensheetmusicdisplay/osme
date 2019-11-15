@@ -3,7 +3,7 @@ import { } from "xmlbuilder";
 import { Note, SourceMeasure } from "../../MusicalScore";
 import { ClefInstruction, AbstractNotationInstruction, KeyInstruction, KeyEnum } from "../../MusicalScore/VoiceData/Instructions";
 import { Pitch } from "../..";
-import { AccidentalEnum } from "../../Common";
+import { AccidentalEnum, NoteEnum } from "../../Common";
 
 export class XMLPropertyTransformer {
     public pitchToAlterStep(note: Note): Number {
@@ -34,7 +34,19 @@ export class XMLPropertyTransformer {
     }
 
     public clefToClefLine(clef: ClefInstruction): number {
-        return clef.ClefPitch.FundamentalNote;
+        if (clef.Line !== undefined) {
+            return clef.Line;
+        }
+        switch (clef.ClefPitch.FundamentalNote) {
+            case NoteEnum.G:
+                return 2;
+            case NoteEnum.F:
+                return 4;
+            case NoteEnum.C:
+                return 3;
+            default:
+                return 2;
+        }
     }
 
     public clefToClefSign(clef: ClefInstruction): String {

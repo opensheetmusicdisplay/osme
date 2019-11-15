@@ -163,6 +163,11 @@ import { Fraction } from '../src/Common/DataObjects';
                 rerender();
             }
         }
+        if (downloadFile) {
+            downloadFile.onclick = function () {
+                downloadMusicxml();
+            }
+        }
 
         if (debugClearBtn) {
             debugClearBtn.onclick = function () {
@@ -340,7 +345,7 @@ import { Fraction } from '../src/Common/DataObjects';
 
         var instrumentOptions = DefaultInstrumentOptions.get("trumpet");
         var timeSignature = new RhythmInstruction(new Fraction(time, 4, 0, false), RhythmSymbolEnum.NONE);
-        var pitchSettings = PitchSettings.EQUIVALENT();
+        var pitchSettings = PitchSettings.PENTATONIC();
         var durationSettings = DurationSettings.TYPICAL();
 
         var scaleKey = ScaleKey.fromStringCode(key)
@@ -357,35 +362,41 @@ import { Fraction } from '../src/Common/DataObjects';
 
         console.log("generatorPluginOptions: ", generatorPluginOptions);
 
-        // var generatorPluginOptions = new GeneratorPluginOptions();
-        // generatorPluginOptions.number_of_measures = measure;
         var generatorPlugin = new ExampleSourceGenerator(generatorPluginOptions);
-        //generatorPlugin.test();
-        console.log("generating: start");
         var sheet = generatorPlugin.generate();
         sheet.title = new Label(editTitle.value); //"Sight reading practice");
         sheet.composer = new Label(editComposer.value); //"Created by OSME");
         generatedSheet = sheet;
-        console.log("generating: done");
-        console.log("generateGraphicalMusicSheet: start");
         var graphicalSheet = generatorPlugin.generateGraphicalMusicSheet(sheet);
         generatedGraphicSheet = graphicalSheet;
         console.log("generateGraphicalMusicSheet: done");
 
         renderGeneratedSheet();
 
-        exportXml(sheet);
+        exportGeneratedSheet();
     }
 
-    function exportXml(sheet) {
+    function exportGeneratedSheet() {
         try {
             var exporter = new XMLSourceExporter();
-            const outputTxt = exporter.export(sheet);
-            // console.log(outputTxt);
-            debugOutput.textContent = outputTxt;
+            const outputTxt = exporter.export(generatedSheet);
+            // debugOutput.textContent = outputTxt;
+            return outputTxt;
         } catch (exception) {
             console.error(exception);
         }
+    }
+
+    function downloadMusicxml() {
+        var xmlContent = exportGeneratedSheet();
+        var element = document.createElement('a');
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(xmlContent));
+        element.setAttribute('download', "text.musicxml");
+        element.style.display = 'none';
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+        return false;
     }
 
     function renderGeneratedSheet() {

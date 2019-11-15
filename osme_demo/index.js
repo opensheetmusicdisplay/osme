@@ -1,7 +1,8 @@
 import { OpenSheetMusicDisplay } from '../src/OpenSheetMusicDisplay/OpenSheetMusicDisplay';
 import { ExampleSourceGenerator } from '../src/OSME/SourceGenerator/ExampleSourceGenerator';
+import { XMLSourceExporter } from '../src/OSME/SourceExporter/XMLSourceExporter';
 import { SourceGeneratorPlugin, GeneratorPluginOptions } from '../src/OSME/SourceGenerator/SourceGeneratorPlugin';
-import { PitchSettings, NoteEnum, AccidentalEnum, DefaultInstrumentOptions, DurationSettings, Label } from '../src';
+import { PitchSettings, NoteEnum, AccidentalEnum, DefaultInstrumentOptions, DurationSettings, Label, MusicSheet } from '../src';
 import { ScaleKey } from '../src/OSME/Common';
 import { RhythmInstruction, RhythmSymbolEnum } from '../src/MusicalScore/VoiceData/Instructions';
 import { Fraction } from '../src/Common/DataObjects';
@@ -66,6 +67,7 @@ import { Fraction } from '../src/Common/DataObjects';
         editTitle,
         editComposer,
         editTempo,
+        downloadFile,
         selectMeasureNumber,
         selectTimeSignature,
         selectKeySignature,
@@ -76,12 +78,13 @@ import { Fraction } from '../src/Common/DataObjects';
         bottomlineDebug,
         custom,
         debugReRenderBtn,
+        debugOutput,
         debugClearBtn;
 
     var minMeasureToDrawStashed = 1;
     var maxMeasureToDrawStashed = Number.MAX_SAFE_INTEGER;
     var measureToDrawRangeNeedsReset = false;
-    
+
     var generatedSheet; // OSME-generated sheet
     var generatedGraphicSheet; // OSME-generated GraphicalMusicSheet
 
@@ -98,11 +101,12 @@ import { Fraction } from '../src/Common/DataObjects';
         editComposer = document.getElementById("editComposer");
         editComposer.value = "Created by OSME"
         editTempo = document.getElementById("editTempo");
+        downloadFile = document.getElementById("downloadFile");
         //selectSample = document.getElementById("selectSample");
         selectTimeSignature = document.getElementById("selectTimeSignature");
         selectTimeSignature.value = 4;
         selectMeasureNumber = document.getElementById("selectMeasureNumber");
-        selectMeasureNumber.value = 16;
+        selectMeasureNumber.value = 1;
         selectKeySignature = document.getElementById("selectKeySignature");
         selectComplexity = document.getElementById("selectComplexity");
         //selectBounding = document.getElementById("selectBounding");
@@ -112,6 +116,7 @@ import { Fraction } from '../src/Common/DataObjects';
 
         debugReRenderBtn = document.getElementById("debug-re-render-btn");
         debugClearBtn = document.getElementById("debug-clear-btn");
+        debugOutput = document.getElementById("debug-output");
 
         // Hide error
         error();
@@ -135,7 +140,6 @@ import { Fraction } from '../src/Common/DataObjects';
         selectKeySignature.onchange = generatorCreatePractice;
         selectComplexity.onchange = generatorCreatePractice;
         editTempo.onchange = generatorCreatePractice;
-
         // Pre-select default music piece
 
         //custom.appendChild(document.createTextNode("Custom"));
@@ -157,6 +161,11 @@ import { Fraction } from '../src/Common/DataObjects';
         if (debugReRenderBtn) {
             debugReRenderBtn.onclick = function () {
                 rerender();
+            }
+        }
+        if (downloadFile) {
+            downloadFile.onclick = function () {
+                downloadMusicxml();
             }
         }
 
@@ -336,7 +345,7 @@ import { Fraction } from '../src/Common/DataObjects';
 
         var instrumentOptions = DefaultInstrumentOptions.get("trumpet");
         var timeSignature = new RhythmInstruction(new Fraction(time, 4, 0, false), RhythmSymbolEnum.NONE);
-        var pitchSettings = PitchSettings.EQUIVALENT();
+        var pitchSettings = PitchSettings.PENTATONIC();
         var durationSettings = DurationSettings.TYPICAL();
 
         var scaleKey = ScaleKey.fromStringCode(key)
@@ -353,22 +362,41 @@ import { Fraction } from '../src/Common/DataObjects';
 
         console.log("generatorPluginOptions: ", generatorPluginOptions);
 
-        // var generatorPluginOptions = new GeneratorPluginOptions();
-        // generatorPluginOptions.number_of_measures = measure;
         var generatorPlugin = new ExampleSourceGenerator(generatorPluginOptions);
-        //generatorPlugin.test();
-        console.log("generating: start");
         var sheet = generatorPlugin.generate();
         sheet.title = new Label(editTitle.value); //"Sight reading practice");
         sheet.composer = new Label(editComposer.value); //"Created by OSME");
         generatedSheet = sheet;
-        console.log("generating: done");
-        console.log("generateGraphicalMusicSheet: start");
         var graphicalSheet = generatorPlugin.generateGraphicalMusicSheet(sheet);
         generatedGraphicSheet = graphicalSheet;
         console.log("generateGraphicalMusicSheet: done");
 
         renderGeneratedSheet();
+
+        exportGeneratedSheet();
+    }
+
+    function exportGeneratedSheet() {
+        try {
+            var exporter = new XMLSourceExporter();
+            const outputTxt = exporter.export(generatedSheet);
+            // debugOutput.textContent = outputTxt;
+            return outputTxt;
+        } catch (exception) {
+            console.error(exception);
+        }
+    }
+
+    function downloadMusicxml() {
+        var xmlContent = exportGeneratedSheet();
+        var element = document.createElement('a');
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(xmlContent));
+        element.setAttribute('download', "text.musicxml");
+        element.style.display = 'none';
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+        return false;
     }
 
     function renderGeneratedSheet() {

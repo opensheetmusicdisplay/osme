@@ -34,7 +34,7 @@
                 <input type="text" id="editComposer" placeholder="Composer">
             </div>
 
-            <h4 class="ui header">Tempo (BPM):</h3>
+            <h4 class="ui header">Tempo (BPM):</h4>
             <div class="ui large input">
                 <input type="text" id="editTempo" placeholder="Tempo in integer BPM">
             </div>
@@ -43,6 +43,7 @@
             <h3 class="ui header">General</h3>
             <h4 class="ui header">Number of measures</h4>
             <select class="ui selection dropdown" id="selectMeasureNumber" style="width:60px">
+                <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="4">4</option>
                 <option value="8">8</option>
@@ -56,10 +57,10 @@
             </select>
 
             <h4 class="ui header">Time signature</h4>
-            <select class="ui selection dropdown" id="selectTimeSignature">            
+            <select class="ui selection dropdown" id="selectTimeSignature">
                 <option value="2">2 / 4</option>
                 <option value="3">3 / 4</option>
-                <option value="4">4 / 4</option>            
+                <option value="4">4 / 4</option>
             </select>
 
             <h4 class="ui header">Key Signature</h4>
@@ -71,14 +72,13 @@
                 <option value="major_2-0">E Major</option>
                 <option value="major_6-0">H Major</option>
                 <option value="major_3-#">F# Major</option>
-                <option value="major_3-0">F Major</option>                
-                <option value="major_6-b">Bb Major</option>                
-                <option value="major_2-b">Eb Major</option>                
-                <option value="major_5-b">Ab Major</option>                
-                <option value="major_1-b">Db Major</option>                
-                <option value="major_4-b">Gb Major</option>                
+                <option value="major_3-0">F Major</option>
+                <option value="major_6-b">Bb Major</option>
+                <option value="major_2-b">Eb Major</option>
+                <option value="major_5-b">Ab Major</option>
+                <option value="major_1-b">Db Major</option>
+                <option value="major_4-b">Gb Major</option>
             </select>
-            
 
         </div>
         <div class="column">
@@ -87,73 +87,38 @@
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
-                <option value="4">4</option>                
-                <option value="5">5</option>                
-                <option value="6">6</option>                
-                <option value="7">7</option>                
-                <option value="8">9</option>                
-                <option value="9">9</option>                
-                <option value="10">10</option>                
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">9</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
             </select>
-            <!-- <h3 class="ui header">Select a sample:</h3>
-            <select class="ui selection dropdown" id="selectSample" style="width:320px; height:38%"></select> -->
         </div>
         <div class="column">
-            <!-- <h3 class="ui header">Render backend:</h3>
-            <select class="ui selection dropdown" id="backend-select" value="svg" style="height:38%">
-                <option value="svg">SVG</option>
-                <option value="canvas">Canvas</option>>
-            </select> -->
-                          
-            <!-- <h3 class="ui header">Show bounding box for:</h3>
-            <select class="ui selection dropdown" id="selectBounding">
-                <option value="none">None</option>
-                <option value="all">All</option>
-                <option value="VexFlowMeasure">Measures</option>
-                <option value="VexFlowGraphicalNote">GraphicalNotes</option>
-                <option value="VexFlowVoiceEntry">VoiceEntries</option>
-                <option value="VexFlowStaffEntry">StaffEntries</option>
-                <option value="GraphicalLabel">Labels</option>
-                <option value="VexFlowStaffLine">StaffLines</option>
-                <option value="SystemLine">SystemLines</option>
-                <option value="StaffLineActivitySymbol">ActivitySymbols</option>
-                <option value="VexFlowContinuousDynamicExpression">DynamicExpressions</option>
-            </select>
-       
-            <h3 class="ui header">Show debug information:</h3>
-            <div class="ui relaxed list">
-                <div class="item">
-                    <div class="ui toggle checkbox">
-                        <input type="checkbox" name="public" id="skylineDebug">
-                        <label>Skyline</label>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="ui toggle checkbox">
-                        <input type="checkbox" name="public" id="bottomlineDebug">
-                        <label>Bottomline</label>
-                    </div>
-                </div>
-            </div> -->
-       
-            <h3 class="ui header">Debug controls:</h3>
+
+            <h3 class="ui header">Download MusicXML File:</h3>
+            <div class="ui vertical buttons">
+                <div class="ui button" id="downloadFile">Download</div>
+            </div>
+            <h4 class="ui header">Debug controls:</h4>
             <div>
                 <div class="ui vertical buttons">
                     <div class="ui button" id="debug-re-render-btn">Re-render</div>
-
                 </div>
                 <div class="ui vertical buttons">
-                    <div class="ui button" id="debug-clear-btn"">Clear</div>
+                    <div class="ui button" id="debug-clear-btn">Clear</div>
+                </div>
             </div>
+
         </div>
     </div>
-</div>
-<table cellspacing=" 0" style="max-width:700px;">
-                        <tr id="error-tr">
-                            <td></td>
-                            <td id="error-td"></td>
-                        </tr>
-                        </table>
+    <table cellspacing=" 0" style="max-width:700px;">
+        <tr id="error-tr">
+            <td></td>
+            <td id="error-td"></td>
+        </tr>
+    </table>
 </body>
-
 </html>

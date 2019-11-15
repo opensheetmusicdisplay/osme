@@ -83,23 +83,18 @@ export class IntervalSettings extends Distribution<number> {
 
 // 1, 1/2, 1/4, 1/8, 1/16, 1/32
 export class DurationSettings extends Distribution<Fraction> {
+
     constructor(entries: Array<DistributionEntry<Fraction>>) {
         super(entries);
     }
-    // public static EQUIVALENT(): DurationSettings {
-    //     return new DurationSettings(1.0, Distribution.EQUIVALENT_VALUES(1.0, 6));
-    // }
-
-    // public static SIMPLE(): DurationSettings {
-    //     return new DurationSettings(1.0, Distribution.EQUIVALENT_VALUES(1.0, 4));
-    // }
 
     public static TYPICAL(): DurationSettings {
-        return new DurationSettings([new DistributionEntry(new Fraction(1, 1), 0.10),
-                                    new DistributionEntry(new Fraction(1, 2), 0.20),
-                                    new DistributionEntry(new Fraction(1, 4), 0.40),
-                                    new DistributionEntry(new Fraction(1, 8), 0.20),
-                                    new DistributionEntry(new Fraction(1, 16), 0.10)]);
+        return new DurationSettings(
+            [new DistributionEntry(new Fraction(1, 1), 0.05),
+            new DistributionEntry(new Fraction(1, 2), 0.30),
+            new DistributionEntry(new Fraction(1, 4), 0.40),
+            new DistributionEntry(new Fraction(1, 8), 0.20),
+            new DistributionEntry(new Fraction(1, 16), 0.05)]);
     }
 }
 
@@ -108,18 +103,40 @@ export class PitchSettings extends Distribution<number> {
     constructor(values: Array<DistributionEntry<number>>) {
         super(values);
     }
+
     public static EQUIVALENT(): PitchSettings {
-        return new PitchSettings(   [new DistributionEntry(0, 1),
-                                    new DistributionEntry(1, 1),
-                                    new DistributionEntry(2, 1),
-                                    new DistributionEntry(3, 1),
-                                    new DistributionEntry(4, 1),
-                                    new DistributionEntry(5, 1),
-                                    new DistributionEntry(6, 1)]);
+        return new PitchSettings(
+            [new DistributionEntry(0, 1),
+            new DistributionEntry(1, 1),
+            new DistributionEntry(2, 1),
+            new DistributionEntry(3, 1),
+            new DistributionEntry(4, 1),
+            new DistributionEntry(5, 1),
+            new DistributionEntry(6, 1)]);
     }
-    // public static HARMONIC_SYMBOLS(): PitchSettings {
-    //     return new PitchSettings(1.0, [0.5, 0, 0, 0.3, 0.2, 0, 0]);
-    // }
+
+    public static HARMONIC(): PitchSettings {
+        return new PitchSettings(
+            [new DistributionEntry(0, 10),
+            new DistributionEntry(1, 5),
+            new DistributionEntry(2, 6),
+            new DistributionEntry(3, 10),
+            new DistributionEntry(4, 8),
+            new DistributionEntry(5, 7),
+            new DistributionEntry(6, 2)]);
+    }
+
+    public static PENTATONIC(): PitchSettings {
+        return new PitchSettings(
+            [new DistributionEntry(0, 1),
+            new DistributionEntry(1, 1),
+            new DistributionEntry(2, 0),
+            new DistributionEntry(3, 1),
+            new DistributionEntry(4, 1),
+            new DistributionEntry(5, 1),
+            new DistributionEntry(6, 0)]);
+    }
+
 }
 
 

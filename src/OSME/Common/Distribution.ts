@@ -16,15 +16,15 @@ export class Distribution<T> {
         return values;
     }
 
-    private calculateProbabilitySum(additionalWeights: Array<number> = undefined): number {
+    private calculateWeightSum(additionalWeights: Array<number> = undefined): number {
         let sum: number = 0.0;
         if (additionalWeights !== undefined) {
             for (let i: number = 0; i < this.entries.length; i++) {
-                sum += this.entries[i].Probability * additionalWeights[i];
+                sum += this.entries[i].Weight * additionalWeights[i];
             }
         } else {
             for (let i: number = 0; i < this.entries.length; i++) {
-                sum += this.entries[i].Probability;
+                sum += this.entries[i].Weight;
             }
         }
         return sum;
@@ -36,15 +36,14 @@ export class Distribution<T> {
 
     public rollAndDraw(additionalWeights: Array<number> = undefined): T {
         // get the sum of all weights
-        const sum: number = this.calculateProbabilitySum(additionalWeights);
-
+        const sum: number = this.calculateWeightSum(additionalWeights);
         // choose a random between 0 and that sum as start distance
         let distance: number = Math.random() * sum;
         let nextIndex: number = 0;
         while (distance > 0) {
             // choose a random index for next element
             nextIndex = Math.floor(Math.random() * this.entries.length);
-            let weight: number = this.entries[nextIndex].Probability;
+            let weight: number = this.entries[nextIndex].Weight;
             if (additionalWeights !== undefined) {
                 weight *= additionalWeights[nextIndex];
             }
@@ -56,18 +55,18 @@ export class Distribution<T> {
 
 export class DistributionEntry<T> {
     private object: T;
-    private probability: number;
+    private weight: number;
 
-    public constructor(object: T, probability: number) {
+    public constructor(object: T, weight: number) {
         this.object = object;
-        this.probability = probability;
+        this.weight = weight;
     }
 
     get Object(): T {
         return this.object;
     }
 
-    get Probability(): number {
-        return this.probability;
+    get Weight(): number {
+        return this.weight;
     }
 }

@@ -30,7 +30,7 @@ export class XMLPropertyTransformer {
         return measure.MeasureNumber;
     }
     public measureToDivisions(measure: SourceMeasure): number {
-        return 128 / 4;
+        return 32; // return 128 / 4;
     }
 
     public clefToClefLine(clef: ClefInstruction): number {

@@ -38,7 +38,6 @@ export class StateManager {
     }
 
     public printStatistics(): void {
-        console.log("global state:");
         let noteFrequencyString: String = "noteFrequency: ";
         this.noteFrequency.forEach((key, value) => { noteFrequencyString += key + ": " + value + "; "; });
         // console.log(this.noteEvents);

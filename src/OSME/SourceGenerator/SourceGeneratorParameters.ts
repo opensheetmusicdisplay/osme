@@ -81,42 +81,146 @@ export class IntervalSettings extends Distribution<number> {
 
 }
 
+export class ComplexityMap {
+
+    public static getDurationSettings(factor: number): DurationSettings {
+        return Array.from<DurationSettings>(DurationSettings.ALL().values()).filter(it => it.getComplexity() <= factor).last();
+    }
+
+    public static getPitchSettings(factor: number): PitchSettings {
+        return Array.from<PitchSettings>(PitchSettings.ALL().values()).filter(it => it.getComplexity() <= factor).last();
+    }
+
+    public static getPitchIndex(factor: number): number {
+        const map: Map<String, PitchSettings> = PitchSettings.ALL();
+        const found: Array<PitchSettings> = Array.from<PitchSettings>(map.values()).filter(it => it.getComplexity() <= factor);
+        if (found !== undefined && found.length > 0) { return found.length - 1; } else { return map.size - 1; }
+    }
+
+    public static getDurationIndex(factor: number): number {
+        const map: Map<String, DurationSettings> = DurationSettings.ALL();
+        const found: Array<DurationSettings> = Array.from<DurationSettings>(map.values()).filter(it => it.getComplexity() <= factor);
+        if (found !== undefined && found.length > 0) { return found.length - 1; } else { return map.size - 1; }
+    }
+}
 // 1, 1/2, 1/4, 1/8, 1/16, 1/32
 export class DurationSettings extends Distribution<Fraction> {
 
-    constructor(entries: Array<DistributionEntry<Fraction>>) {
-        super(entries);
+    constructor(complexity: number, entries: Array<DistributionEntry<Fraction>>) {
+        super(complexity, entries);
     }
 
+    public static ALL(): Map<String, DurationSettings> {
+        const map: Map<String, DurationSettings> = new Map();
+        map.set("MINIMAL", this.MINIMAL());
+        map.set("EASY", this.EASY());
+        map.set("TYPICAL", this.TYPICAL());
+        map.set("COMPLEX", this.COMPLEX());
+        map.set("CRAZY", this.CRAZY());
+        return map;
+    }
+    public static MINIMAL(): DurationSettings {
+        return new DurationSettings(
+            0.1,
+            [new DistributionEntry(new Fraction(1, 1), 0.10),
+            new DistributionEntry(new Fraction(1, 2), 0.30),
+            new DistributionEntry(new Fraction(1, 4), 0.60)]);
+    }
+    public static EASY(): DurationSettings {
+        return new DurationSettings(
+            0.2,
+            [new DistributionEntry(new Fraction(1, 1), 0.10),
+            new DistributionEntry(new Fraction(1, 2), 0.30),
+            new DistributionEntry(new Fraction(1, 4), 0.40),
+            new DistributionEntry(new Fraction(1, 8), 0.20),
+            new DistributionEntry(new Fraction(1, 16), 0.00)]);
+    }
     public static TYPICAL(): DurationSettings {
         return new DurationSettings(
+            0.5,
             [new DistributionEntry(new Fraction(1, 1), 0.05),
             new DistributionEntry(new Fraction(1, 2), 0.30),
             new DistributionEntry(new Fraction(1, 4), 0.40),
             new DistributionEntry(new Fraction(1, 8), 0.20),
             new DistributionEntry(new Fraction(1, 16), 0.05)]);
     }
+    public static COMPLEX(): DurationSettings {
+        return new DurationSettings(
+            0.7,
+            [new DistributionEntry(new Fraction(1, 1), 0.05),
+            new DistributionEntry(new Fraction(1, 2), 0.20),
+            new DistributionEntry(new Fraction(1, 4), 0.40),
+            new DistributionEntry(new Fraction(1, 8), 0.20),
+            new DistributionEntry(new Fraction(1, 16), 0.10),
+            new DistributionEntry(new Fraction(1, 16), 0.05)]);
+    }
+    public static CRAZY(): DurationSettings {
+        return new DurationSettings(
+            0.9,
+            [new DistributionEntry(new Fraction(1, 1), 0.05),
+            new DistributionEntry(new Fraction(1, 2), 0.20),
+            new DistributionEntry(new Fraction(1, 4), 0.20),
+            new DistributionEntry(new Fraction(1, 8), 0.20),
+            new DistributionEntry(new Fraction(1, 16), 0.20),
+            new DistributionEntry(new Fraction(1, 16), 0.15)]);
+    }
 }
 
 export class PitchSettings extends Distribution<number> {
 
-    constructor(values: Array<DistributionEntry<number>>) {
-        super(values);
+    constructor(complexity: number, values: Array<DistributionEntry<number>>) {
+        super(complexity, values);
     }
 
-    public static EQUIVALENT(): PitchSettings {
+    public static ALL(): Map<String, PitchSettings> {
+        const map: Map<String, PitchSettings> = new Map();
+        map.set("MINIMAL", this.MINIMAL());
+        map.set("EASY", this.EASY());
+        map.set("PENTATONIC", this.PENTATONIC());
+        map.set("HARMONIC", this.HARMONIC());
+        map.set("EQUIVALENT", this.EQUIVALENT());
+        return map;
+    }
+
+    public static MINIMAL(): PitchSettings {
         return new PitchSettings(
+            0.1,
+            [new DistributionEntry(0, 2),
+            new DistributionEntry(1, 0),
+            new DistributionEntry(2, 0),
+            new DistributionEntry(3, 1),
+            new DistributionEntry(4, 1),
+            new DistributionEntry(5, 0),
+            new DistributionEntry(6, 0)]);
+    }
+
+    public static EASY(): PitchSettings {
+        return new PitchSettings(
+            0.4,
+            [new DistributionEntry(0, 10),
+            new DistributionEntry(1, 3),
+            new DistributionEntry(2, 3),
+            new DistributionEntry(3, 7),
+            new DistributionEntry(4, 7),
+            new DistributionEntry(5, 2),
+            new DistributionEntry(6, 2)]);
+    }
+
+    public static PENTATONIC(): PitchSettings {
+        return new PitchSettings(
+            0.3,
             [new DistributionEntry(0, 1),
             new DistributionEntry(1, 1),
-            new DistributionEntry(2, 1),
+            new DistributionEntry(2, 0),
             new DistributionEntry(3, 1),
             new DistributionEntry(4, 1),
             new DistributionEntry(5, 1),
-            new DistributionEntry(6, 1)]);
+            new DistributionEntry(6, 0)]);
     }
 
     public static HARMONIC(): PitchSettings {
         return new PitchSettings(
+            0.6,
             [new DistributionEntry(0, 10),
             new DistributionEntry(1, 5),
             new DistributionEntry(2, 6),
@@ -126,15 +230,16 @@ export class PitchSettings extends Distribution<number> {
             new DistributionEntry(6, 2)]);
     }
 
-    public static PENTATONIC(): PitchSettings {
+    public static EQUIVALENT(): PitchSettings {
         return new PitchSettings(
+            0.8,
             [new DistributionEntry(0, 1),
             new DistributionEntry(1, 1),
-            new DistributionEntry(2, 0),
+            new DistributionEntry(2, 1),
             new DistributionEntry(3, 1),
             new DistributionEntry(4, 1),
             new DistributionEntry(5, 1),
-            new DistributionEntry(6, 0)]);
+            new DistributionEntry(6, 1)]);
     }
 
 }

@@ -5,10 +5,10 @@ import { Fraction } from "../../../src/Common/DataObjects";
 describe("Distribution random algorithm", () => {
 
    it("works with array", (done: MochaDone) => {
-      const values: Array<DistributionEntry<Fraction>> = [  new DistributionEntry(new Fraction(1, 1), 0.10),
-                                                            new DistributionEntry(new Fraction(1, 2), 0.20),
-                                                            new DistributionEntry(new Fraction(1, 4), 0.40)];
-      const subject: Distribution<Fraction> = new Distribution<Fraction>(values);
+      const values: Array<DistributionEntry<Fraction>> = [new DistributionEntry(new Fraction(1, 1), 0.10),
+      new DistributionEntry(new Fraction(1, 2), 0.20),
+      new DistributionEntry(new Fraction(1, 4), 0.40)];
+      const subject: Distribution<Fraction> = new Distribution<Fraction>(0.5, values);
       chai.expect(subject).to.not.be.undefined;
       chai.expect(subject.getValues()).to.not.be.undefined;
       chai.expect(subject.rollAndDraw()).to.not.be.undefined;
@@ -17,15 +17,15 @@ describe("Distribution random algorithm", () => {
 
    it("calculates correctly: dont exceed 5% error with 1000 iterations ", (done: MochaDone) => {
       // this test only works when the sum of all weights is equal to 1!
-      const values: Array<DistributionEntry<number>> = [ new DistributionEntry(0, 0.6),
-                                                         new DistributionEntry(1, 0.0),
-                                                         new DistributionEntry(2, 0.4)];
+      const values: Array<DistributionEntry<number>> = [new DistributionEntry(0, 0.6),
+      new DistributionEntry(1, 0.0),
+      new DistributionEntry(2, 0.4)];
 
-      const subject: Distribution<number> = new Distribution<number>(values);
+      const subject: Distribution<number> = new Distribution<number>(0.5, values);
       const poolsCount: Array<number> = [0, 0, 0];
-      const poolsExpectedWeight: Array<number> = [ values[0].Weight,
-                                                   values[1].Weight,
-                                                   values[2].Weight];
+      const poolsExpectedWeight: Array<number> = [values[0].Weight,
+      values[1].Weight,
+      values[2].Weight];
       const iterations: number = 1000;
       for (let i: number = 0; i < iterations; i++) {
          const value: number = subject.rollAndDraw();
@@ -48,9 +48,9 @@ describe("Distribution random algorithm", () => {
    });
 
    it("calculates correctly: weights with 0.0 must not be taken", (done: MochaDone) => {
-      const values: Array<DistributionEntry<number>> = [ new DistributionEntry(0, 0.6),
-                                                         new DistributionEntry(1, 0.0)];
-      const subject: Distribution<number> = new Distribution<number>(values);
+      const values: Array<DistributionEntry<number>> = [new DistributionEntry(0, 0.6),
+      new DistributionEntry(1, 0.0)];
+      const subject: Distribution<number> = new Distribution<number>(0.5, values);
       const proofPool: Array<number> = [0, 0];
       const iterations: number = 1000;
       for (let i: number = 0; i < iterations; i++) {
@@ -63,11 +63,11 @@ describe("Distribution random algorithm", () => {
    });
 
    it("calculates correctly: stay in bounds when sum=1", (done: MochaDone) => {
-      const values: Array<DistributionEntry<number>> = [ new DistributionEntry(0, 0.6),
-                                                         new DistributionEntry(1, 0.0),
-                                                         new DistributionEntry(2, 0.4)];
+      const values: Array<DistributionEntry<number>> = [new DistributionEntry(0, 0.6),
+      new DistributionEntry(1, 0.0),
+      new DistributionEntry(2, 0.4)];
 
-      const subject: Distribution<number> = new Distribution<number>(values);
+      const subject: Distribution<number> = new Distribution<number>(0.5, values);
       const proofPool: Array<number> = [0, 0, 0];
       const iterations: number = 1000;
       for (let i: number = 0; i < iterations; i++) {
@@ -81,12 +81,12 @@ describe("Distribution random algorithm", () => {
    });
 
    it("calculates correctly: stay in bounds when sum>1", (done: MochaDone) => {
-      const values: Array<DistributionEntry<number>> = [ new DistributionEntry(0, 0.6),
-                                                         new DistributionEntry(1, 0.0),
-                                                         new DistributionEntry(2, 0.4),
-                                                         new DistributionEntry(3, 0.4)];
+      const values: Array<DistributionEntry<number>> = [new DistributionEntry(0, 0.6),
+      new DistributionEntry(1, 0.0),
+      new DistributionEntry(2, 0.4),
+      new DistributionEntry(3, 0.4)];
 
-      const subject: Distribution<number> = new Distribution<number>(values);
+      const subject: Distribution<number> = new Distribution<number>(0.5, values);
       const proofPool: Array<number> = [0, 0, 0];
       const iterations: number = 1000;
       for (let i: number = 0; i < iterations; i++) {
@@ -100,9 +100,9 @@ describe("Distribution random algorithm", () => {
    });
 
    it("calculates correctly: stay in bounds when sum<1", (done: MochaDone) => {
-      const values: Array<DistributionEntry<number>> = [ new DistributionEntry(0, 0.6),
-                                                         new DistributionEntry(1, 0.0)];
-      const subject: Distribution<number> = new Distribution<number>(values);
+      const values: Array<DistributionEntry<number>> = [new DistributionEntry(0, 0.6),
+      new DistributionEntry(1, 0.0)];
+      const subject: Distribution<number> = new Distribution<number>(0.5, values);
       const proofPool: Array<number> = [0, 0, 0];
       const iterations: number = 1000;
       for (let i: number = 0; i < iterations; i++) {
@@ -116,13 +116,13 @@ describe("Distribution random algorithm", () => {
    });
 
    it("calculates correctly: incorrect params wont crash ", (done: MochaDone) => {
-      const values: Array<DistributionEntry<number>> = [ new DistributionEntry(0, 0.1),
-                                                         new DistributionEntry(1, 0.2),
-                                                         new DistributionEntry(2, 0.3),
-                                                         new DistributionEntry(3, 0.4),
-                                                         new DistributionEntry(4, 0.5)];
+      const values: Array<DistributionEntry<number>> = [new DistributionEntry(0, 0.1),
+      new DistributionEntry(1, 0.2),
+      new DistributionEntry(2, 0.3),
+      new DistributionEntry(3, 0.4),
+      new DistributionEntry(4, 0.5)];
 
-      const subject: Distribution<number> = new Distribution<number>(values);
+      const subject: Distribution<number> = new Distribution<number>(0.5, values);
       const proofPool: Array<number> = [0, 0, 0, 0, 0];
       const iterations: number = 1000;
       for (let i: number = 0; i < iterations; i++) {

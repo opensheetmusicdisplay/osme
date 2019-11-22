@@ -1,9 +1,13 @@
 export class Distribution<T> {
     private entries: Array<DistributionEntry<T>>;
+    protected complexity: number;
 
-    public constructor(values: Array<DistributionEntry<T>>) {
+    public constructor(complexity: number, values: Array<DistributionEntry<T>>) {
         this.entries = values;
+        this.complexity = complexity;
     }
+
+    public getComplexity(): number { return this.complexity; }
 
     public static EQUIVALENT_VALUES(sum: number, count: number): Array<number> {
         const values: Array<number> = new Array(count);

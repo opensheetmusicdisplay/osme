@@ -188,16 +188,12 @@ export class ScaleKey {
             const patternStep: number = pattern[i];
             currentStep = (currentStep + patternStep) % 12;
 
-            console.log("CurrentSymbol %s, currentStep: %s", currentSymbol, currentStep);
             const candidates: Array<Tone> = Tone.getAllTones().filter(tone => tone.getSymbol() === currentSymbol);
-            console.log(candidates);
             if (candidates.length > 0) {
                 const matches: Array<Tone> = candidates.filter(tone => tone.getHalftone() === currentStep);
-                console.log(matches);
                 if (matches.length > 0) {
                     const chosenMatch: Tone = matches[0];
                     tones[i] = chosenMatch;
-                    console.log("Chosen next Tone: ", chosenMatch);
                 }
             } else {
                 console.log("No candidates found!");

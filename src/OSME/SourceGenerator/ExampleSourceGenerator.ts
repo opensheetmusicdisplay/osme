@@ -45,8 +45,6 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
 
         for (let index: number = 0; index < measureCount; index++) {
 
-            console.log("Creating measure %s", index);
-
             const currentMeasure: SourceMeasure = this.createSourceMeasure(
                 new Fraction(
                     this.measureDuration.Numerator * index,
@@ -69,11 +67,9 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
         }
         musicSheet.SourceMeasures.last().endingBarStyleEnum = SystemLinesEnum.ThinBold; // add final bar line to last measure
 
-        console.log("fillStaffList");
         // finalize and polish the sheet
         musicSheet.fillStaffList();
-        super.debugStatistics();
-        console.log("debugStatistics done");
+        // super.debugStatistics();
 
         return musicSheet;
     }
@@ -93,8 +89,6 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
             if (durationSum.RealValue + durationFraction.RealValue <= currentMeasure.Duration.RealValue) {
                 // const durationFraction: Fraction = this.createFraction(duration);
                 note = this.generateEntry(currentMeasure, staff, voice, startPosition, durationFraction, pitch);
-                console.log("Add normal note:");
-                console.log(durationFraction);
                 durationSum.Add(durationFraction);
             } else {
                 const diffDuration: Fraction = Fraction.minus(currentMeasure.Duration, durationSum);
@@ -102,8 +96,6 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
                     console.log("Skip diffDuration note:");
                     console.log(diffDuration);
                 } else {
-                    console.log("Add diffDuration note:");
-                    console.log(diffDuration);
                     note = this.generateEntry(currentMeasure, staff, voice, startPosition, diffDuration, pitch);
                     durationSum.Add(diffDuration);
                 }
@@ -124,7 +116,6 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
         const tone: Tone = this.chooseScaleTone(scaleKey, index);
         entry.Pitch = tone.toPitch(1);
         entry.Duration = this.chooseDuration(currentMeasure, startPosition);
-        console.log(entry.Duration);
         if (entry.Pitch === undefined) {
             throw new Error("entry.pitch is undefined");
         }
@@ -167,7 +158,6 @@ export class ExampleSourceGenerator extends SourceGeneratorPlugin {
         do {
 
             const currPosWeights: Array<number> = this.calcWeightsForDurations(startPosition, this.beat, this.options.duration_settings.getValues());
-            console.log(currPosWeights);
             chosenDuration = this.options.duration_settings.rollAndDraw(currPosWeights);
 
             noteShouldBeReRolled = new Fraction(1, 4).lte(chosenDuration) && !startPositionIsOnBeat;

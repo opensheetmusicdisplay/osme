@@ -82,7 +82,7 @@
 
         </div>
         <div class="column">
-            <h4 class="ui header">Complexity (1-10)</h4>
+            <h3 class="ui header">Complexity (1-10)</h3>
             <select class="ui selection dropdown" id="selectComplexity">
                 <option value="1">1</option>
                 <option value="2">2</option>
@@ -91,9 +91,26 @@
                 <option value="5">5</option>
                 <option value="6">6</option>
                 <option value="7">7</option>
-                <option value="8">9</option>
+                <option value="8">8</option>
                 <option value="9">9</option>
                 <option value="10">10</option>
+            </select>
+            <h3 class="ui header">Finetuning</h3>
+            <h4 class="ui header">Duration Settings (1-10)</h4>
+            <select class="ui selection dropdown" id="selectDuration">
+                <option value="MINIMAL">MINIMAL (1)</option>
+                <option value="EASY">EASY (2)</option>
+                <option value="TYPICAL">TYPICAL (5)</option>
+                <option value="COMPLEX">COMPLEX (7)</option>
+                <option value="CRAZY">CRAZY (9)</option>
+            </select>
+            <h4 class="ui header">Pitch Settings (1-10)</h4>
+            <select class="ui selection dropdown" id="selectPitch">
+                <option value="MINIMAL">MINIMAL (1)</option>
+                <option value="PENTATONIC">PENTATONIC (3)</option>
+                <option value="EASY">EASY (4)</option>
+                <option value="HARMONIC">HARMONIC (6)</option>
+                <option value="EQUIVALENT">EQUIVALENT (8)</option>
             </select>
         </div>
         <div class="column">
@@ -121,4 +138,5 @@
         </tr>
     </table>
 </body>
+
 </html>

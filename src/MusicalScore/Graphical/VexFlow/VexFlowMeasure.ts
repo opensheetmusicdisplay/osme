@@ -33,7 +33,7 @@ import {TechnicalInstruction} from "../../VoiceData/Instructions/TechnicalInstru
 import {PlacementEnum} from "../../VoiceData/Expressions/AbstractExpression";
 import {VexFlowGraphicalNote} from "./VexFlowGraphicalNote";
 import {AutoBeamOptions} from "../../../OpenSheetMusicDisplay/OSMDOptions";
-import {NoteType} from "../../VoiceData";
+import {NoteType, Arpeggio} from "../../VoiceData";
 
 export class VexFlowMeasure extends GraphicalMeasure {
     constructor(staff: Staff, staffLine: StaffLine = undefined, sourceMeasure: SourceMeasure = undefined) {
@@ -461,7 +461,7 @@ export class VexFlowMeasure extends GraphicalMeasure {
             let gNotesEndTimestamp: Fraction = new Fraction();
             for (const graphicalNote of gve.notes) {
                 const noteEnd: Fraction  = Fraction.plus(graphicalNote.sourceNote.getAbsoluteTimestamp(), graphicalNote.sourceNote.Length);
-                if (gNotesEndTimestamp < noteEnd) {
+                if (gNotesEndTimestamp.lt(noteEnd)) {
                     gNotesEndTimestamp = noteEnd;
                 }
             }
@@ -471,7 +471,7 @@ export class VexFlowMeasure extends GraphicalMeasure {
                 // if this voice is new, check for a gap from measure start to the start of the current voice entry:
                 const gapFromMeasureStart: Fraction = Fraction.minus(gNotesStartTimestamp, this.parentSourceMeasure.AbsoluteTimestamp);
                 if (gapFromMeasureStart.RealValue > 0) {
-                    log.debug("Ghost Found at start");
+                    log.trace(`Ghost Found at start (measure ${this.MeasureNumber})`); // happens too often for valid measures to be logged to debug
                     const vfghost: Vex.Flow.GhostNote = VexFlowConverter.GhostNote(gapFromMeasureStart);
                     const ghostGve: VexFlowVoiceEntry = new VexFlowVoiceEntry(undefined, undefined);
                     ghostGve.vfStaveNote = vfghost;
@@ -483,7 +483,7 @@ export class VexFlowMeasure extends GraphicalMeasure {
                 const inBetweenLength: Fraction = Fraction.minus(gNotesStartTimestamp, latestVoiceTimestamp);
 
                 if (inBetweenLength.RealValue > 0) {
-                    log.debug("Ghost Found in between");
+                    log.trace(`Ghost Found in between (measure ${this.MeasureNumber})`); // happens too often for valid measures to be logged to debug
                     const vfghost: Vex.Flow.GhostNote = VexFlowConverter.GhostNote(inBetweenLength);
                     const ghostGve: VexFlowVoiceEntry = new VexFlowVoiceEntry(undefined, undefined);
                     ghostGve.vfStaveNote = vfghost;
@@ -496,8 +496,6 @@ export class VexFlowMeasure extends GraphicalMeasure {
 
             // finally set the latest timestamp of this voice to the end timestamp of the longest note in the current voiceEntry:
             latestVoiceTimestamp = gNotesEndTimestamp;
-
-
         }
 
         const measureEndTimestamp: Fraction = Fraction.plus(this.parentSourceMeasure.AbsoluteTimestamp, this.parentSourceMeasure.Duration);
@@ -506,7 +504,7 @@ export class VexFlowMeasure extends GraphicalMeasure {
             // fill the gap with a rest ghost note
             // starting from lastFraction
             // with length restLength:
-            log.debug("Ghost Found at end");
+            log.trace(`Ghost Found at end (measure ${this.MeasureNumber})`); // happens too often for valid measures to be logged to debug
             const vfghost: Vex.Flow.GhostNote = VexFlowConverter.GhostNote(restLength);
             const ghostGve: VexFlowVoiceEntry = new VexFlowVoiceEntry(undefined, undefined);
             ghostGve.vfStaveNote = vfghost;
@@ -938,8 +936,16 @@ export class VexFlowMeasure extends GraphicalMeasure {
 
                 // add Arpeggio
                 if (voiceEntry.parentVoiceEntry && voiceEntry.parentVoiceEntry.Arpeggio !== undefined) {
-                    const type: Vex.Flow.Stroke.Type = voiceEntry.parentVoiceEntry.Arpeggio.type;
-                    vexFlowVoiceEntry.vfStaveNote.addStroke(0, new Vex.Flow.Stroke(type));
+                    const arpeggio: Arpeggio = voiceEntry.parentVoiceEntry.Arpeggio;
+                    if (voiceEntry.notes && voiceEntry.notes.length > 1) {
+                        // only draw arpeggio if there's more than one note in it. otherwise Vexflow renders the arpeggio to a very high y level
+                        const type: Vex.Flow.Stroke.Type = arpeggio.type;
+                        vexFlowVoiceEntry.vfStaveNote.addStroke(0, new Vex.Flow.Stroke(type));
+                    } else {
+                        log.debug(`[OSMD] arpeggio in measure ${this.MeasureNumber} could not be drawn.
+                        voice entry had less than two notes, arpeggio is likely between voice entries, not currently supported in Vexflow.`);
+                        // TODO: create new arpeggio with all the arpeggio's notes (arpeggio.notes), perhaps with GhostNotes in a new vfStaveNote. not easy.
+                    }
                 }
 
                 this.vfVoices[voice.VoiceId].addTickable(vexFlowVoiceEntry.vfStaveNote);

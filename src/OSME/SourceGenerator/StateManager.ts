@@ -1,6 +1,6 @@
-import { Note, Pitch } from "../..";
+import { Note, Pitch } from "opensheetmusicdisplay";
 import { Dictionary } from "typescript-collections";
-import { NoteEnum } from "../../Common";
+import { NoteEnum } from "opensheetmusicdisplay";
 
 export class StateManager {
 

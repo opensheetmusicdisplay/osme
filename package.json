@@ -48,8 +48,8 @@
   },
   "homepage": "http://opensheetmusicdisplay.org",
   "dependencies": {
-    "opensheetmusicdisplay": "^0.7.1"
-   
+    "opensheetmusicdisplay": "^0.7.1",
+    "xmlbuilder": "^13.0.2"
   },
   "devDependencies": {
     "@types/chai": "^4.0.3",

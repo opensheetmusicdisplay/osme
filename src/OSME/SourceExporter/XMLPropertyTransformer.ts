@@ -1,9 +1,9 @@
 
 import { } from "xmlbuilder";
-import { Note, SourceMeasure } from "../../MusicalScore";
-import { ClefInstruction, AbstractNotationInstruction, KeyInstruction, KeyEnum } from "../../MusicalScore/VoiceData/Instructions";
-import { Pitch } from "../..";
-import { AccidentalEnum, NoteEnum } from "../../Common";
+import { Note, SourceMeasure } from "opensheetmusicdisplay";
+import { ClefInstruction, AbstractNotationInstruction, KeyInstruction, KeyEnum } from "opensheetmusicdisplay";
+import { Pitch } from "opensheetmusicdisplay";
+import { AccidentalEnum, NoteEnum } from "opensheetmusicdisplay";
 
 export class XMLPropertyTransformer {
     public pitchToAlterStep(note: Note): Number {

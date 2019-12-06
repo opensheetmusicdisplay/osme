@@ -1,9 +1,10 @@
 {
   "name": "osme",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "description": "An open source JavaScript engine for displaying MusicXML based on VexFlow.",
-  "main": "build/osme.min.js",
-  "typings": "build/dist/src/",
+  "main": "dist/index.js",
+  "typings": "dist/src/",
+  "types": "dist/index.d.ts",
   "scripts": {
     "docs": "typedoc --out ./build/docs --name OSME --module commonjs --target ES5 --ignoreCompilerErrors --mode file ./src",
     "eslint": "eslint .",

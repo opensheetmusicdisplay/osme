@@ -8,7 +8,7 @@
     "docs": "typedoc --out ./build/docs --name OSME --module commonjs --target ES5 --ignoreCompilerErrors --mode file ./src",
     "eslint": "eslint .",
     "tslint": "tslint --project tsconfig.json \"src/**/*.ts\"",
-    "lint": "npm-run-all eslint",
+    "lint": "npm-run-all eslint tslint",
     "test": "karma start --single-run --no-auto-watch",
     "test:watch": "karma start --no-single-run --auto-watch --browsers ChromeNoSecurity",
     "prepare": "npm run build",

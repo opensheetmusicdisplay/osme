@@ -3,18 +3,17 @@
     "target": "es6",
     "module": "commonjs",
     "moduleResolution": "node",
-    "noUnusedLocals": true,
-    "outDir": "lib",
+    "outDir": "./lib",
     "declaration": true,
     "sourceMap": true,
-    "typeRoots": ["./node_modules/@types"],
+    "typeRoots": [
+      "./node_modules/@types"
+    ],
     "skipLibCheck": true
   },
   "include": ["src"],
   "exclude": [
     "node_modules",
-    "dist",
-    "lib",
     "demo",
     "osme_demo",
     "build"

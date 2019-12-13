@@ -1,5 +1,4 @@
 {
-  "extends": "tslint:latest",
   "linterOptions": {
     "exclude": [
       "bin",

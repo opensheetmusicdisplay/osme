@@ -1,4 +1,4 @@
-import { OpenSheetMusicDisplay } from "../../src/OpenSheetMusicDisplay/OpenSheetMusicDisplay";
+import { OpenSheetMusicDisplay } from "opensheetmusicdisplay";
 
 /**
  * This class collects useful methods to interact with test data.

@@ -1,10 +1,10 @@
 
 import { } from "xmlbuilder";
 import xmlbuilder = require("xmlbuilder");
-import { SourceMeasure } from "../..";
-import { Note } from "../../MusicalScore";
+import { SourceMeasure } from "opensheetmusicdisplay";
+import { Note } from "opensheetmusicdisplay";
 import { XMLPropertyTransformer } from "./XMLPropertyTransformer";
-import { ClefInstruction, KeyInstruction } from "../../MusicalScore/VoiceData/Instructions";
+import { ClefInstruction, KeyInstruction } from "opensheetmusicdisplay";
 
 export class XMLDriver {
 

@@ -1,10 +1,10 @@
 import { ScaleKey, ScaleType, Tone } from "../../../src/OSME/Common";
 import { SourceGeneratorOptions, DefaultInstrumentOptions } from "../../../src/OSME/SourceGenerator/SourceGeneratorParameters";
 import { ExampleSourceGenerator } from "../../../src/OSME/SourceGenerator/ExampleSourceGenerator";
-import { MusicSheet } from "../../../src/MusicalScore/MusicSheet";
+import { MusicSheet } from "opensheetmusicdisplay";
 import { SourceGeneratorPlugin } from "../../../src/OSME/SourceGenerator/SourceGeneratorPlugin";
-import { RhythmInstruction, RhythmSymbolEnum } from "../../../src/MusicalScore/VoiceData/Instructions";
-import { Fraction } from "../../../src";
+import { RhythmInstruction, RhythmSymbolEnum } from "opensheetmusicdisplay";
+import { Fraction } from "opensheetmusicdisplay";
 
 /* tslint:disable:no-unused-expression */
 describe("SourceGenerator Parameters", () => {

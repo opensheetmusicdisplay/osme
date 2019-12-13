@@ -1,13 +1,13 @@
 import { SourceGeneratorPlugin } from "./SourceGeneratorPlugin";
 // tslint:disable-next-line: max-line-length
-import { MusicSheet, SourceMeasure, Staff, Instrument, Voice, Note, VoiceEntry, SourceStaffEntry, InstrumentalGroup } from "../../MusicalScore";
-import { Fraction, Pitch } from "../../Common";
-import { ClefInstruction, KeyInstruction } from "../../MusicalScore/VoiceData/Instructions";
+import { MusicSheet, SourceMeasure, Staff, Instrument, Voice, Note, VoiceEntry, SourceStaffEntry, InstrumentalGroup } from "opensheetmusicdisplay";
+import { Fraction, Pitch } from "opensheetmusicdisplay";
+import { ClefInstruction, KeyInstruction } from "opensheetmusicdisplay";
 import { SourceGeneratorOptions, PitchSettings } from "./SourceGeneratorParameters";
 import { ScaleKey, Tone } from "../Common";
 import { MusicalEntry } from "../Common/Intention/IntentionEntry";
 import { DistributionEntry } from "../Common/Distribution";
-import { SystemLinesEnum } from "../../MusicalScore/Graphical/SystemLinesEnum";
+import { SystemLinesEnum } from "opensheetmusicdisplay";
 
 export class ExampleSourceGenerator extends SourceGeneratorPlugin {
 

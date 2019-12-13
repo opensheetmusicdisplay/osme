@@ -54,6 +54,7 @@
     "loglevel": "^1.5.0",
     "typescript-collections": "^1.1.2",
     "vexflow": "^1.2.89",
+    "opensheetmusicdisplay": "github:opensheetmusicdisplay/opensheetmusicdisplay#feature/fix-module-exports",
     "xmlbuilder": "^13.0.2"
   },
   "devDependencies": {

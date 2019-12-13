@@ -13,7 +13,7 @@ export class XMLPropertyTransformer {
         return Pitch.HalfTonesFromAccidental(note.Pitch.Accidental);
     }
 
-    public pitchToAlterString(note: Note): String {
+    public pitchToAlterString(note: Note): string {
         if (note === undefined || note.Pitch === undefined || note.Pitch.Accidental === undefined) {
             return undefined;
         }
@@ -49,7 +49,7 @@ export class XMLPropertyTransformer {
         }
     }
 
-    public clefToClefSign(clef: ClefInstruction): String {
+    public clefToClefSign(clef: ClefInstruction): string {
         return Pitch.getNoteEnumString(clef.ClefPitch.FundamentalNote);
     }
 
@@ -96,7 +96,7 @@ export class XMLPropertyTransformer {
         return Math.sign(key.Key.valueOf());
     }
 
-    public keyToMode(key: KeyInstruction): String {
+    public keyToMode(key: KeyInstruction): string {
         switch (key.Mode) {
             case KeyEnum.major: return "major";
             case KeyEnum.minor: return "minor";
@@ -104,7 +104,7 @@ export class XMLPropertyTransformer {
         }
     }
 
-    public noteToNoteString(note: Note): String {
+    public noteToNoteString(note: Note): string {
         return Pitch.getNoteEnumString(note.Pitch.FundamentalNote);
     }
 
@@ -125,7 +125,7 @@ export class XMLPropertyTransformer {
         return newNom;
     }
 
-    public noteToDurationType(note: Note): String {
+    public noteToDurationType(note: Note): string {
         const val: Number = note.Length.RealValue;
         switch (val) {
             case (1.0 / 128.0): return "128th";

@@ -36,7 +36,7 @@ import {ScaleKey} from '../src/OSME/Common';
             "Mozart, W.A. - An Chloe": "Mozart_AnChloe.xml",
             "Mozart, W.A. - Das Veilchen": "Mozart_DasVeilchen.xml",
             "Mozart, W.A. - Clarinet Quintet (Excerpt)": "Mozart_Clarinet_Quintet_Excerpt.mxl",
-            "Mozart, W.A. - String Quartet in G, K. 387, 1st Mvmt Excerpt": "Mozart_String_Quartet_in_G_K._387_1st_Mvmnt_excerpt.musicxml",
+            "Mozart, W.A. - string Quartet in G, K. 387, 1st Mvmt Excerpt": "Mozart_String_Quartet_in_G_K._387_1st_Mvmnt_excerpt.musicxml",
             "Mozart/Holzer - Land der Berge (national anthem of Austria)": "Land_der_Berge.musicxml",
             "OSMD Function Test - All": "OSMD_function_test_all.xml",
             "OSMD Function Test - Accidentals": "OSMD_function_test_accidentals.musicxml",

@@ -15,11 +15,11 @@ module.exports = merge(common, {
         filename: '[name].min.js',
         path: path.resolve(__dirname, 'lib'),
         library: 'osme',
-        libraryTarget: 'umd'
+        libraryTarget: 'commonjs'
     },
     mode: 'production',
     optimization: {
-        minimize: true
+        minimize: false
     },
     plugins: [
         // build optimization plugins

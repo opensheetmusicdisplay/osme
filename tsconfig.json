@@ -4,12 +4,13 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "noUnusedLocals": true,
-    "outDir": "typings",
+    "outDir": "lib",
     "declaration": true,
     "sourceMap": true,
-    "typeRoots": ["./node_modules/@types"]
+    "typeRoots": ["./node_modules/@types"],
+    "skipLibCheck": true
   },
-//  "include": ["src"],
+  "include": ["src"],
   "exclude": [
     "node_modules",
     "dist",

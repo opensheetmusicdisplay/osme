@@ -13,7 +13,7 @@ export class XMLSourceExporter {
         this.xmlDriver = new XMLDriver(this.transformer);
     }
 
-    public export(sheet: MusicSheet): String {
+    public export(sheet: MusicSheet): string {
         const measures: SourceMeasure[] = sheet.SourceMeasures;
 
         this.xmlDriver.begin(sheet.ComposerString, sheet.TitleString);
@@ -64,7 +64,7 @@ export class XMLSourceExporter {
             this.xmlDriver.endMeasure();
         });
 
-        const xmlString: String = this.xmlDriver.endAndReturn();
+        const xmlString: string = this.xmlDriver.endAndReturn();
         return xmlString;
     }
 }

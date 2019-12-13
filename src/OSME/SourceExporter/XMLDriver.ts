@@ -19,7 +19,7 @@ export class XMLDriver {
         this.transformer = transformer;
     }
 
-    public begin(composer: String, title: String): void {
+    public begin(composer: string, title: string): void {
         this.root = xmlbuilder.create("score-partwise", {
             version: "1.0",
             encoding: "UTF-8",
@@ -66,12 +66,12 @@ export class XMLDriver {
         const measureNumber: Number = this.transformer.measureToNumber(measure);
         const divisions: Number = this.transformer.measureToDivisions(measure);
         const clef: ClefInstruction = this.transformer.getClefInstruction(measure);
-        const clefSign: String = (clef === undefined) ? undefined : this.transformer.clefToClefSign(clef);
+        const clefSign: string = (clef === undefined) ? undefined : this.transformer.clefToClefSign(clef);
         const clefLine: Number = (clef === undefined) ? undefined : this.transformer.clefToClefLine(clef);
 
         const key: KeyInstruction = this.transformer.getKeyInstruction(measure);
         const keyFifths: Number = (key === undefined) ? undefined : this.transformer.keyToFifths(key);
-        const keyMode: String = (key === undefined) ? undefined : this.transformer.keyToMode(key);
+        const keyMode: string = (key === undefined) ? undefined : this.transformer.keyToMode(key);
 
         const beats: Number = measure.ActiveTimeSignature.Numerator;
         const beatType: Number = measure.ActiveTimeSignature.Denominator;
@@ -109,12 +109,12 @@ export class XMLDriver {
     }
 
     public writeNote(note: Note, lastAccidental: number = 0): void {
-        const step: String = this.transformer.noteToNoteString(note);
+        const step: string = this.transformer.noteToNoteString(note);
         const octave: Number = this.transformer.noteToOctaveNumber(note);
         const duration: Number = this.transformer.noteToDurationNumber(note);
-        const durationType: String = this.transformer.noteToDurationType(note);
+        const durationType: string = this.transformer.noteToDurationType(note);
         const alterStep: Number = this.transformer.pitchToAlterStep(note);
-        const alterString: String = this.transformer.pitchToAlterString(note);
+        const alterString: string = this.transformer.pitchToAlterString(note);
 
         const xmlNote: xmlbuilder.XMLElement = this.currentMeasure.element("note");
         //    order is important! Pitch, duration,type
@@ -139,7 +139,7 @@ export class XMLDriver {
         }
     }
 
-    public endAndReturn(): String {
+    public endAndReturn(): string {
         return this.root.end({ pretty: true });
     }
 }

@@ -35,7 +35,7 @@ export interface SourceGeneratorOptions {
 }
 
 export class InstrumentOptions {
-    public name: String;
+    public name: string;
     public midi: MidiInstrument;
     public rangeLowest: Pitch;
     public rangeHighest: Pitch;
@@ -92,13 +92,13 @@ export class ComplexityMap {
     }
 
     public static getPitchIndex(factor: number): number {
-        const map: Map<String, PitchSettings> = PitchSettings.ALL();
+        const map: Map<string, PitchSettings> = PitchSettings.ALL();
         const found: Array<PitchSettings> = Array.from<PitchSettings>(map.values()).filter(it => it.getComplexity() <= factor);
         if (found !== undefined && found.length > 0) { return found.length - 1; } else { return map.size - 1; }
     }
 
     public static getDurationIndex(factor: number): number {
-        const map: Map<String, DurationSettings> = DurationSettings.ALL();
+        const map: Map<string, DurationSettings> = DurationSettings.ALL();
         const found: Array<DurationSettings> = Array.from<DurationSettings>(map.values()).filter(it => it.getComplexity() <= factor);
         if (found !== undefined && found.length > 0) { return found.length - 1; } else { return map.size - 1; }
     }
@@ -110,8 +110,8 @@ export class DurationSettings extends Distribution<Fraction> {
         super(complexity, entries);
     }
 
-    public static ALL(): Map<String, DurationSettings> {
-        const map: Map<String, DurationSettings> = new Map();
+    public static ALL(): Map<string, DurationSettings> {
+        const map: Map<string, DurationSettings> = new Map();
         map.set("MINIMAL", this.MINIMAL());
         map.set("EASY", this.EASY());
         map.set("TYPICAL", this.TYPICAL());
@@ -172,8 +172,8 @@ export class PitchSettings extends Distribution<number> {
         super(complexity, values);
     }
 
-    public static ALL(): Map<String, PitchSettings> {
-        const map: Map<String, PitchSettings> = new Map();
+    public static ALL(): Map<string, PitchSettings> {
+        const map: Map<string, PitchSettings> = new Map();
         map.set("MINIMAL", this.MINIMAL());
         map.set("EASY", this.EASY());
         map.set("PENTATONIC", this.PENTATONIC());

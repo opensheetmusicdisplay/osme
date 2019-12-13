@@ -38,12 +38,12 @@ export class StateManager {
     }
 
     public printStatistics(): void {
-        let noteFrequencyString: String = "noteFrequency: ";
+        let noteFrequencyString: string = "noteFrequency: ";
         this.noteFrequency.forEach((key, value) => { noteFrequencyString += key + ": " + value + "; "; });
         // console.log(this.noteEvents);
         console.log(noteFrequencyString);
         console.log("local state:");
-        let localNoteFrequencyString: String = "localNoteFrequency: ";
+        let localNoteFrequencyString: string = "localNoteFrequency: ";
         this.localNoteFrequency.forEach((key, value) => { localNoteFrequencyString += key + ": " + value + "; "; });
         // console.log(this.localNoteEvents);
         console.log(localNoteFrequencyString);

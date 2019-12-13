@@ -19,7 +19,7 @@ describe("SourceExporterDriver Test", () => {
       driver.beginMeasure(measure);
       driver.writeNote(note);
       driver.endMeasure();
-      const xmlString: String = driver.endAndReturn();
+      const xmlString: string = driver.endAndReturn();
       console.log(xmlString);
       chai.expect(xmlString).to.not.be.undefined;
       done();

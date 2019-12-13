@@ -1,4 +1,15 @@
 {
+  "extends": "tslint:latest",
+  "linterOptions": {
+    "exclude": [
+      "bin",
+      "node_modules",
+      "node_modules/**",
+      "lib",
+      "typings",
+      "osme_demo"
+    ]
+  },
   "rules": {
     "align": [
       true,
@@ -19,6 +30,7 @@
       true,
       "spaces"
     ],
+    "ordered-imports": false,
     "interface-name": false,
     "jsdoc-format": true,
     "label-position": true,

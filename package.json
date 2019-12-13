@@ -1,7 +1,7 @@
 {
   "name": "osme",
-  "version": "0.7.1",
-  "description": "An open source JavaScript engine for displaying MusicXML based on VexFlow.",
+  "version": "0.1.0",
+  "description": "An open source JavaScript engine for generating Music Sheets and export MusicXML files.",
   "main": "build/osme.min.js",
   "typings": "build/dist/src/",
   "scripts": {

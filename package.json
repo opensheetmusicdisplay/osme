@@ -48,7 +48,7 @@
   },
   "homepage": "http://opensheetmusicdisplay.org",
   "dependencies": {
-    "opensheetmusicdisplay": "github:opensheetmusicdisplay/opensheetmusicdisplay#feature/fix-module-exports",
+    "opensheetmusicdisplay": "github:opensheetmusicdisplay/opensheetmusicdisplay#feature/fix-npm-package",
     "xmlbuilder": "^13.0.2"
   },
   "devDependencies": {

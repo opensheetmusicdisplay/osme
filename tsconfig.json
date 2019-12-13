@@ -4,14 +4,16 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "noUnusedLocals": true,
-    "outDir": "dist",
+    "outDir": "typings",
     "declaration": true,
     "sourceMap": true,
     "typeRoots": ["./node_modules/@types"]
   },
+//  "include": ["src"],
   "exclude": [
     "node_modules",
     "dist",
+    "lib",
     "demo",
     "osme_demo",
     "build"

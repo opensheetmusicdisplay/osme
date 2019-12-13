@@ -5,6 +5,7 @@ var common = require('./webpack.common.js')
 var Cleaner = require('clean-webpack-plugin')
 
 var pathsToClean = [
+    'lib/**',
     'dist/**',
     'build/**'
 ]
@@ -12,7 +13,7 @@ var pathsToClean = [
 module.exports = merge(common, {
     output: {
         filename: '[name].min.js',
-        path: path.resolve(__dirname, 'dist'),
+        path: path.resolve(__dirname, 'lib'),
         library: 'osme',
         libraryTarget: 'umd'
     },

@@ -2,12 +2,12 @@
   "name": "osme",
   "version": "0.1.0",
   "description": "An open source JavaScript engine for generating Music Sheets and export MusicXML files.",
-  "main": "build/osme.min.js",
-  "typings": "build/dist/src/",
+  "main": "lib/osme.min.js",
+  "typings": "lib/typings/src",
   "scripts": {
     "docs": "typedoc --out ./build/docs --name OSME --module commonjs --target ES5 --ignoreCompilerErrors --mode file ./src",
     "eslint": "eslint .",
-    "tslint": "tslint --project tsconfig.json \"src/**/*.ts\" \"test/**/*.ts\"",
+    "tslint": "tslint --project tsconfig.json \"src/**/*.ts\"",
     "lint": "npm-run-all eslint tslint",
     "test": "karma start --single-run --no-auto-watch",
     "test:watch": "karma start --no-single-run --auto-watch --browsers ChromeNoSecurity",
@@ -24,12 +24,12 @@
     "lint"
   ],
   "files": [
-    "build/dist/src",
-    "build/osme.min.js",
+    "lib/typings/src",
+    "lib/osme.min.js",
+    "osme.min.js",
     "AUTHORS",
     "CHANGELOG.md",
-    "README.md",
-    "external"
+    "README.md"
   ],
   "repository": {
     "type": "git",

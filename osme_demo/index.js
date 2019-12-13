@@ -1,11 +1,17 @@
-import { OpenSheetMusicDisplay } from '../src/OpenSheetMusicDisplay/OpenSheetMusicDisplay';
-import { ExampleSourceGenerator } from '../src/OSME/SourceGenerator/ExampleSourceGenerator';
-import { XMLSourceExporter } from '../src/OSME/SourceExporter/XMLSourceExporter';
-import { SourceGeneratorPlugin, GeneratorPluginOptions } from '../src/OSME/SourceGenerator/SourceGeneratorPlugin';
-import { PitchSettings, NoteEnum, AccidentalEnum, DefaultInstrumentOptions, DurationSettings, Label, MusicSheet, ComplexityMap } from '../src';
-import { ScaleKey } from '../src/OSME/Common';
-import { RhythmInstruction, RhythmSymbolEnum } from '../src/MusicalScore/VoiceData/Instructions';
-import { Fraction } from '../src/Common/DataObjects';
+import {
+    ComplexityMap,
+    DefaultInstrumentOptions,
+    DurationSettings,
+    ExampleSourceGenerator,
+    Fraction,
+    Label,
+    OpenSheetMusicDisplay,
+    PitchSettings,
+    RhythmInstruction,
+    RhythmSymbolEnum,
+    XMLSourceExporter
+} from 'opensheetmusicdisplay';
+import {ScaleKey} from '../src/OSME/Common';
 //import * as OSME from '../src/OSME';
 
 /*jslint browser:true */

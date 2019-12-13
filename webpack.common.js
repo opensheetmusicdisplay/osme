@@ -4,13 +4,13 @@ var webpack = require('webpack')
 
 module.exports = {
     entry: {
-        opensheetmusicdisplay: './src/index.ts', // Main index (OpenSheetMusicDisplay and other classes)
-        demo: './demo/index.js' // Demo index
+        osme: './src/index.ts', // Main index (OpenSheetMusicDisplay and other classes)
+        osme_demo: './osme_demo/index.js' // Demo index
     },
     output: {
         path: path.resolve(__dirname, 'build'),
         filename: '[name].js',
-        library: 'opensheetmusicdisplay',
+        library: 'osme',
         libraryTarget: 'umd'
     },
     resolve: {
@@ -40,18 +40,18 @@ module.exports = {
         }),
         // add a demo page to the build folder
         new HtmlWebpackPlugin({
-            template: 'demo/index.html',
-            favicon: 'demo/favicon.ico',
-            title: 'OpenSheetMusicDisplay Demo'
+            template: 'osme_demo/index.html',
+            favicon: 'osme_demo/favicon.ico',
+            title: 'OSME Demo'
         })
     ],
     devServer: {
         contentBase: [
             path.join(__dirname, 'test/data'),
             path.join(__dirname, 'build'),
-            path.join(__dirname, 'demo')
+            path.join(__dirname, 'osme_demo')
         ],
-        port: 8000,
+        port: 9000,
         compress: false
     }
 }

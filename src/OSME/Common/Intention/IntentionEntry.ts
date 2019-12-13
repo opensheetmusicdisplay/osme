@@ -1,4 +1,4 @@
-import { Pitch, Fraction } from "../../../Common";
+import { Pitch, Fraction } from "opensheetmusicdisplay";
 
 export class MusicalEntry {
     public Pitch: Pitch;

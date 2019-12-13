@@ -1,5 +1,5 @@
 import { XMLDriver } from "../../../src/OSME/SourceExporter";
-import { SourceMeasure, Note, Fraction, Pitch, NoteEnum, AccidentalEnum } from "../../../src";
+import { SourceMeasure, Note, Fraction, Pitch, NoteEnum, AccidentalEnum } from "opensheetmusicdisplay";
 import { XMLPropertyTransformer } from "../../../src/OSME/SourceExporter/XMLPropertyTransformer";
 
 /* tslint:disable:no-unused-expression */

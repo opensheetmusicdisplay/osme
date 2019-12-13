@@ -2,7 +2,6 @@ var merge = require('webpack-merge')
 var webpack = require('webpack')
 var path = require('path')
 var common = require('./webpack.common.js')
-var Visualizer = require('webpack-visualizer-plugin')
 var Cleaner = require('clean-webpack-plugin')
 
 var pathsToClean = [
@@ -13,17 +12,13 @@ var pathsToClean = [
 module.exports = merge(common, {
     output: {
         filename: '[name].min.js',
-        path: path.resolve(__dirname, 'build'),
+        path: path.resolve(__dirname, 'dist'),
         library: 'osme',
         libraryTarget: 'umd'
     },
     mode: 'production',
     optimization: {
         minimize: true
-        // splitChunks: {
-        //     chunks: 'all',
-        //     name: false
-        // }
     },
     plugins: [
         // build optimization plugins
@@ -31,10 +26,10 @@ module.exports = merge(common, {
             minimize: true,
             debug: true
         }),
-        new Visualizer({
-            path: path.resolve(__dirname, 'build'),
-            filename: './statistics.html'
-        }),
+        // new Visualizer({
+        //     path: path.resolve(__dirname, 'build'),
+        //     filename: './statistics.html'
+        // }),
         new Cleaner(pathsToClean, { verbose: true, dry: false })
     ]
 })

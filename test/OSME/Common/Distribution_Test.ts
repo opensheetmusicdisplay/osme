@@ -1,5 +1,5 @@
-import { Distribution, DistributionEntry } from "../../../src/OSME/Common/Distribution";
-import { Fraction } from "../../../src/Common/DataObjects";
+import { Distribution, DistributionEntry } from "../../../src/OSME/Common";
+import { Fraction } from "opensheetmusicdisplay";
 
 /* tslint:disable:no-unused-expression */
 describe("Distribution random algorithm", () => {

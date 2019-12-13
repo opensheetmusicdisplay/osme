@@ -1,8 +1,8 @@
 import { XMLPropertyTransformer } from "./XMLPropertyTransformer";
 import { XMLDriver } from "./XMLDriver";
-import { MusicSheet, SourceMeasure, Note, VerticalSourceStaffEntryContainer, SourceStaffEntry, VoiceEntry } from "../../MusicalScore";
-import { KeyInstruction } from "../../MusicalScore/VoiceData/Instructions";
-import { NoteEnum } from "../..";
+import { MusicSheet, SourceMeasure, Note, VerticalSourceStaffEntryContainer, SourceStaffEntry, VoiceEntry } from "opensheetmusicdisplay";
+import { KeyInstruction } from "opensheetmusicdisplay";
+import { NoteEnum } from "opensheetmusicdisplay";
 
 export class XMLSourceExporter {
     private transformer: XMLPropertyTransformer;

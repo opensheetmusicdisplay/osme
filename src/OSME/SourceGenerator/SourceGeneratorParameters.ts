@@ -1,6 +1,6 @@
 import { ScaleKey } from "../Common";
-import { Pitch, NoteEnum, AccidentalEnum, Fraction } from "../../Common";
-import { ClefInstruction, MidiInstrument, RhythmInstruction } from "../../MusicalScore/VoiceData/Instructions";
+import { Pitch, NoteEnum, AccidentalEnum, Fraction } from "opensheetmusicdisplay";
+import { ClefInstruction, MidiInstrument, RhythmInstruction } from "opensheetmusicdisplay";
 import { Distribution, DistributionEntry } from "../Common/Distribution";
 
 /**

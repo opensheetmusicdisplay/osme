@@ -1,6 +1,6 @@
 import { OSMPlugin, OSMPluginType } from "../OSMPlugin";
-import { MusicSheet, GraphicalMusicSheet, MusicSheetCalculator, Voice, Note } from "../../MusicalScore";
-import { VexFlowMusicSheetCalculator } from "../../MusicalScore/Graphical/VexFlow/VexFlowMusicSheetCalculator";
+import { MusicSheet, GraphicalMusicSheet, MusicSheetCalculator, Voice, Note } from "opensheetmusicdisplay";
+import { VexFlowMusicSheetCalculator } from "opensheetmusicdisplay";
 // importing VexFlowMusicSheetCalculator from MusicalScore led to the constructor not being found
 import { SourceGeneratorOptions } from "./SourceGeneratorParameters";
 import { Dictionary } from "typescript-collections";

@@ -1,7 +1,7 @@
 {
   "name": "osme",
-  "version": "0.7.1",
-  "description": "An open source JavaScript engine for displaying MusicXML based on VexFlow.",
+  "version": "0.1.0",
+  "description": "An open source JavaScript engine for generating Music Sheets and export MusicXML files.",
   "main": "build/osme.min.js",
   "typings": "build/dist/src/",
   "scripts": {
@@ -48,12 +48,7 @@
   },
   "homepage": "http://opensheetmusicdisplay.org",
   "dependencies": {
-    "@types/vexflow": "^1.2.33",
-    "es6-promise": "^4.2.5",
-    "jszip": "^3.0.0",
-    "loglevel": "^1.5.0",
-    "typescript-collections": "^1.1.2",
-    "vexflow": "^1.2.89",
+    "opensheetmusicdisplay": "github:opensheetmusicdisplay/opensheetmusicdisplay#feature/fix-module-exports",
     "xmlbuilder": "^13.0.2"
   },
   "devDependencies": {

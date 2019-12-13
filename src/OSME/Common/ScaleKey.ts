@@ -1,6 +1,6 @@
-import { NoteEnum, Pitch, AccidentalEnum } from "../../Common";
+import { NoteEnum, Pitch, AccidentalEnum } from "opensheetmusicdisplay";
 import { ScaleType } from "./ScaleType";
-import { KeyEnum } from "../../MusicalScore/VoiceData/Instructions";
+import { KeyEnum } from "opensheetmusicdisplay";
 
 export class Tone {
 

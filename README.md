@@ -4,6 +4,7 @@
 
 # OpenSheetMusicEducation
 
+Open Sheet Music Education: A configurable generator for sight reading practice sheets.
 [opensheetmusiceducation.org](https://opensheetmusiceducation.org/)
 
 See our sister project [OpenSheetMusicDisplay](https://github.com/opensheetmusicdisplay/opensheetmusicdisplay), our underlying rendering technology used to display the sheets in OSMD.
@@ -34,18 +35,3 @@ To run the local demo and test your MusicXML files:
 * To render your own MusicXML file, drag&drop it into the window.
 * It should look similar to our [public demo](https://opensheetmusicdisplay.github.io/demo/), except for a different interface and state of code.<br>
 The public demo is on the state of the last release, which can be useful to compare.
-
-
-
-
-<!--# <a name="license"></a>License
-The MIT License (MIT)
-
-Copyright &copy; 2016 PhonicScore GmbH
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
--->

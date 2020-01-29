@@ -4,8 +4,8 @@ var webpack = require('webpack')
 
 module.exports = {
     entry: {
-        osme: './src/index.ts' // Main index
-        // osme_demo: './osme_demo/index.js' // Demo index
+        // osme: './src/index.ts', // Main index,
+        osme_demo: './osme_demo/index.js' // Demo index
     },
     output: {
         path: path.resolve(__dirname, 'build'),

@@ -1,16 +1,7 @@
-import {
-    ComplexityMap,
-    DefaultInstrumentOptions,
-    DurationSettings,
-    ExampleSourceGenerator,
-    Fraction,
-    Label,
-    OpenSheetMusicDisplay,
-    PitchSettings,
-    RhythmInstruction,
-    RhythmSymbolEnum,
-    XMLSourceExporter
-} from 'opensheetmusicdisplay';
+import {Fraction, Label, OpenSheetMusicDisplay, RhythmInstruction, RhythmSymbolEnum} from 'opensheetmusicdisplay';
+import {ExampleSourceGenerator} from '../src/OSME/SourceGenerator/ExampleSourceGenerator';
+import {XMLSourceExporter} from '../src/OSME/SourceExporter/XMLSourceExporter';
+import {ComplexityMap, DefaultInstrumentOptions, DurationSettings, PitchSettings} from '../src';
 import {ScaleKey} from '../src/OSME/Common';
 //import * as OSME from '../src/OSME';
 
@@ -203,7 +194,7 @@ import {ScaleKey} from '../src/OSME/Common';
                 colorStemsLikeNoteheads: true
             });
         } else {
-            openSheetMusicDisplay.setOptions({ coloringMode: 0, colorStemsLikeNoteheads: false });
+            openSheetMusicDisplay.setOptions({coloringMode: 0, colorStemsLikeNoteheads: false});
         }
 
 
@@ -351,6 +342,7 @@ import {ScaleKey} from '../src/OSME/Common';
         document.body.style.opacity = 0.3;
         //selectSample.disabled = "disabled";
     }
+
     function enable() {
         document.body.style.opacity = 1;
         //selectSample.disabled = "";
@@ -391,8 +383,7 @@ import {ScaleKey} from '../src/OSME/Common';
             reader.readAsText(event.dataTransfer.files[0]);
         } else if (event.dataTransfer.files[0].name.toLowerCase().indexOf(".mxl") > 0) {
             reader.readAsBinaryString(event.dataTransfer.files[0]);
-        }
-        else {
+        } else {
             alert("No vaild .xml/.mxl/.musicxml file!");
         }
     });

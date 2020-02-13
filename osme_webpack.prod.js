@@ -13,7 +13,7 @@ var pathsToClean = [
 module.exports = merge(common, {
     output: {
         filename: '[name].min.js',
-        path: path.resolve(__dirname, 'build'),
+        path: path.resolve(__dirname, 'osme_demo'),
         library: 'osme',
         libraryTarget: 'umd'
     },

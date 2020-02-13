@@ -16,7 +16,7 @@
     "build:doc": "cross-env STATIC_FILES_SUBFOLDER=sheets npm run build",
     "build:webpack": "webpack --progress --colors --config osme_webpack.prod.js",
     "build:webpack-dev": "webpack --progress --colors --config osme_webpack.dev.js",
-    "build:webpack-sourcemap": "webpack --progress --colors --config webpack.sourcemap.js",
+    "build:webpack-sourcemap": "webpack --progress --colors --config osme_webpack.sourcemap.js",
     "start": "webpack-dev-server --progress --colors --config osme_webpack.dev.js",
     "fix-memory-limit": "cross-env NODE_OPTIONS=--max_old_space_size=4096"
   },

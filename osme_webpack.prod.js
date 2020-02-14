@@ -1,7 +1,7 @@
 var merge = require('webpack-merge')
 var webpack = require('webpack')
 var path = require('path')
-var common = require('./webpack.common.js')
+var common = require('./osme_webpack.common.js')
 var Visualizer = require('webpack-visualizer-plugin')
 var Cleaner = require('clean-webpack-plugin')
 

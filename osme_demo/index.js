@@ -102,13 +102,13 @@ import { Fraction } from '../src/Common/DataObjects';
         editTitle = document.getElementById("editTitle");
         editTitle.value = "Sight reading practice"
         editComposer = document.getElementById("editComposer");
-        editComposer.value = "Created by OSME"
+        editComposer.value = "OSME"
         editTempo = document.getElementById("editTempo");
         downloadFile = document.getElementById("downloadFile");
         selectTimeSignature = document.getElementById("selectTimeSignature");
         selectTimeSignature.value = 4;
         selectMeasureNumber = document.getElementById("selectMeasureNumber");
-        selectMeasureNumber.value = 1;
+        selectMeasureNumber.value = 48;
         selectKeySignature = document.getElementById("selectKeySignature");
         selectComplexity = document.getElementById("selectComplexity");
         selectDuration = document.getElementById("selectDuration");
@@ -286,7 +286,7 @@ import { Fraction } from '../src/Common/DataObjects';
 
         renderGeneratedSheet();
 
-        exportGeneratedSheet();
+        //exportGeneratedSheet();
     }
 
     function exportGeneratedSheet() {
@@ -304,7 +304,11 @@ import { Fraction } from '../src/Common/DataObjects';
         var xmlContent = exportGeneratedSheet();
         var element = document.createElement('a');
         element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(xmlContent));
-        element.setAttribute('download', "text.musicxml");
+        var filename = "OSME Practice.musicxml";
+        if (generatedSheet !== undefined) {
+            filename = generatedSheet.composer.text + " - " + generatedSheet.title.text + ".musicxml";
+        }
+        element.setAttribute('download', filename);
         element.style.display = 'none';
         document.body.appendChild(element);
         element.click();

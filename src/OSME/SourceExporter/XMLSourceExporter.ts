@@ -17,7 +17,7 @@ export class XMLSourceExporter {
         const measures: SourceMeasure[] = sheet.SourceMeasures;
 
         this.xmlDriver.begin(sheet.ComposerString, sheet.TitleString);
-        this.xmlDriver.beginPart("P1");
+        this.xmlDriver.beginPart(sheet.Parts[0].Id, sheet.Parts[0].IdString);
 
         let printedMeasureInstructions: Boolean = false;
 

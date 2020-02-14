@@ -45,12 +45,12 @@ export class XMLDriver {
         this.partList = this.root.element("part-list");
     }
 
-    public beginPart(partId: string): void {
+    public beginPart(partId: number, partIdString: string): void {
         const part1: xmlbuilder.XMLElement = this.partList.element("score-part");
-        part1.attribute("id", partId);
-        part1.element("part-name", "Music");
+        part1.attribute("id", "P" + partId.toString());
+        part1.element("part-name", partIdString);
         this.currentPart = this.root.element("part");
-        this.currentPart.att("id", partId);
+        this.currentPart.att("id", "P" + partId.toString());
     }
     public endPart(): void {
         this.currentPart.end();

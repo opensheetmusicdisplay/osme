@@ -10,7 +10,7 @@ describe("SourceExporterDriver Test", () => {
       const driver: XMLDriver = new XMLDriver(transformer);
 
       driver.begin("testcomposer", "testtitle");
-      driver.beginPart("P1");
+      driver.beginPart(1, "Part 1");
       const measure: SourceMeasure = new SourceMeasure(2);
       const length: Fraction = new Fraction(1, 2);
       measure.ActiveTimeSignature = length;

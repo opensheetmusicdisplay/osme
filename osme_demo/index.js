@@ -108,7 +108,7 @@ import { Fraction } from '../src/Common/DataObjects';
         selectTimeSignature = document.getElementById("selectTimeSignature");
         selectTimeSignature.value = 4;
         selectMeasureNumber = document.getElementById("selectMeasureNumber");
-        selectMeasureNumber.value = 48;
+        selectMeasureNumber.value = 16;
         selectKeySignature = document.getElementById("selectKeySignature");
         selectComplexity = document.getElementById("selectComplexity");
         selectDuration = document.getElementById("selectDuration");
